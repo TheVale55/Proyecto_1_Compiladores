@@ -1,0 +1,44 @@
+//terminales (tokens que va a retornar el scanner)
+
+//tipos de datos
+terminal INTEGER, FLOAT, BOOL, CHAR, STRING;
+
+
+//bloques de código
+terminal APERTURA_DE_BLOQUE, CIERRRE_DE_BLOQUE;
+
+
+//corchetes
+terminal CORCHETE_APERTURA, CORCHETE_CIERRE;
+
+
+//asignacion
+terminal ASIGNACION;
+
+
+//Parentesis
+terminal PARENTESIS_APERTURA, PARENTESIS_CIERRRE; 
+
+
+//expresiones aritmeticas
+terminal SUMA, RESTA, MULTIPLICACION, MODULO, POTENCIA;
+
+
+//expresiones aritmeticas unarias
+terminal INCREMENTO, DECREMENTO;
+
+
+//expresiones relacionales
+terminal MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUALDAD, DIFERENTE;
+
+
+//expresiones logicas
+terminal CONJUNCION, DISYUNCION, NEGACION;
+
+
+//estructuras de control
+terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT, BREAK, RETURN, DOS_PUNTOS;
+
+
+//funciones de leer
+terminal PRINT, READ;
