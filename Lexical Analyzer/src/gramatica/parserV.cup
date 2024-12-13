@@ -1,0 +1,20 @@
+parser code{:
+
+:}
+
+init with {: :};
+
+/* Define how to connect to the scanner! */
+scan with {: return lex.next_token(); :};
+
+/* Terminales (tokens retornados por el scanner). */
+terminal INTIGER, STRING, CHAR, IDENTIFICADOR, L_INTIGER, ASIGNA, COMPARACION, SUMA, L_STRING;
+
+// Non terminals
+non terminal programa, programaAux ;
+
+// Produccion de inicio 
+start with programa;
+
+programa ::= programaAux;
+programa ::= INTIGER;
