@@ -11,7 +11,7 @@ scan with {: return lex.next_token(); :};
 terminal INTIGER, STRING, CHAR, IDENTIFICADOR, L_INTIGER, ASIGNA, COMPARACION, SUMA, L_STRING;
 
 // Non terminals
-non terminal programa, programaAux ;
+non terminal programa, programaAux;
 
 // Produccion de inicio 
 start with programa;

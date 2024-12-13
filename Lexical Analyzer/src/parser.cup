@@ -1,3 +1,11 @@
+import java_cup.runtime.*;
+
+parser code{: :};
+
+init with {: :};
+
+scan with {: return lex.next_token(); :};
+
 //terminales (tokens que va a retornar el scanner)
 
 //tipos de datos
@@ -42,3 +50,20 @@ terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT, BREAK, RETURN, DOS_PUNTOS;
 
 //funciones de leer
 terminal PRINT, READ;
+
+
+//identificadores
+terminal IDENTIFICADOR;
+
+
+//desconocido/error
+terminal ERROR;
+
+
+non terminal programa;
+
+start with programa;
+
+programa ::= ;
+
+//Para crear sym.java y Parser.java -> java -jar cup.jar archivo.cup ---> donde "archivo" es el nombre del .cup que tenemos.

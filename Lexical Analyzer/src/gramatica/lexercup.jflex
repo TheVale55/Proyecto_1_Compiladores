@@ -1,5 +1,4 @@
 /* JF1ex exarnole: partial Java language lexer specification*/
-package ParserLexer;
 import java_cup.runtime.* ;
 
     /*
@@ -12,7 +11,7 @@ import java_cup.runtime.* ;
     */
 
 %% 
-%class BasicLexerCupV
+%class LexerCupV
 %public 
 %unicode
 %cup
@@ -35,22 +34,24 @@ LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 WhiteSpace = {LineTerminator} | [ \t\f]
 
-/* Comments */
-Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+//comentarios
+Comment = {TraditionalComment} | {EndOfLineComment}
 
-TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+TraditionalComment = "\\_" [^*] ~"_/" | "\\_" "_"+ "/" //Verificar que se este mapeando correctamente el '\' :c
 
-// Comment can be the last line of the file, without a line terminator
-EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
-DocumentationComment = "/**" {CommentContent} "*"+ "/"
-CommentContent = ([^*] | \*+ [^ / *])* 
+EndOfLineComment = "#" {InputCharacter}* {LineTerminator}?
+//DocumentationComment = "/**" {CommentContent} "*"+ "/"
+//CommentContent = ([^*] | \*+ [^ / *])* 
 
-Identifier = [:jletter:]* [:jletterdigit:]*
+Identifier = _[:jletter:]+[:jletterdigit:]*_
 
-//DecIntergerLiteral = 0 | [1-9] [0-9]* /*Ojo no permite negativos*/
+
 digito = [0-9]
 digitoNoCero = [1-9]
-DecIntergerLiteral = 0 | {digitoNoCero} {digito}*
+DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
+
+
+
 
 %state STRING
 
@@ -100,4 +101,4 @@ DecIntergerLiteral = 0 | {digitoNoCero} {digito}*
 }
 
 /* Error Fallback */
-[^]                     { throw new Error("Illegal character <" + yytext() + ">"); }
+//[^]                     { throw new Error("Illegal character <" + yytext() + ">"); }
