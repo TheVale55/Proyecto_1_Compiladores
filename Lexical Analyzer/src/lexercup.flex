@@ -12,7 +12,7 @@ import java_cup.runtime.* ;
 
 %% 
 %class LexerCupV
-%public 
+%public
 %unicode
 %cup
 %line
@@ -37,15 +37,13 @@ WhiteSpace = {LineTerminator} | [ \t\f]
 //comentarios
 Comment = {TraditionalComment} | {EndOfLineComment}
 
-TraditionalComment = "\\_" [^*] ~"_/" | "\\_" "_"+ "/" //Verificar que se este mapeando correctamente el '\' :c
+TraditionalComment = "\\_" .* "_/"
 
 EndOfLineComment = "#" {InputCharacter}* {LineTerminator}?
 //DocumentationComment = "/**" {CommentContent} "*"+ "/"
 //CommentContent = ([^*] | \*+ [^ / *])* 
 
-Identifier = [_][:jletter:][:jletterdigit:]*_
-
-// Literals
+// Literales
 Digit = [0-9]
 NonZeroDigit = [1-9]
 DecIntegerLiteral = 0 | {NonZeroDigit}{Digit}*
@@ -155,5 +153,4 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 /* Ignore white space */
 <YYINITIAL> {WhiteSpace} { /* Ignore white space */ }
 
-/* Error Fallback */
-//[^]                     { throw new Error("Illegal character <" + yytext() + ">"); }
+[^]                     { return symbol(sym.SYNTAX_ERROR); }

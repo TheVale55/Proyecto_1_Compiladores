@@ -57,7 +57,7 @@ terminal IDENTIFICADOR;
 
 
 //desconocido/error
-terminal ERROR;
+terminal SYNTAX_ERROR;
 
 
 non terminal programa;
