@@ -94,7 +94,7 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 /* Parentheses and Brackets */
 <YYINITIAL> "abreregalo" { return symbol(sym.PARENTESIS_APERTURA); }
-<YYINITIAL> "cierraregalo" { return symbol(sym.PARENTESIS_CIERRRE); }
+<YYINITIAL> "cierraregalo" { return symbol(sym.PARENTESIS_CIERRE); }
 <YYINITIAL> "abreempaque" { return symbol(sym.CORCHETE_APERTURA); }
 <YYINITIAL> "cierraempaque" { return symbol(sym.CORCHETE_CIERRE); }
 
@@ -139,11 +139,17 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 <STRING> {
     \" { yybegin(YYINITIAL); return symbol(sym.STRING_LITERAL, string.toString()); }
-    [^\r\n"\\]+ { string.append(yytext()); }
+
+    [^\r\n\"\\]+ { string.append(yytext()); }
+
     \\t { string.append("\t"); }
+
     \\n { string.append("\n"); }
+
     \\r { string.append("\r"); }
-    \\" { string.append("\""); }
+
+    \\\" { string.append("\""); }
+
     \\\\ { string.append("\\"); }
 }
 
@@ -154,3 +160,5 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 <YYINITIAL> {WhiteSpace} { /* Ignore white space */ }
 
 [^]                     { return symbol(sym.SYNTAX_ERROR); }
+
+//java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex

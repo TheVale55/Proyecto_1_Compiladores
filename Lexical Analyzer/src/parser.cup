@@ -2,9 +2,9 @@ import java_cup.runtime.*;
 
 parser code{: :};
 
-init with {: :};
+init with {: scanner.init() :};
 
-scan with {: return lex.next_token(); :};
+scan with {: return scanner.next_token(); :};
 
 //terminales (tokens que va a retornar el scanner)
 
@@ -25,7 +25,7 @@ terminal ASIGNACION;
 
 
 //Parentesis
-terminal PARENTESIS_APERTURA, PARENTESIS_CIERRRE; 
+terminal PARENTESIS_APERTURA, PARENTESIS_CIERRE; 
 
 
 //expresiones aritmeticas
@@ -66,4 +66,6 @@ start with programa;
 
 programa ::= ;
 
-//Para crear sym.java y Parser.java -> java -jar cup.jar archivo.cup ---> donde "archivo" es el nombre del .cup que tenemos.
+//dentro de lexical analyzer
+//java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup
+
