@@ -1,5 +1,6 @@
 /* JF1ex exarnole: partial Java language lexer specification*/
-import java_cup.runtime.* ;
+
+import java_cup.runtime.*;
 
     /*
     *   This class is a simple example lexer.
@@ -11,14 +12,18 @@ import java_cup.runtime.* ;
     */
 
 %% 
-%class LexerCupV
+
+
+%class Lexer
 %public
-%unicode
-%cup
 %line
 %column
+%unicode
+%cup
+
 
 %{
+
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type) {
@@ -100,13 +105,13 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 /* Assignment and Expression Delimiters */
 <YYINITIAL> "entrega" { return symbol(sym.ASIGNACION); }
-<YYINITIAL> "finregalo" { return symbol(sym.END_EXPR); }
+<YYINITIAL> "finregalo" { return symbol(sym.END_EXPR); }  //aqui esta el end_expr
 <YYINITIAL> "sigue" { return symbol(sym.DOS_PUNTOS); }
 
 /* Arithmetic */
 <YYINITIAL> "navidad" { return symbol(sym.SUMA); }
 <YYINITIAL> "intercambio" { return symbol(sym.RESTA); }
-<YYINITIAL> "reyes" { return symbol(sym.DIV); }
+<YYINITIAL> "reyes" { return symbol(sym.DIVISION); }
 <YYINITIAL> "nochebuena" { return symbol(sym.MULTIPLICACION); }
 <YYINITIAL> "magos" { return symbol(sym.MODULO); }
 <YYINITIAL> "adviento" { return symbol(sym.POTENCIA); }
@@ -161,4 +166,5 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 [^]                     { return symbol(sym.SYNTAX_ERROR); }
 
+//ejecutar desde Lexical Analyzer
 //java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex

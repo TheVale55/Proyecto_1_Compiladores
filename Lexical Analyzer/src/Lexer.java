@@ -3,7 +3,8 @@
 // source: src/lexercup.flex
 
 /* JF1ex exarnole: partial Java language lexer specification*/
-import java_cup.runtime.* ;
+
+import java_cup.runtime.*;
 
     /*
     *   This class is a simple example lexer.
@@ -16,7 +17,7 @@ import java_cup.runtime.* ;
 
 
 @SuppressWarnings("fallthrough")
-public class LexerCupV implements java_cup.runtime.Scanner {
+public class Lexer implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file. */
   public static final int YYEOF = -1;
@@ -660,8 +661,16 @@ public class LexerCupV implements java_cup.runtime.Scanner {
   /** Number of newlines encountered up to the start of the matched text. */
   private int yyline;
 
+  public int yyline() {
+    return yyline;
+  }
+
   /** Number of characters from the last newline up to the start of the matched text. */
   private int yycolumn;
+
+  public int yycolumn() {
+    return yycolumn;
+  }
 
   /** Number of characters up to the start of the matched text. */
   @SuppressWarnings("unused")
@@ -675,6 +684,7 @@ public class LexerCupV implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
+
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type) {
@@ -691,7 +701,7 @@ public class LexerCupV implements java_cup.runtime.Scanner {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public LexerCupV(java.io.Reader in) {
+  public Lexer(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -1215,7 +1225,7 @@ public class LexerCupV implements java_cup.runtime.Scanner {
           // fall through
           case 77: break;
           case 22:
-            { return symbol(sym.DIV);
+            { return symbol(sym.DIVISION);
             }
           // fall through
           case 78: break;

@@ -6,50 +6,55 @@
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int PARENTESIS_CIERRE = 13;
+  public static final int STRING_LITERAL = 8;
+  public static final int PARENTESIS_CIERRE = 15;
   public static final int CHAR = 5;
-  public static final int CASE = 35;
-  public static final int DIFERENTE = 26;
-  public static final int RESTA = 15;
+  public static final int CASE = 38;
+  public static final int DIFERENTE = 29;
+  public static final int RESTA = 17;
   public static final int INTEGER = 2;
-  public static final int DOS_PUNTOS = 39;
-  public static final int FOR = 33;
-  public static final int IDENTIFICADOR = 42;
-  public static final int CORCHETE_CIERRE = 10;
-  public static final int IGUALDAD = 25;
+  public static final int DOS_PUNTOS = 42;
+  public static final int FOR = 36;
+  public static final int IDENTIFICADOR = 45;
+  public static final int CORCHETE_CIERRE = 12;
+  public static final int IGUALDAD = 28;
   public static final int BOOL = 4;
-  public static final int INCREMENTO = 19;
-  public static final int SUMA = 14;
-  public static final int IF = 30;
+  public static final int INCREMENTO = 22;
+  public static final int SUMA = 16;
+  public static final int MAIN = 48;
+  public static final int IF = 33;
   public static final int EOF = 0;
-  public static final int RETURN = 38;
-  public static final int CORCHETE_APERTURA = 9;
-  public static final int DECREMENTO = 20;
+  public static final int RETURN = 41;
+  public static final int CORCHETE_APERTURA = 11;
+  public static final int DECREMENTO = 23;
   public static final int error = 1;
-  public static final int SYNTAX_ERROR = 43;
-  public static final int MODULO = 17;
-  public static final int NEGACION = 29;
-  public static final int APERTURA_DE_BLOQUE = 7;
-  public static final int MENOR = 21;
-  public static final int BREAK = 37;
-  public static final int ASIGNACION = 11;
-  public static final int SWITCH = 34;
-  public static final int MAYOR = 23;
-  public static final int POTENCIA = 18;
-  public static final int ELSE = 31;
-  public static final int READ = 41;
-  public static final int WHILE = 32;
-  public static final int DEFAULT = 36;
-  public static final int MAYOR_IGUAL = 24;
+  public static final int SYNTAX_ERROR = 46;
+  public static final int MODULO = 19;
+  public static final int NEGACION = 32;
+  public static final int APERTURA_DE_BLOQUE = 9;
+  public static final int MENOR = 24;
+  public static final int BREAK = 40;
+  public static final int SWITCH = 37;
+  public static final int ASIGNACION = 13;
+  public static final int MAYOR = 26;
+  public static final int POTENCIA = 20;
+  public static final int ELSE = 34;
+  public static final int READ = 44;
+  public static final int WHILE = 35;
+  public static final int DEFAULT = 39;
+  public static final int MAYOR_IGUAL = 27;
   public static final int FLOAT = 3;
-  public static final int CONJUNCION = 27;
+  public static final int CONJUNCION = 30;
+  public static final int END_EXPR = 47;
   public static final int STRING = 6;
-  public static final int PARENTESIS_APERTURA = 12;
-  public static final int DISYUNCION = 28;
-  public static final int MENOR_IGUAL = 22;
-  public static final int CIERRRE_DE_BLOQUE = 8;
-  public static final int PRINT = 40;
-  public static final int MULTIPLICACION = 16;
+  public static final int PARENTESIS_APERTURA = 14;
+  public static final int DISYUNCION = 31;
+  public static final int MENOR_IGUAL = 25;
+  public static final int DIVISION = 21;
+  public static final int CIERRRE_DE_BLOQUE = 10;
+  public static final int PRINT = 43;
+  public static final int INT_LITERAL = 7;
+  public static final int MULTIPLICACION = 18;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -58,6 +63,8 @@ public class sym {
   "BOOL",
   "CHAR",
   "STRING",
+  "INT_LITERAL",
+  "STRING_LITERAL",
   "APERTURA_DE_BLOQUE",
   "CIERRRE_DE_BLOQUE",
   "CORCHETE_APERTURA",
@@ -70,6 +77,7 @@ public class sym {
   "MULTIPLICACION",
   "MODULO",
   "POTENCIA",
+  "DIVISION",
   "INCREMENTO",
   "DECREMENTO",
   "MENOR",
@@ -94,7 +102,9 @@ public class sym {
   "PRINT",
   "READ",
   "IDENTIFICADOR",
-  "SYNTAX_ERROR"
+  "SYNTAX_ERROR",
+  "END_EXPR",
+  "MAIN"
   };
 }
 

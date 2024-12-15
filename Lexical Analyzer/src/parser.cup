@@ -2,14 +2,16 @@ import java_cup.runtime.*;
 
 parser code{: :};
 
-init with {: scanner.init() :};
+//para usar esto, sera que debo ponerle de nombre s? asi se declara al compilar
 
-scan with {: return scanner.next_token(); :};
+//init with {: scanner.init() :};
+
+//scan with {: return scanner.next_token(); :};
 
 //terminales (tokens que va a retornar el scanner)
 
 //tipos de datos
-terminal INTEGER, FLOAT, BOOL, CHAR, STRING;
+terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, STRING_LITERAL;
 
 
 //bloques de código
@@ -29,7 +31,7 @@ terminal PARENTESIS_APERTURA, PARENTESIS_CIERRE;
 
 
 //expresiones aritmeticas
-terminal SUMA, RESTA, MULTIPLICACION, MODULO, POTENCIA;
+terminal SUMA, RESTA, MULTIPLICACION, MODULO, POTENCIA, DIVISION; 
 
 
 //expresiones aritmeticas unarias
@@ -60,12 +62,15 @@ terminal IDENTIFICADOR;
 terminal SYNTAX_ERROR;
 
 
+//final de expresion y Main
+terminal END_EXPR, MAIN;
+
+
 non terminal programa;
 
 start with programa;
 
 programa ::= ;
 
-//dentro de lexical analyzer
+//ejecutar desde Lexical Analyzer
 //java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup
-

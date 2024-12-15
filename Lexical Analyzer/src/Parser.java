@@ -85,19 +85,6 @@ public class Parser extends java_cup.runtime.lr_parser {
   public int error_sym() {return 1;}
 
 
-  /** User initialization code. */
-  public void user_init() throws java.lang.Exception
-    {
- scanner.init() 
-    }
-
-  /** Scan to get the next Symbol. */
-  public java_cup.runtime.Symbol scan()
-    throws java.lang.Exception
-    {
- return scanner.next_token(); 
-    }
-
  
 
 /** Cup generated class to encapsulate user supplied action code.*/
