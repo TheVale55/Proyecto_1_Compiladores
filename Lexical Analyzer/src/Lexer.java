@@ -5,6 +5,10 @@
 /* JF1ex exarnole: partial Java language lexer specification*/
 
 import java_cup.runtime.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
     /*
     *   This class is a simple example lexer.
@@ -661,16 +665,8 @@ public class Lexer implements java_cup.runtime.Scanner {
   /** Number of newlines encountered up to the start of the matched text. */
   private int yyline;
 
-  public int yyline() {
-    return yyline;
-  }
-
   /** Number of characters from the last newline up to the start of the matched text. */
   private int yycolumn;
-
-  public int yycolumn() {
-    return yycolumn;
-  }
 
   /** Number of characters up to the start of the matched text. */
   @SuppressWarnings("unused")
@@ -684,6 +680,29 @@ public class Lexer implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
+    public BufferedWriter outputFile;
+
+    public void createWriter(String root) throws IOException {
+        outputFile = new BufferedWriter(new FileWriter(root));
+    }
+
+    public void closeWritter() throws IOException {
+        if(outputFile != null) {
+            outputFile.close();
+        }
+    }
+
+    public void writeToken(String content) throws IOException {
+        try {
+            if(outputFile != null) {
+                outputFile.write(content);
+                outputFile.flush();
+            }
+        } catch (IOException e) {
+            System.err.println("Error while writting in outputFile: " + e.getMessage());
+        }
+    }
+
 
     StringBuffer string = new StringBuffer();
 
@@ -1385,7 +1404,7 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 109: break;
           case 54:
-            { return symbol(sym.CIERRRE_DE_BLOQUE);
+            { return symbol(sym.CIERRE_DE_BLOQUE);
             }
           // fall through
           case 110: break;

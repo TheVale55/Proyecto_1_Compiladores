@@ -17,6 +17,7 @@ public class sym {
   public static final int FOR = 36;
   public static final int IDENTIFICADOR = 45;
   public static final int CORCHETE_CIERRE = 12;
+  public static final int CIERRE_DE_BLOQUE = 10;
   public static final int IGUALDAD = 28;
   public static final int BOOL = 4;
   public static final int INCREMENTO = 22;
@@ -51,7 +52,6 @@ public class sym {
   public static final int DISYUNCION = 31;
   public static final int MENOR_IGUAL = 25;
   public static final int DIVISION = 21;
-  public static final int CIERRRE_DE_BLOQUE = 10;
   public static final int PRINT = 43;
   public static final int INT_LITERAL = 7;
   public static final int MULTIPLICACION = 18;
@@ -66,7 +66,7 @@ public class sym {
   "INT_LITERAL",
   "STRING_LITERAL",
   "APERTURA_DE_BLOQUE",
-  "CIERRRE_DE_BLOQUE",
+  "CIERRE_DE_BLOQUE",
   "CORCHETE_APERTURA",
   "CORCHETE_CIERRE",
   "ASIGNACION",

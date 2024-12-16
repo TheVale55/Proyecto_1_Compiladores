@@ -1,12 +1,19 @@
 import java_cup.runtime.*;
 
-parser code{: :};
+parser code{: 
+    private Lexer scanner;
+
+    public Parser(Lexer scanner) {
+        this.scanner = scanner;
+    }
+
+:};
 
 //para usar esto, sera que debo ponerle de nombre s? asi se declara al compilar
 
-//init with {: scanner.init() :};
+//init with {: scanner.init(); :};
 
-//scan with {: return scanner.next_token(); :};
+scan with {: return scanner.next_token(); :};
 
 //terminales (tokens que va a retornar el scanner)
 
@@ -15,7 +22,7 @@ terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, STRING_LITERAL;
 
 
 //bloques de código
-terminal APERTURA_DE_BLOQUE, CIERRRE_DE_BLOQUE;
+terminal APERTURA_DE_BLOQUE, CIERRE_DE_BLOQUE;
 
 
 //corchetes

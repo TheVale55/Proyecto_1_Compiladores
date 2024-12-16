@@ -85,7 +85,21 @@ public class Parser extends java_cup.runtime.lr_parser {
   public int error_sym() {return 1;}
 
 
+  /** Scan to get the next Symbol. */
+  public java_cup.runtime.Symbol scan()
+    throws java.lang.Exception
+    {
+ return scanner.next_token(); 
+    }
+
  
+    private Lexer scanner;
+
+    public Parser(Lexer scanner) {
+        this.scanner = scanner;
+    }
+
+
 
 /** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})

@@ -1,6 +1,10 @@
 /* JF1ex exarnole: partial Java language lexer specification*/
 
 import java_cup.runtime.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
     /*
     *   This class is a simple example lexer.
@@ -21,6 +25,31 @@ import java_cup.runtime.*;
 %unicode
 %cup
 
+%{
+    public BufferedWriter outputFile;
+
+    public void createWriter(String root) throws IOException {
+        outputFile = new BufferedWriter(new FileWriter(root));
+    }
+
+    public void closeWritter() throws IOException {
+        if(outputFile != null) {
+            outputFile.close();
+        }
+    }
+
+    public void writeToken(String content) throws IOException {
+        try {
+            if(outputFile != null) {
+                outputFile.write(content);
+                outputFile.flush();
+            }
+        } catch (IOException e) {
+            System.err.println("Error while writting in outputFile: " + e.getMessage());
+        }
+    }
+
+%}
 
 %{
 
@@ -95,7 +124,7 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 /* Block Delimiters */
 <YYINITIAL> "abrecuento" { return symbol(sym.APERTURA_DE_BLOQUE); }
-<YYINITIAL> "cierracuento" { return symbol(sym.CIERRRE_DE_BLOQUE); }
+<YYINITIAL> "cierracuento" { return symbol(sym.CIERRE_DE_BLOQUE); }
 
 /* Parentheses and Brackets */
 <YYINITIAL> "abreregalo" { return symbol(sym.PARENTESIS_APERTURA); }
