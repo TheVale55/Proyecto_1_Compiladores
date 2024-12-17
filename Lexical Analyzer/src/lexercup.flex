@@ -1,22 +1,17 @@
-/* JF1ex exarnole: partial Java language lexer specification*/
+/* JF1ex exarnole: partial Java language lexer specification */
 
 import java_cup.runtime.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/* This class is a simple example lexer. */
 
-    /*
-    *   This class is a simple example lexer.
-    */
+/* Lexer base tomado de la página de Cup que requiere sym para utilizarse como Lexer */
 
-    /* 
-        Lexer base tomado de la página de Cup que requiere sym para utilizarse como Lexer
-        Este lexer es utilizado por por el parser generado por BasicLexerCup (parser.java que se genera) 
-    */
+/* Este lexer es utilizado por el parser generado por BasicLexerCup (parser.java que se genera) */
 
-%% 
-
+%%
 
 %class Lexer
 %public
@@ -32,7 +27,7 @@ import java.io.IOException;
         outputFile = new BufferedWriter(new FileWriter(root));
     }
 
-    public void closeWritter() throws IOException {
+    public void closeWriter() throws IOException {
         if(outputFile != null) {
             outputFile.close();
         }
@@ -45,7 +40,7 @@ import java.io.IOException;
                 outputFile.flush();
             }
         } catch (IOException e) {
-            System.err.println("Error while writting in outputFile: " + e.getMessage());
+            System.err.println("Error while writing in outputFile: " + e.getMessage());
         }
     }
 
@@ -62,34 +57,23 @@ import java.io.IOException;
     private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline, yycolumn, value);
     }
+
 %}
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 WhiteSpace = {LineTerminator} | [ \t\f]
 
-//comentarios
 Comment = {TraditionalComment} | {EndOfLineComment}
 
-TraditionalComment = "\\_" .* "_/"
-
+TraditionalComment = "\\_" ([^_] | "_" [^/] | "\n")* "_/"             
 EndOfLineComment = "#" {InputCharacter}* {LineTerminator}?
-//DocumentationComment = "/**" {CommentContent} "*"+ "/"
-//CommentContent = ([^*] | \*+ [^ / *])* 
 
-// Literales
-Digit = [0-9]
-NonZeroDigit = [1-9]
-DecIntegerLiteral = 0 | {NonZeroDigit}{Digit}*
-Identifier = _[:jletter:]+[:jletterdigit:]*_
-
+Identifier = _[a-zA-Z][a-zA-Z0-9]*_
 
 digito = [0-9]
 digitoNoCero = [1-9]
-DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
-
-
-
+DecIntegerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 %state STRING
 
@@ -134,7 +118,7 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 /* Assignment and Expression Delimiters */
 <YYINITIAL> "entrega" { return symbol(sym.ASIGNACION); }
-<YYINITIAL> "finregalo" { return symbol(sym.END_EXPR); }  //aqui esta el end_expr
+<YYINITIAL> "finregalo" { return symbol(sym.END_EXPR); } 
 <YYINITIAL> "sigue" { return symbol(sym.DOS_PUNTOS); }
 
 /* Arithmetic */
@@ -188,12 +172,15 @@ DecIntergerLiteral = 0 | -?{digitoNoCero}{digito}*
 }
 
 /* Ignore comments */
-<YYINITIAL> {Comment} { /* Ignore comments */ }
+<YYINITIAL> {Comment} { return symbol(sym.COMENTARIO); }
 
 /* Ignore white space */
 <YYINITIAL> {WhiteSpace} { /* Ignore white space */ }
 
-[^]                     { return symbol(sym.SYNTAX_ERROR); }
+<YYINITIAL> <<EOF>> { return symbol(sym.EOF); }
 
-//ejecutar desde Lexical Analyzer
-//java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex
+[^] { return symbol(sym.SYNTAX_ERROR); } /* Antes estaba con [^] */
+ 
+
+/* ejecutar desde Lexical Analyzer */
+/* java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex */

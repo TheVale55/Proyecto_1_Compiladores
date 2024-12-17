@@ -65,8 +65,8 @@ terminal PRINT, READ;
 terminal IDENTIFICADOR;
 
 
-//desconocido/error
-terminal SYNTAX_ERROR;
+//desconocido/error y comentario
+terminal SYNTAX_ERROR, COMENTARIO;
 
 
 //final de expresion y Main

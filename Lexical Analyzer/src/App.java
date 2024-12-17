@@ -10,7 +10,7 @@ public class App {
             lexer.createWriter("C:/Users/joshu/OneDrive/Desktop/Proyecto_1_Compiladores/Lexical Analyzer/src/output.txt");
             parser.parse();
 
-            lexer.closeWritter();
+            lexer.closeWriter();
 
         } catch (Exception e) {
             e.printStackTrace();
