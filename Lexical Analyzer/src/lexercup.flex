@@ -33,10 +33,10 @@ import java.io.IOException;
         }
     }
 
-    public void writeToken(String content) throws IOException {
+    public void writeToken(int tokenNum) throws IOException {
         try {
             if(outputFile != null) {
-                outputFile.write(content);
+                outputFile.write("Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
                 outputFile.flush();
             }
         } catch (IOException e) {
@@ -82,81 +82,81 @@ DecIntegerLiteral = 0 | -?{digitoNoCero}{digito}*
 /* KEYWORDS */
 
 /* Data Types */
-<YYINITIAL> "rodolfo" { return symbol(sym.INTEGER); }
-<YYINITIAL> "bromista" { return symbol(sym.FLOAT); }
-<YYINITIAL> "trueno" { return symbol(sym.BOOL); }
-<YYINITIAL> "cupido" { return symbol(sym.CHAR); }
-<YYINITIAL> "cometa" { return symbol(sym.STRING); }
+<YYINITIAL> "rodolfo" { writeToken(sym.INTEGER); return symbol(sym.INTEGER, yytext()); }
+<YYINITIAL> "bromista" { writeToken(sym.FLOAT); return symbol(sym.FLOAT, yytext()); }
+<YYINITIAL> "trueno" { writeToken(sym.BOOL); return symbol(sym.BOOL, yytext()); }
+<YYINITIAL> "cupido" { writeToken(sym.CHAR); return symbol(sym.CHAR, yytext()); }
+<YYINITIAL> "cometa" { writeToken(sym.STRING); return symbol(sym.STRING, yytext()); }
 
 /* Main Method */
-<YYINITIAL> "_verano_" { return symbol(sym.MAIN); }
+<YYINITIAL> "_verano_" { writeToken(sym.MAIN); return symbol(sym.MAIN, yytext()); }
 
 /* Control Structures */
-<YYINITIAL> "elfo" { return symbol(sym.IF); }
-<YYINITIAL> "hada" { return symbol(sym.ELSE); }
-<YYINITIAL> "envuelve" { return symbol(sym.WHILE); }
-<YYINITIAL> "duende" { return symbol(sym.FOR); }
-<YYINITIAL> "varios" { return symbol(sym.SWITCH); }
-<YYINITIAL> "historia" { return symbol(sym.CASE); }
-<YYINITIAL> "ultimo" { return symbol(sym.DEFAULT); }
-<YYINITIAL> "corta" { return symbol(sym.BREAK); }
-<YYINITIAL> "envia" { return symbol(sym.RETURN); }
+<YYINITIAL> "elfo" { writeToken(sym.IF); return symbol(sym.IF, yytext()); }
+<YYINITIAL> "hada" { writeToken(sym.ELSE); return symbol(sym.ELSE, yytext()); }
+<YYINITIAL> "envuelve" { writeToken(sym.WHILE); return symbol(sym.WHILE, yytext()); }
+<YYINITIAL> "duende" { writeToken(sym.FOR); return symbol(sym.FOR, yytext()); }
+<YYINITIAL> "varios" { writeToken(sym.SWITCH); return symbol(sym.SWITCH, yytext()); }
+<YYINITIAL> "historia" { writeToken(sym.CASE); return symbol(sym.CASE, yytext()); }
+<YYINITIAL> "ultimo" { writeToken(sym.DEFAULT); return symbol(sym.DEFAULT, yytext()); }
+<YYINITIAL> "corta" { writeToken(sym.BREAK); return symbol(sym.BREAK, yytext()); }
+<YYINITIAL> "envia" { writeToken(sym.RETURN); return symbol(sym.RETURN, yytext()); }
 
 /* I/O Functions */
-<YYINITIAL> "narra" { return symbol(sym.PRINT); }
-<YYINITIAL> "escucha" { return symbol(sym.READ); }
+<YYINITIAL> "narra" { writeToken(sym.PRINT); return symbol(sym.PRINT, yytext()); }
+<YYINITIAL> "escucha" { writeToken(sym.READ); return symbol(sym.READ, yytext()); }
 
 /* Block Delimiters */
-<YYINITIAL> "abrecuento" { return symbol(sym.APERTURA_DE_BLOQUE); }
-<YYINITIAL> "cierracuento" { return symbol(sym.CIERRE_DE_BLOQUE); }
+<YYINITIAL> "abrecuento" { writeToken(sym.APERTURA_DE_BLOQUE); return symbol(sym.APERTURA_DE_BLOQUE, yytext()); }
+<YYINITIAL> "cierracuento" { writeToken(sym.CIERRE_DE_BLOQUE); return symbol(sym.CIERRE_DE_BLOQUE, yytext()); }
 
 /* Parentheses and Brackets */
-<YYINITIAL> "abreregalo" { return symbol(sym.PARENTESIS_APERTURA); }
-<YYINITIAL> "cierraregalo" { return symbol(sym.PARENTESIS_CIERRE); }
-<YYINITIAL> "abreempaque" { return symbol(sym.CORCHETE_APERTURA); }
-<YYINITIAL> "cierraempaque" { return symbol(sym.CORCHETE_CIERRE); }
+<YYINITIAL> "abreregalo" { writeToken(sym.PARENTESIS_APERTURA); return symbol(sym.PARENTESIS_APERTURA, yytext()); }
+<YYINITIAL> "cierraregalo" { writeToken(sym.PARENTESIS_CIERRE); return symbol(sym.PARENTESIS_CIERRE, yytext()); }
+<YYINITIAL> "abreempaque" { writeToken(sym.CORCHETE_APERTURA); return symbol(sym.CORCHETE_APERTURA, yytext()); }
+<YYINITIAL> "cierraempaque" { writeToken(sym.CORCHETE_CIERRE); return symbol(sym.CORCHETE_CIERRE, yytext()); }
 
 /* Assignment and Expression Delimiters */
-<YYINITIAL> "entrega" { return symbol(sym.ASIGNACION); }
-<YYINITIAL> "finregalo" { return symbol(sym.END_EXPR); } 
-<YYINITIAL> "sigue" { return symbol(sym.DOS_PUNTOS); }
+<YYINITIAL> "entrega" { writeToken(sym.ASIGNACION); return symbol(sym.ASIGNACION, yytext()); }
+<YYINITIAL> "finregalo" { writeToken(sym.END_EXPR); return symbol(sym.END_EXPR, yytext()); } 
+<YYINITIAL> "sigue" { writeToken(sym.DOS_PUNTOS); return symbol(sym.DOS_PUNTOS, yytext()); }
 
 /* Arithmetic */
-<YYINITIAL> "navidad" { return symbol(sym.SUMA); }
-<YYINITIAL> "intercambio" { return symbol(sym.RESTA); }
-<YYINITIAL> "reyes" { return symbol(sym.DIVISION); }
-<YYINITIAL> "nochebuena" { return symbol(sym.MULTIPLICACION); }
-<YYINITIAL> "magos" { return symbol(sym.MODULO); }
-<YYINITIAL> "adviento" { return symbol(sym.POTENCIA); }
+<YYINITIAL> "navidad" { writeToken(sym.SUMA); return symbol(sym.SUMA, yytext()); }
+<YYINITIAL> "intercambio" { writeToken(sym.RESTA); return symbol(sym.RESTA, yytext()); }
+<YYINITIAL> "reyes" { writeToken(sym.DIVISION); return symbol(sym.DIVISION, yytext()); }
+<YYINITIAL> "nochebuena" { writeToken(sym.MULTIPLICACION); return symbol(sym.MULTIPLICACION, yytext()); }
+<YYINITIAL> "magos" { writeToken(sym.MODULO); return symbol(sym.MODULO, yytext()); }
+<YYINITIAL> "adviento" { writeToken(sym.POTENCIA); return symbol(sym.POTENCIA, yytext()); }
 
 /* Relational */
-<YYINITIAL> "snowball" { return symbol(sym.MENOR); }
-<YYINITIAL> "evergreen" { return symbol(sym.MENOR_IGUAL); }
-<YYINITIAL> "minstix" { return symbol(sym.MAYOR); }
-<YYINITIAL> "upatree" { return symbol(sym.MAYOR_IGUAL); }
-<YYINITIAL> "mary" { return symbol(sym.IGUALDAD); }
-<YYINITIAL> "openslae" { return symbol(sym.DIFERENTE); }
+<YYINITIAL> "snowball" { writeToken(sym.MENOR); return symbol(sym.MENOR, yytext()); }
+<YYINITIAL> "evergreen" { writeToken(sym.MENOR_IGUAL); return symbol(sym.MENOR_IGUAL, yytext()); }
+<YYINITIAL> "minstix" { writeToken(sym.MAYOR); return symbol(sym.MAYOR, yytext()); }
+<YYINITIAL> "upatree" { writeToken(sym.MAYOR_IGUAL); return symbol(sym.MAYOR_IGUAL, yytext()); }
+<YYINITIAL> "mary" { writeToken(sym.IGUALDAD); return symbol(sym.IGUALDAD, yytext()); }
+<YYINITIAL> "openslae" { writeToken(sym.DIFERENTE); return symbol(sym.DIFERENTE, yytext()); }
 
 /* Logical */
-<YYINITIAL> "melchor" { return symbol(sym.CONJUNCION); }
-<YYINITIAL> "gaspar" { return symbol(sym.DISYUNCION); }
-<YYINITIAL> "baltazar" { return symbol(sym.NEGACION); }
+<YYINITIAL> "melchor" { writeToken(sym.CONJUNCION); return symbol(sym.CONJUNCION, yytext()); }
+<YYINITIAL> "gaspar" { writeToken(sym.DISYUNCION); return symbol(sym.DISYUNCION, yytext()); }
+<YYINITIAL> "baltazar" { writeToken(sym.NEGACION); return symbol(sym.NEGACION, yytext()); }
 
 /* Unary */
-<YYINITIAL> "quien" { return symbol(sym.INCREMENTO); }
-<YYINITIAL> "grinch" { return symbol(sym.DECREMENTO); }
+<YYINITIAL> "quien" { writeToken(sym.INCREMENTO); return symbol(sym.INCREMENTO, yytext()); }
+<YYINITIAL> "grinch" { writeToken(sym.DECREMENTO); return symbol(sym.DECREMENTO, yytext()); }
 
 /* Identifiers */
-<YYINITIAL> {Identifier} { return symbol(sym.IDENTIFICADOR, yytext()); }
+<YYINITIAL> {Identifier} { writeToken(sym.IDENTIFICADOR); return symbol(sym.IDENTIFICADOR, yytext()); }
 
 /* Literals */
-<YYINITIAL> {DecIntegerLiteral} { return symbol(sym.INT_LITERAL, Integer.parseInt(yytext())); }
+<YYINITIAL> {DecIntegerLiteral} { writeToken(sym.INT_LITERAL); return symbol(sym.INT_LITERAL, Integer.parseInt(yytext())); }
 
 /* String literals */
 <YYINITIAL> \" { string.setLength(0); yybegin(STRING); }
 
 <STRING> {
-    \" { yybegin(YYINITIAL); return symbol(sym.STRING_LITERAL, string.toString()); }
+    \" { yybegin(YYINITIAL); writeToken(sym.STRING_LITERAL); return symbol(sym.STRING_LITERAL, string.toString()); }
 
     [^\r\n\"\\]+ { string.append(yytext()); }
 
@@ -172,15 +172,16 @@ DecIntegerLiteral = 0 | -?{digitoNoCero}{digito}*
 }
 
 /* Ignore comments */
-<YYINITIAL> {Comment} { return symbol(sym.COMENTARIO); }
+<YYINITIAL> {Comment} { writeToken(sym.COMENTARIO); return symbol(sym.COMENTARIO, yytext()); }
 
 /* Ignore white space */
 <YYINITIAL> {WhiteSpace} { /* Ignore white space */ }
 
-<YYINITIAL> <<EOF>> { return symbol(sym.EOF); }
+<YYINITIAL> <<EOF>> { return symbol(sym.EOF, yytext()); }
 
-[^] { return symbol(sym.SYNTAX_ERROR); } /* Antes estaba con [^] */
+[^] { writeToken(sym.SYNTAX_ERROR); return symbol(sym.SYNTAX_ERROR, yytext()); } /* Antes estaba con . */
  
 
 /* ejecutar desde Lexical Analyzer */
+/* cd "Lexical Analyzer" */
 /* java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex */

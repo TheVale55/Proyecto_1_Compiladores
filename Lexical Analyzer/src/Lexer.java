@@ -429,10 +429,10 @@ public class Lexer implements java_cup.runtime.Scanner {
         }
     }
 
-    public void writeToken(String content) throws IOException {
+    public void writeToken(int tokenNum) throws IOException {
         try {
             if(outputFile != null) {
-                outputFile.write(content);
+                outputFile.write("Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
                 outputFile.flush();
             }
         } catch (IOException e) {
@@ -874,7 +874,7 @@ public class Lexer implements java_cup.runtime.Scanner {
             zzDoEOF();
             switch (zzLexicalState) {
             case YYINITIAL: {
-              return symbol(sym.EOF);
+              return symbol(sym.EOF, yytext());
             }  // fall though
             case 295: break;
             default:
@@ -884,7 +884,7 @@ public class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { return symbol(sym.SYNTAX_ERROR);
+            { writeToken(sym.SYNTAX_ERROR); return symbol(sym.SYNTAX_ERROR, yytext());
             }
           // fall through
           case 57: break;
@@ -899,12 +899,12 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 59: break;
           case 4:
-            { return symbol(sym.COMENTARIO);
+            { writeToken(sym.COMENTARIO); return symbol(sym.COMENTARIO, yytext());
             }
           // fall through
           case 60: break;
           case 5:
-            { return symbol(sym.INT_LITERAL, Integer.parseInt(yytext()));
+            { writeToken(sym.INT_LITERAL); return symbol(sym.INT_LITERAL, Integer.parseInt(yytext()));
             }
           // fall through
           case 61: break;
@@ -914,7 +914,7 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 62: break;
           case 7:
-            { yybegin(YYINITIAL); return symbol(sym.STRING_LITERAL, string.toString());
+            { yybegin(YYINITIAL); writeToken(sym.STRING_LITERAL); return symbol(sym.STRING_LITERAL, string.toString());
             }
           // fall through
           case 63: break;
@@ -944,222 +944,222 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 68: break;
           case 13:
-            { return symbol(sym.IDENTIFICADOR, yytext());
+            { writeToken(sym.IDENTIFICADOR); return symbol(sym.IDENTIFICADOR, yytext());
             }
           // fall through
           case 69: break;
           case 14:
-            { return symbol(sym.IF);
+            { writeToken(sym.IF); return symbol(sym.IF, yytext());
             }
           // fall through
           case 70: break;
           case 15:
-            { return symbol(sym.ELSE);
+            { writeToken(sym.ELSE); return symbol(sym.ELSE, yytext());
             }
           // fall through
           case 71: break;
           case 16:
-            { return symbol(sym.IGUALDAD);
+            { writeToken(sym.IGUALDAD); return symbol(sym.IGUALDAD, yytext());
             }
           // fall through
           case 72: break;
           case 17:
-            { return symbol(sym.BREAK);
+            { writeToken(sym.BREAK); return symbol(sym.BREAK, yytext());
             }
           // fall through
           case 73: break;
           case 18:
-            { return symbol(sym.RETURN);
+            { writeToken(sym.RETURN); return symbol(sym.RETURN, yytext());
             }
           // fall through
           case 74: break;
           case 19:
-            { return symbol(sym.MODULO);
+            { writeToken(sym.MODULO); return symbol(sym.MODULO, yytext());
             }
           // fall through
           case 75: break;
           case 20:
-            { return symbol(sym.PRINT);
+            { writeToken(sym.PRINT); return symbol(sym.PRINT, yytext());
             }
           // fall through
           case 76: break;
           case 21:
-            { return symbol(sym.INCREMENTO);
+            { writeToken(sym.INCREMENTO); return symbol(sym.INCREMENTO, yytext());
             }
           // fall through
           case 77: break;
           case 22:
-            { return symbol(sym.DIVISION);
+            { writeToken(sym.DIVISION); return symbol(sym.DIVISION, yytext());
             }
           // fall through
           case 78: break;
           case 23:
-            { return symbol(sym.DOS_PUNTOS);
+            { writeToken(sym.DOS_PUNTOS); return symbol(sym.DOS_PUNTOS, yytext());
             }
           // fall through
           case 79: break;
           case 24:
-            { return symbol(sym.STRING);
+            { writeToken(sym.STRING); return symbol(sym.STRING, yytext());
             }
           // fall through
           case 80: break;
           case 25:
-            { return symbol(sym.CHAR);
+            { writeToken(sym.CHAR); return symbol(sym.CHAR, yytext());
             }
           // fall through
           case 81: break;
           case 26:
-            { return symbol(sym.FOR);
+            { writeToken(sym.FOR); return symbol(sym.FOR, yytext());
             }
           // fall through
           case 82: break;
           case 27:
-            { return symbol(sym.DISYUNCION);
+            { writeToken(sym.DISYUNCION); return symbol(sym.DISYUNCION, yytext());
             }
           // fall through
           case 83: break;
           case 28:
-            { return symbol(sym.DECREMENTO);
+            { writeToken(sym.DECREMENTO); return symbol(sym.DECREMENTO, yytext());
             }
           // fall through
           case 84: break;
           case 29:
-            { return symbol(sym.BOOL);
+            { writeToken(sym.BOOL); return symbol(sym.BOOL, yytext());
             }
           // fall through
           case 85: break;
           case 30:
-            { return symbol(sym.DEFAULT);
+            { writeToken(sym.DEFAULT); return symbol(sym.DEFAULT, yytext());
             }
           // fall through
           case 86: break;
           case 31:
-            { return symbol(sym.SWITCH);
+            { writeToken(sym.SWITCH); return symbol(sym.SWITCH, yytext());
             }
           // fall through
           case 87: break;
           case 32:
-            { return symbol(sym.ASIGNACION);
+            { writeToken(sym.ASIGNACION); return symbol(sym.ASIGNACION, yytext());
             }
           // fall through
           case 88: break;
           case 33:
-            { return symbol(sym.READ);
+            { writeToken(sym.READ); return symbol(sym.READ, yytext());
             }
           // fall through
           case 89: break;
           case 34:
-            { return symbol(sym.CONJUNCION);
+            { writeToken(sym.CONJUNCION); return symbol(sym.CONJUNCION, yytext());
             }
           // fall through
           case 90: break;
           case 35:
-            { return symbol(sym.MAYOR);
+            { writeToken(sym.MAYOR); return symbol(sym.MAYOR, yytext());
             }
           // fall through
           case 91: break;
           case 36:
-            { return symbol(sym.SUMA);
+            { writeToken(sym.SUMA); return symbol(sym.SUMA, yytext());
             }
           // fall through
           case 92: break;
           case 37:
-            { return symbol(sym.INTEGER);
+            { writeToken(sym.INTEGER); return symbol(sym.INTEGER, yytext());
             }
           // fall through
           case 93: break;
           case 38:
-            { return symbol(sym.MAYOR_IGUAL);
+            { writeToken(sym.MAYOR_IGUAL); return symbol(sym.MAYOR_IGUAL, yytext());
             }
           // fall through
           case 94: break;
           case 39:
-            { return symbol(sym.MAIN);
+            { writeToken(sym.MAIN); return symbol(sym.MAIN, yytext());
             }
           // fall through
           case 95: break;
           case 40:
-            { return symbol(sym.POTENCIA);
+            { writeToken(sym.POTENCIA); return symbol(sym.POTENCIA, yytext());
             }
           // fall through
           case 96: break;
           case 41:
-            { return symbol(sym.NEGACION);
+            { writeToken(sym.NEGACION); return symbol(sym.NEGACION, yytext());
             }
           // fall through
           case 97: break;
           case 42:
-            { return symbol(sym.FLOAT);
+            { writeToken(sym.FLOAT); return symbol(sym.FLOAT, yytext());
             }
           // fall through
           case 98: break;
           case 43:
-            { return symbol(sym.WHILE);
+            { writeToken(sym.WHILE); return symbol(sym.WHILE, yytext());
             }
           // fall through
           case 99: break;
           case 44:
-            { return symbol(sym.CASE);
+            { writeToken(sym.CASE); return symbol(sym.CASE, yytext());
             }
           // fall through
           case 100: break;
           case 45:
-            { return symbol(sym.DIFERENTE);
+            { writeToken(sym.DIFERENTE); return symbol(sym.DIFERENTE, yytext());
             }
           // fall through
           case 101: break;
           case 46:
-            { return symbol(sym.MENOR);
+            { writeToken(sym.MENOR); return symbol(sym.MENOR, yytext());
             }
           // fall through
           case 102: break;
           case 47:
-            { return symbol(sym.MENOR_IGUAL);
+            { writeToken(sym.MENOR_IGUAL); return symbol(sym.MENOR_IGUAL, yytext());
             }
           // fall through
           case 103: break;
           case 48:
-            { return symbol(sym.END_EXPR);
+            { writeToken(sym.END_EXPR); return symbol(sym.END_EXPR, yytext());
             }
           // fall through
           case 104: break;
           case 49:
-            { return symbol(sym.APERTURA_DE_BLOQUE);
+            { writeToken(sym.APERTURA_DE_BLOQUE); return symbol(sym.APERTURA_DE_BLOQUE, yytext());
             }
           // fall through
           case 105: break;
           case 50:
-            { return symbol(sym.PARENTESIS_APERTURA);
+            { writeToken(sym.PARENTESIS_APERTURA); return symbol(sym.PARENTESIS_APERTURA, yytext());
             }
           // fall through
           case 106: break;
           case 51:
-            { return symbol(sym.MULTIPLICACION);
+            { writeToken(sym.MULTIPLICACION); return symbol(sym.MULTIPLICACION, yytext());
             }
           // fall through
           case 107: break;
           case 52:
-            { return symbol(sym.CORCHETE_APERTURA);
+            { writeToken(sym.CORCHETE_APERTURA); return symbol(sym.CORCHETE_APERTURA, yytext());
             }
           // fall through
           case 108: break;
           case 53:
-            { return symbol(sym.RESTA);
+            { writeToken(sym.RESTA); return symbol(sym.RESTA, yytext());
             }
           // fall through
           case 109: break;
           case 54:
-            { return symbol(sym.CIERRE_DE_BLOQUE);
+            { writeToken(sym.CIERRE_DE_BLOQUE); return symbol(sym.CIERRE_DE_BLOQUE, yytext());
             }
           // fall through
           case 110: break;
           case 55:
-            { return symbol(sym.PARENTESIS_CIERRE);
+            { writeToken(sym.PARENTESIS_CIERRE); return symbol(sym.PARENTESIS_CIERRE, yytext());
             }
           // fall through
           case 111: break;
           case 56:
-            { return symbol(sym.CORCHETE_CIERRE);
+            { writeToken(sym.CORCHETE_CIERRE); return symbol(sym.CORCHETE_CIERRE, yytext());
             }
           // fall through
           case 112: break;
