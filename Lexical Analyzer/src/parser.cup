@@ -18,7 +18,7 @@ scan with {: return scanner.next_token(); :};
 //terminales (tokens que va a retornar el scanner)
 
 //tipos de datos
-terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, STRING_LITERAL, BOOL_LITERAL, FLOAT_LITERAL;
+terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, STRING_LITERAL, BOOL_LITERAL, FLOAT_LITERAL, CHAR_LITERAL;
 
 
 //bloques de código

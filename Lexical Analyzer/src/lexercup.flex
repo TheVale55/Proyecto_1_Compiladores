@@ -78,6 +78,8 @@ BoolLiteral = "true" | "false"
 
 FloatLiteral = "0\.0" | -?{digito}+"\."{digito}*{digitoNoCero}
 
+CharLiteral = '\'' (\\.|[^\'\\]) '\''
+
 
 %state STRING
 
@@ -161,6 +163,8 @@ FloatLiteral = "0\.0" | -?{digito}+"\."{digito}*{digitoNoCero}
 
 
 <YYINITIAL> {FloatLiteral} { writeToken(sym.FLOAT_LITERAL); return symbol(sym.FLOAT_LITERAL, Float.parseFloat(yytext())); }
+
+<YYINITIAL> {CharLiteral} { writeToken(sym.CHAR_LITERAL); return symbol(sym.CHAR_LITERAL, yytext()); }
 
 /* String literals */
 <YYINITIAL> \" { string.setLength(0); yybegin(STRING); }

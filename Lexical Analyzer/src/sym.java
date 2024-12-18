@@ -7,57 +7,58 @@
 public class sym {
   /* terminals */
   public static final int STRING_LITERAL = 8;
-  public static final int PARENTESIS_CIERRE = 17;
+  public static final int PARENTESIS_CIERRE = 18;
   public static final int CHAR = 5;
-  public static final int CASE = 40;
-  public static final int DIFERENTE = 31;
-  public static final int RESTA = 19;
+  public static final int CHAR_LITERAL = 11;
+  public static final int CASE = 41;
+  public static final int DIFERENTE = 32;
+  public static final int RESTA = 20;
   public static final int INTEGER = 2;
-  public static final int DOS_PUNTOS = 44;
-  public static final int FOR = 38;
-  public static final int IDENTIFICADOR = 47;
-  public static final int CORCHETE_CIERRE = 14;
-  public static final int CIERRE_DE_BLOQUE = 12;
-  public static final int IGUALDAD = 30;
+  public static final int DOS_PUNTOS = 45;
+  public static final int FOR = 39;
+  public static final int IDENTIFICADOR = 48;
+  public static final int CORCHETE_CIERRE = 15;
+  public static final int CIERRE_DE_BLOQUE = 13;
+  public static final int IGUALDAD = 31;
   public static final int BOOL = 4;
-  public static final int INCREMENTO = 24;
-  public static final int SUMA = 18;
-  public static final int MAIN = 51;
-  public static final int IF = 35;
+  public static final int INCREMENTO = 25;
+  public static final int SUMA = 19;
+  public static final int MAIN = 52;
+  public static final int IF = 36;
   public static final int EOF = 0;
-  public static final int RETURN = 43;
-  public static final int CORCHETE_APERTURA = 13;
-  public static final int DECREMENTO = 25;
+  public static final int RETURN = 44;
+  public static final int CORCHETE_APERTURA = 14;
+  public static final int DECREMENTO = 26;
   public static final int error = 1;
-  public static final int COMENTARIO = 49;
-  public static final int MODULO = 21;
-  public static final int NEGACION = 34;
-  public static final int APERTURA_DE_BLOQUE = 11;
-  public static final int MENOR = 26;
-  public static final int BREAK = 42;
-  public static final int ERROR = 48;
-  public static final int SWITCH = 39;
-  public static final int ASIGNACION = 15;
-  public static final int MAYOR = 28;
-  public static final int POTENCIA = 22;
-  public static final int ELSE = 36;
-  public static final int READ = 46;
-  public static final int WHILE = 37;
-  public static final int DEFAULT = 41;
-  public static final int MAYOR_IGUAL = 29;
+  public static final int COMENTARIO = 50;
+  public static final int NEGACION = 35;
+  public static final int MODULO = 22;
+  public static final int APERTURA_DE_BLOQUE = 12;
+  public static final int MENOR = 27;
+  public static final int BREAK = 43;
+  public static final int ERROR = 49;
+  public static final int SWITCH = 40;
+  public static final int ASIGNACION = 16;
+  public static final int MAYOR = 29;
+  public static final int POTENCIA = 23;
+  public static final int ELSE = 37;
+  public static final int READ = 47;
+  public static final int WHILE = 38;
+  public static final int DEFAULT = 42;
+  public static final int MAYOR_IGUAL = 30;
   public static final int FLOAT = 3;
-  public static final int CONJUNCION = 32;
-  public static final int END_EXPR = 50;
+  public static final int CONJUNCION = 33;
+  public static final int END_EXPR = 51;
   public static final int STRING = 6;
-  public static final int PARENTESIS_APERTURA = 16;
-  public static final int DISYUNCION = 33;
-  public static final int MENOR_IGUAL = 27;
+  public static final int PARENTESIS_APERTURA = 17;
+  public static final int DISYUNCION = 34;
+  public static final int MENOR_IGUAL = 28;
   public static final int FLOAT_LITERAL = 10;
-  public static final int DIVISION = 23;
-  public static final int PRINT = 45;
+  public static final int DIVISION = 24;
+  public static final int PRINT = 46;
   public static final int BOOL_LITERAL = 9;
   public static final int INT_LITERAL = 7;
-  public static final int MULTIPLICACION = 20;
+  public static final int MULTIPLICACION = 21;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -70,6 +71,7 @@ public class sym {
   "STRING_LITERAL",
   "BOOL_LITERAL",
   "FLOAT_LITERAL",
+  "CHAR_LITERAL",
   "APERTURA_DE_BLOQUE",
   "CIERRE_DE_BLOQUE",
   "CORCHETE_APERTURA",
