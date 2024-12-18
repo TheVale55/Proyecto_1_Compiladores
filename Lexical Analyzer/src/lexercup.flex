@@ -34,13 +34,12 @@ import java.io.IOException;
     }
 
     public void writeToken(int tokenNum) throws IOException {
-        try {
-            if(outputFile != null) {
-                outputFile.write("Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
-                outputFile.flush();
-            }
-        } catch (IOException e) {
-            System.err.println("Error while writing in outputFile: " + e.getMessage());
+        if(outputFile != null) {
+            String text = "Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn;
+            if(tokenNum == sym.ERROR) text += " (Error léxico)";
+            text+='\n';
+            outputFile.write(text);
+            outputFile.flush();
         }
     }
 
@@ -74,6 +73,11 @@ Identifier = _[a-zA-Z][a-zA-Z0-9]*_
 digito = [0-9]
 digitoNoCero = [1-9]
 DecIntegerLiteral = 0 | -?{digitoNoCero}{digito}*
+
+BoolLiteral = "true" | "false"
+
+FloatLiteral = "0\.0" | -?{digito}+"\."{digito}*{digitoNoCero}
+
 
 %state STRING
 
@@ -152,6 +156,12 @@ DecIntegerLiteral = 0 | -?{digitoNoCero}{digito}*
 /* Literals */
 <YYINITIAL> {DecIntegerLiteral} { writeToken(sym.INT_LITERAL); return symbol(sym.INT_LITERAL, Integer.parseInt(yytext())); }
 
+
+<YYINITIAL> {BoolLiteral} { writeToken(sym.BOOL_LITERAL); return symbol(sym.BOOL_LITERAL, yytext()); }
+
+
+<YYINITIAL> {FloatLiteral} { writeToken(sym.FLOAT_LITERAL); return symbol(sym.FLOAT_LITERAL, Float.parseFloat(yytext())); }
+
 /* String literals */
 <YYINITIAL> \" { string.setLength(0); yybegin(STRING); }
 
@@ -179,7 +189,7 @@ DecIntegerLiteral = 0 | -?{digitoNoCero}{digito}*
 
 <YYINITIAL> <<EOF>> { return symbol(sym.EOF, yytext()); }
 
-[^] { writeToken(sym.SYNTAX_ERROR); return symbol(sym.SYNTAX_ERROR, yytext()); } /* Antes estaba con . */
+[^] { writeToken(sym.ERROR); return symbol(sym.ERROR, yytext()); } /* Antes estaba con . */
  
 
 /* ejecutar desde Lexical Analyzer */
