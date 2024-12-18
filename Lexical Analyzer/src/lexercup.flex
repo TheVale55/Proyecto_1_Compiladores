@@ -78,7 +78,8 @@ BoolLiteral = "true" | "false"
 
 FloatLiteral = "0\.0" | -?{digito}+"\."{digito}*{digitoNoCero}
 
-CharLiteral = '\'' (\\.|[^\'\\]) '\''
+CharLiteral = '((\\.)|[^\\'\r\n])'
+
 
 
 %state STRING

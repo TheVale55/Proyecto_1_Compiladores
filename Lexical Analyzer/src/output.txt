@@ -1,233 +1,223 @@
-Token: 49, Valor: \_ esto es un comentario inicial _/, l√≠nea: 0, columna: 1
-Token: 3, Valor: bromista, l√≠nea: 2, columna: 0
-Token: 47, Valor: _func1_, l√≠nea: 2, columna: 9
-Token: 16, Valor: abreregalo, l√≠nea: 2, columna: 17
-Token: 5, Valor: cupido, l√≠nea: 2, columna: 28
-Token: 47, Valor: _x22_, l√≠nea: 2, columna: 35
-Token: 48, Valor: ,, l√≠nea: 2, columna: 41 (Error l√©xico)
-Token: 5, Valor: cupido, l√≠nea: 2, columna: 43
-Token: 47, Valor: _x22_, l√≠nea: 2, columna: 50
-Token: 17, Valor: cierraregalo, l√≠nea: 2, columna: 56
-Token: 11, Valor: abrecuento, l√≠nea: 2, columna: 70
-Token: 5, Valor: cupido, l√≠nea: 3, columna: 5
-Token: 47, Valor: _miChar_, l√≠nea: 3, columna: 12
-Token: 15, Valor: entrega, l√≠nea: 3, columna: 21
-Token: 48, Valor: ', l√≠nea: 3, columna: 29 (Error l√©xico)
-Token: 48, Valor: !, l√≠nea: 3, columna: 30 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 3, columna: 31 (Error l√©xico)
-Token: 50, Valor: finregalo, l√≠nea: 3, columna: 33
-Token: 6, Valor: cometa, l√≠nea: 4, columna: 5
-Token: 47, Valor: _str1_, l√≠nea: 4, columna: 12
-Token: 15, Valor: entrega, l√≠nea: 4, columna: 19
-Token: 8, Valor: ", l√≠nea: 4, columna: 65
-Token: 50, Valor: finregalo, l√≠nea: 4, columna: 67
-Token: 3, Valor: bromista, l√≠nea: 5, columna: 5
-Token: 47, Valor: _fl1_, l√≠nea: 5, columna: 14
-Token: 15, Valor: entrega, l√≠nea: 5, columna: 20
-Token: 10, Valor: 56.6, l√≠nea: 5, columna: 28
-Token: 50, Valor: finregalo, l√≠nea: 5, columna: 33
-Token: 5, Valor: cupido, l√≠nea: 6, columna: 5
-Token: 47, Valor: _arr_, l√≠nea: 6, columna: 12
-Token: 13, Valor: abreempaque, l√≠nea: 6, columna: 18
-Token: 47, Valor: _lit_, l√≠nea: 6, columna: 30
-Token: 14, Valor: cierraempaque, l√≠nea: 6, columna: 36
-Token: 15, Valor: entrega, l√≠nea: 6, columna: 51
-Token: 11, Valor: abrecuento, l√≠nea: 6, columna: 61
-Token: 48, Valor: ', l√≠nea: 6, columna: 72 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 6, columna: 73 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 6, columna: 74 (Error l√©xico)
-Token: 48, Valor: ,, l√≠nea: 6, columna: 75 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 6, columna: 76 (Error l√©xico)
-Token: 48, Valor: d, l√≠nea: 6, columna: 77 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 6, columna: 78 (Error l√©xico)
-Token: 12, Valor: cierracuento, l√≠nea: 7, columna: 0
-Token: 50, Valor: finregalo, l√≠nea: 7, columna: 14
-Token: 47, Valor: _arr_, l√≠nea: 8, columna: 4
-Token: 13, Valor: abreempaque, l√≠nea: 8, columna: 10
-Token: 47, Valor: _lit_, l√≠nea: 8, columna: 22
-Token: 14, Valor: cierraempaque, l√≠nea: 8, columna: 28
-Token: 15, Valor: entrega, l√≠nea: 8, columna: 43
-Token: 48, Valor: ', l√≠nea: 8, columna: 52 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 8, columna: 53 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 8, columna: 54 (Error l√©xico)
-Token: 50, Valor: finregalo, l√≠nea: 8, columna: 56
-Token: 4, Valor: trueno, l√≠nea: 9, columna: 5
-Token: 47, Valor: _mibool_, l√≠nea: 9, columna: 12
-Token: 15, Valor: entrega, l√≠nea: 9, columna: 22
-Token: 9, Valor: true, l√≠nea: 9, columna: 31
-Token: 50, Valor: finregalo, l√≠nea: 9, columna: 36
-Token: 47, Valor: _mibool_, l√≠nea: 11, columna: 4
-Token: 15, Valor: entrega, l√≠nea: 11, columna: 14
-Token: 16, Valor: abreregalo, l√≠nea: 11, columna: 24
-Token: 10, Valor: 3.7, l√≠nea: 11, columna: 36
-Token: 20, Valor: nochebuena, l√≠nea: 11, columna: 40
-Token: 47, Valor: _fl1_, l√≠nea: 11, columna: 51
-Token: 24, Valor: quien, l√≠nea: 12, columna: 0
-Token: 17, Valor: cierraregalo, l√≠nea: 12, columna: 7
-Token: 26, Valor: snowball, l√≠nea: 12, columna: 21
-Token: 7, Valor: 56, l√≠nea: 12, columna: 30
-Token: 32, Valor: melchor, l√≠nea: 12, columna: 33
-Token: 9, Valor: true, l√≠nea: 12, columna: 41
-Token: 50, Valor: finregalo, l√≠nea: 12, columna: 48
-Token: 38, Valor: duende, l√≠nea: 14, columna: 4
-Token: 16, Valor: abreregalo, l√≠nea: 14, columna: 12
-Token: 47, Valor: _i_, l√≠nea: 14, columna: 24
-Token: 15, Valor: entrega, l√≠nea: 14, columna: 29
-Token: 7, Valor: 10, l√≠nea: 14, columna: 38
-Token: 48, Valor: ,, l√≠nea: 14, columna: 41 (Error l√©xico)
-Token: 47, Valor: _i_, l√≠nea: 14, columna: 43
-Token: 26, Valor: snowball, l√≠nea: 14, columna: 47
-Token: 7, Valor: 30, l√≠nea: 14, columna: 56
-Token: 20, Valor: nochebuena, l√≠nea: 14, columna: 59
-Token: 7, Valor: 2, l√≠nea: 14, columna: 70
-Token: 48, Valor: ,, l√≠nea: 14, columna: 72 (Error l√©xico)
-Token: 47, Valor: _i_, l√≠nea: 14, columna: 74
-Token: 24, Valor: quien, l√≠nea: 15, columna: 0
-Token: 17, Valor: cierraregalo, l√≠nea: 15, columna: 7
-Token: 11, Valor: abrecuento, l√≠nea: 16, columna: 5
-Token: 37, Valor: envuelve, l√≠nea: 17, columna: 8
-Token: 16, Valor: abreregalo, l√≠nea: 17, columna: 17
-Token: 47, Valor: _var2_, l√≠nea: 17, columna: 28
-Token: 28, Valor: minstix, l√≠nea: 17, columna: 35
-Token: 10, Valor: 12.2, l√≠nea: 17, columna: 43
-Token: 33, Valor: gaspar, l√≠nea: 17, columna: 48
-Token: 16, Valor: abreregalo, l√≠nea: 17, columna: 56
-Token: 7, Valor: 34, l√≠nea: 17, columna: 67
-Token: 18, Valor: navidad, l√≠nea: 17, columna: 70
-Token: 7, Valor: 33, l√≠nea: 17, columna: 78
-Token: 17, Valor: cierraregalo, l√≠nea: 18, columna: 0
-Token: 28, Valor: minstix, l√≠nea: 18, columna: 13
-Token: 7, Valor: 12, l√≠nea: 18, columna: 21
-Token: 17, Valor: cierraregalo, l√≠nea: 18, columna: 24
-Token: 11, Valor: abrecuento, l√≠nea: 19, columna: 9
-Token: 47, Valor: _var_, l√≠nea: 20, columna: 12
-Token: 15, Valor: entrega, l√≠nea: 20, columna: 19
-Token: 47, Valor: _var_, l√≠nea: 20, columna: 28
-Token: 19, Valor: intercambio, l√≠nea: 20, columna: 34
-Token: 7, Valor: 1, l√≠nea: 20, columna: 46
-Token: 50, Valor: finregalo, l√≠nea: 20, columna: 48
-Token: 48, Valor: @, l√≠nea: 20, columna: 58 (Error l√©xico)
-Token: 48, Valor: s, l√≠nea: 20, columna: 59 (Error l√©xico)
-Token: 48, Valor: e, l√≠nea: 20, columna: 60 (Error l√©xico)
-Token: 48, Valor: m, l√≠nea: 20, columna: 61 (Error l√©xico)
-Token: 48, Valor: a, l√≠nea: 20, columna: 62 (Error l√©xico)
-Token: 48, Valor: n, l√≠nea: 20, columna: 63 (Error l√©xico)
-Token: 48, Valor: t, l√≠nea: 20, columna: 64 (Error l√©xico)
-Token: 48, Valor: i, l√≠nea: 20, columna: 65 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 20, columna: 66 (Error l√©xico)
-Token: 48, Valor: o, l√≠nea: 20, columna: 67 (Error l√©xico)
-Token: 43, Valor: envia, l√≠nea: 21, columna: 12
-Token: 50, Valor: finregalo, l√≠nea: 21, columna: 18
-Token: 48, Valor: @, l√≠nea: 21, columna: 28 (Error l√©xico)
-Token: 48, Valor: s, l√≠nea: 21, columna: 29 (Error l√©xico)
-Token: 48, Valor: i, l√≠nea: 21, columna: 30 (Error l√©xico)
-Token: 48, Valor: n, l√≠nea: 21, columna: 31 (Error l√©xico)
-Token: 48, Valor: t, l√≠nea: 21, columna: 32 (Error l√©xico)
-Token: 48, Valor: a, l√≠nea: 21, columna: 33 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 21, columna: 34 (Error l√©xico)
-Token: 48, Valor: t, l√≠nea: 21, columna: 35 (Error l√©xico)
-Token: 48, Valor: i, l√≠nea: 21, columna: 36 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 21, columna: 37 (Error l√©xico)
-Token: 48, Valor: o, l√≠nea: 21, columna: 38 (Error l√©xico)
-Token: 12, Valor: cierracuento, l√≠nea: 22, columna: 9
-Token: 35, Valor: elfo, l√≠nea: 24, columna: 8
-Token: 16, Valor: abreregalo, l√≠nea: 24, columna: 14
-Token: 47, Valor: _var_, l√≠nea: 24, columna: 25
-Token: 30, Valor: mary, l√≠nea: 24, columna: 31
-Token: 7, Valor: 0, l√≠nea: 24, columna: 36
-Token: 17, Valor: cierraregalo, l√≠nea: 24, columna: 38
-Token: 11, Valor: abrecuento, l√≠nea: 25, columna: 9
-Token: 43, Valor: envia, l√≠nea: 26, columna: 12
-Token: 50, Valor: finregalo, l√≠nea: 26, columna: 18
-Token: 12, Valor: cierracuento, l√≠nea: 27, columna: 9
-Token: 36, Valor: hada, l√≠nea: 28, columna: 8
-Token: 11, Valor: abrecuento, l√≠nea: 29, columna: 9
-Token: 43, Valor: envia, l√≠nea: 30, columna: 12
-Token: 50, Valor: finregalo, l√≠nea: 30, columna: 18
-Token: 12, Valor: cierracuento, l√≠nea: 31, columna: 9
-Token: 39, Valor: varios, l√≠nea: 33, columna: 8
-Token: 16, Valor: abreregalo, l√≠nea: 33, columna: 15
-Token: 47, Valor: _ch_, l√≠nea: 33, columna: 26
-Token: 17, Valor: cierraregalo, l√≠nea: 33, columna: 31
-Token: 11, Valor: abrecuento, l√≠nea: 33, columna: 46
-Token: 40, Valor: historia, l√≠nea: 34, columna: 12
-Token: 7, Valor: 1, l√≠nea: 34, columna: 21
-Token: 44, Valor: sigue, l√≠nea: 34, columna: 23
-Token: 47, Valor: _id_, l√≠nea: 34, columna: 29
-Token: 24, Valor: quien, l√≠nea: 34, columna: 34
-Token: 50, Valor: finregalo, l√≠nea: 34, columna: 41
-Token: 40, Valor: historia, l√≠nea: 35, columna: 12
-Token: 7, Valor: 2, l√≠nea: 35, columna: 21
-Token: 44, Valor: sigue, l√≠nea: 35, columna: 23
-Token: 47, Valor: _id_, l√≠nea: 35, columna: 29
-Token: 25, Valor: grinch, l√≠nea: 35, columna: 34
-Token: 50, Valor: finregalo, l√≠nea: 35, columna: 41
-Token: 43, Valor: envia, l√≠nea: 36, columna: 12
-Token: 50, Valor: finregalo, l√≠nea: 36, columna: 18
-Token: 41, Valor: ultimo, l√≠nea: 37, columna: 12
-Token: 44, Valor: sigue, l√≠nea: 37, columna: 19
-Token: 47, Valor: _id_, l√≠nea: 37, columna: 25
-Token: 15, Valor: entrega, l√≠nea: 37, columna: 30
-Token: 47, Valor: _id_, l√≠nea: 37, columna: 38
-Token: 50, Valor: finregalo, l√≠nea: 37, columna: 43
-Token: 12, Valor: cierracuento, l√≠nea: 38, columna: 13
-Token: 12, Valor: cierracuento, l√≠nea: 40, columna: 5
-Token: 43, Valor: envia, l√≠nea: 41, columna: 4
-Token: 7, Valor: 1, l√≠nea: 41, columna: 10
-Token: 50, Valor: finregalo, l√≠nea: 41, columna: 12
-Token: 48, Valor: @, l√≠nea: 41, columna: 22 (Error l√©xico)
-Token: 48, Valor: h, l√≠nea: 41, columna: 23 (Error l√©xico)
-Token: 48, Valor: o, l√≠nea: 41, columna: 24 (Error l√©xico)
-Token: 48, Valor: l, l√≠nea: 41, columna: 25 (Error l√©xico)
-Token: 48, Valor: a, l√≠nea: 41, columna: 26 (Error l√©xico)
-Token: 12, Valor: cierracuento, l√≠nea: 42, columna: 1
-Token: 2, Valor: rodolfo, l√≠nea: 44, columna: 0
-Token: 51, Valor: _verano_, l√≠nea: 44, columna: 8
-Token: 16, Valor: abreregalo, l√≠nea: 44, columna: 18
-Token: 17, Valor: cierraregalo, l√≠nea: 44, columna: 31
-Token: 11, Valor: abrecuento, l√≠nea: 44, columna: 46
-Token: 49, Valor: \_ 
+Token: 50, Valor: \_ esto es un comentario inicial _/, lÌnea: 0, columna: 1
+Token: 3, Valor: bromista, lÌnea: 2, columna: 0
+Token: 48, Valor: _func1_, lÌnea: 2, columna: 9
+Token: 17, Valor: abreregalo, lÌnea: 2, columna: 17
+Token: 5, Valor: cupido, lÌnea: 2, columna: 28
+Token: 48, Valor: _x22_, lÌnea: 2, columna: 35
+Token: 49, Valor: ,, lÌnea: 2, columna: 41 (Error lÈxico)
+Token: 5, Valor: cupido, lÌnea: 2, columna: 43
+Token: 48, Valor: _x22_, lÌnea: 2, columna: 50
+Token: 18, Valor: cierraregalo, lÌnea: 2, columna: 56
+Token: 12, Valor: abrecuento, lÌnea: 2, columna: 70
+Token: 5, Valor: cupido, lÌnea: 3, columna: 5
+Token: 48, Valor: _miChar_, lÌnea: 3, columna: 12
+Token: 16, Valor: entrega, lÌnea: 3, columna: 21
+Token: 11, Valor: '!', lÌnea: 3, columna: 29
+Token: 51, Valor: finregalo, lÌnea: 3, columna: 33
+Token: 6, Valor: cometa, lÌnea: 4, columna: 5
+Token: 48, Valor: _str1_, lÌnea: 4, columna: 12
+Token: 16, Valor: entrega, lÌnea: 4, columna: 19
+Token: 8, Valor: ", lÌnea: 4, columna: 65
+Token: 51, Valor: finregalo, lÌnea: 4, columna: 67
+Token: 3, Valor: bromista, lÌnea: 5, columna: 5
+Token: 48, Valor: _fl1_, lÌnea: 5, columna: 14
+Token: 16, Valor: entrega, lÌnea: 5, columna: 20
+Token: 10, Valor: 56.6, lÌnea: 5, columna: 28
+Token: 51, Valor: finregalo, lÌnea: 5, columna: 33
+Token: 5, Valor: cupido, lÌnea: 6, columna: 5
+Token: 48, Valor: _arr_, lÌnea: 6, columna: 12
+Token: 14, Valor: abreempaque, lÌnea: 6, columna: 18
+Token: 48, Valor: _lit_, lÌnea: 6, columna: 30
+Token: 15, Valor: cierraempaque, lÌnea: 6, columna: 36
+Token: 16, Valor: entrega, lÌnea: 6, columna: 51
+Token: 12, Valor: abrecuento, lÌnea: 6, columna: 61
+Token: 11, Valor: 'c', lÌnea: 6, columna: 72
+Token: 49, Valor: ,, lÌnea: 6, columna: 75 (Error lÈxico)
+Token: 11, Valor: 'd', lÌnea: 6, columna: 76
+Token: 13, Valor: cierracuento, lÌnea: 7, columna: 0
+Token: 51, Valor: finregalo, lÌnea: 7, columna: 14
+Token: 48, Valor: _arr_, lÌnea: 8, columna: 4
+Token: 14, Valor: abreempaque, lÌnea: 8, columna: 10
+Token: 48, Valor: _lit_, lÌnea: 8, columna: 22
+Token: 15, Valor: cierraempaque, lÌnea: 8, columna: 28
+Token: 16, Valor: entrega, lÌnea: 8, columna: 43
+Token: 11, Valor: 'c', lÌnea: 8, columna: 52
+Token: 51, Valor: finregalo, lÌnea: 8, columna: 56
+Token: 4, Valor: trueno, lÌnea: 9, columna: 5
+Token: 48, Valor: _mibool_, lÌnea: 9, columna: 12
+Token: 16, Valor: entrega, lÌnea: 9, columna: 22
+Token: 9, Valor: true, lÌnea: 9, columna: 31
+Token: 51, Valor: finregalo, lÌnea: 9, columna: 36
+Token: 48, Valor: _mibool_, lÌnea: 11, columna: 4
+Token: 16, Valor: entrega, lÌnea: 11, columna: 14
+Token: 17, Valor: abreregalo, lÌnea: 11, columna: 24
+Token: 10, Valor: 3.7, lÌnea: 11, columna: 36
+Token: 21, Valor: nochebuena, lÌnea: 11, columna: 40
+Token: 48, Valor: _fl1_, lÌnea: 11, columna: 51
+Token: 25, Valor: quien, lÌnea: 12, columna: 0
+Token: 18, Valor: cierraregalo, lÌnea: 12, columna: 7
+Token: 27, Valor: snowball, lÌnea: 12, columna: 21
+Token: 7, Valor: 56, lÌnea: 12, columna: 30
+Token: 33, Valor: melchor, lÌnea: 12, columna: 33
+Token: 9, Valor: true, lÌnea: 12, columna: 41
+Token: 51, Valor: finregalo, lÌnea: 12, columna: 48
+Token: 39, Valor: duende, lÌnea: 14, columna: 4
+Token: 17, Valor: abreregalo, lÌnea: 14, columna: 12
+Token: 48, Valor: _i_, lÌnea: 14, columna: 24
+Token: 16, Valor: entrega, lÌnea: 14, columna: 29
+Token: 7, Valor: 10, lÌnea: 14, columna: 38
+Token: 49, Valor: ,, lÌnea: 14, columna: 41 (Error lÈxico)
+Token: 48, Valor: _i_, lÌnea: 14, columna: 43
+Token: 27, Valor: snowball, lÌnea: 14, columna: 47
+Token: 7, Valor: 30, lÌnea: 14, columna: 56
+Token: 21, Valor: nochebuena, lÌnea: 14, columna: 59
+Token: 7, Valor: 2, lÌnea: 14, columna: 70
+Token: 49, Valor: ,, lÌnea: 14, columna: 72 (Error lÈxico)
+Token: 48, Valor: _i_, lÌnea: 14, columna: 74
+Token: 25, Valor: quien, lÌnea: 15, columna: 0
+Token: 18, Valor: cierraregalo, lÌnea: 15, columna: 7
+Token: 12, Valor: abrecuento, lÌnea: 16, columna: 5
+Token: 38, Valor: envuelve, lÌnea: 17, columna: 8
+Token: 17, Valor: abreregalo, lÌnea: 17, columna: 17
+Token: 48, Valor: _var2_, lÌnea: 17, columna: 28
+Token: 29, Valor: minstix, lÌnea: 17, columna: 35
+Token: 10, Valor: 12.2, lÌnea: 17, columna: 43
+Token: 34, Valor: gaspar, lÌnea: 17, columna: 48
+Token: 17, Valor: abreregalo, lÌnea: 17, columna: 56
+Token: 7, Valor: 34, lÌnea: 17, columna: 67
+Token: 19, Valor: navidad, lÌnea: 17, columna: 70
+Token: 7, Valor: 33, lÌnea: 17, columna: 78
+Token: 18, Valor: cierraregalo, lÌnea: 18, columna: 0
+Token: 29, Valor: minstix, lÌnea: 18, columna: 13
+Token: 7, Valor: 12, lÌnea: 18, columna: 21
+Token: 18, Valor: cierraregalo, lÌnea: 18, columna: 24
+Token: 12, Valor: abrecuento, lÌnea: 19, columna: 9
+Token: 48, Valor: _var_, lÌnea: 20, columna: 12
+Token: 16, Valor: entrega, lÌnea: 20, columna: 19
+Token: 48, Valor: _var_, lÌnea: 20, columna: 28
+Token: 20, Valor: intercambio, lÌnea: 20, columna: 34
+Token: 7, Valor: 1, lÌnea: 20, columna: 46
+Token: 51, Valor: finregalo, lÌnea: 20, columna: 48
+Token: 49, Valor: @, lÌnea: 20, columna: 58 (Error lÈxico)
+Token: 49, Valor: s, lÌnea: 20, columna: 59 (Error lÈxico)
+Token: 49, Valor: e, lÌnea: 20, columna: 60 (Error lÈxico)
+Token: 49, Valor: m, lÌnea: 20, columna: 61 (Error lÈxico)
+Token: 49, Valor: a, lÌnea: 20, columna: 62 (Error lÈxico)
+Token: 49, Valor: n, lÌnea: 20, columna: 63 (Error lÈxico)
+Token: 49, Valor: t, lÌnea: 20, columna: 64 (Error lÈxico)
+Token: 49, Valor: i, lÌnea: 20, columna: 65 (Error lÈxico)
+Token: 49, Valor: c, lÌnea: 20, columna: 66 (Error lÈxico)
+Token: 49, Valor: o, lÌnea: 20, columna: 67 (Error lÈxico)
+Token: 44, Valor: envia, lÌnea: 21, columna: 12
+Token: 51, Valor: finregalo, lÌnea: 21, columna: 18
+Token: 49, Valor: @, lÌnea: 21, columna: 28 (Error lÈxico)
+Token: 49, Valor: s, lÌnea: 21, columna: 29 (Error lÈxico)
+Token: 49, Valor: i, lÌnea: 21, columna: 30 (Error lÈxico)
+Token: 49, Valor: n, lÌnea: 21, columna: 31 (Error lÈxico)
+Token: 49, Valor: t, lÌnea: 21, columna: 32 (Error lÈxico)
+Token: 49, Valor: a, lÌnea: 21, columna: 33 (Error lÈxico)
+Token: 49, Valor: c, lÌnea: 21, columna: 34 (Error lÈxico)
+Token: 49, Valor: t, lÌnea: 21, columna: 35 (Error lÈxico)
+Token: 49, Valor: i, lÌnea: 21, columna: 36 (Error lÈxico)
+Token: 49, Valor: c, lÌnea: 21, columna: 37 (Error lÈxico)
+Token: 49, Valor: o, lÌnea: 21, columna: 38 (Error lÈxico)
+Token: 13, Valor: cierracuento, lÌnea: 22, columna: 9
+Token: 36, Valor: elfo, lÌnea: 24, columna: 8
+Token: 17, Valor: abreregalo, lÌnea: 24, columna: 14
+Token: 48, Valor: _var_, lÌnea: 24, columna: 25
+Token: 31, Valor: mary, lÌnea: 24, columna: 31
+Token: 7, Valor: 0, lÌnea: 24, columna: 36
+Token: 18, Valor: cierraregalo, lÌnea: 24, columna: 38
+Token: 12, Valor: abrecuento, lÌnea: 25, columna: 9
+Token: 44, Valor: envia, lÌnea: 26, columna: 12
+Token: 51, Valor: finregalo, lÌnea: 26, columna: 18
+Token: 13, Valor: cierracuento, lÌnea: 27, columna: 9
+Token: 37, Valor: hada, lÌnea: 28, columna: 8
+Token: 12, Valor: abrecuento, lÌnea: 29, columna: 9
+Token: 44, Valor: envia, lÌnea: 30, columna: 12
+Token: 51, Valor: finregalo, lÌnea: 30, columna: 18
+Token: 13, Valor: cierracuento, lÌnea: 31, columna: 9
+Token: 40, Valor: varios, lÌnea: 33, columna: 8
+Token: 17, Valor: abreregalo, lÌnea: 33, columna: 15
+Token: 48, Valor: _ch_, lÌnea: 33, columna: 26
+Token: 18, Valor: cierraregalo, lÌnea: 33, columna: 31
+Token: 12, Valor: abrecuento, lÌnea: 33, columna: 46
+Token: 41, Valor: historia, lÌnea: 34, columna: 12
+Token: 7, Valor: 1, lÌnea: 34, columna: 21
+Token: 45, Valor: sigue, lÌnea: 34, columna: 23
+Token: 48, Valor: _id_, lÌnea: 34, columna: 29
+Token: 25, Valor: quien, lÌnea: 34, columna: 34
+Token: 51, Valor: finregalo, lÌnea: 34, columna: 41
+Token: 41, Valor: historia, lÌnea: 35, columna: 12
+Token: 7, Valor: 2, lÌnea: 35, columna: 21
+Token: 45, Valor: sigue, lÌnea: 35, columna: 23
+Token: 48, Valor: _id_, lÌnea: 35, columna: 29
+Token: 26, Valor: grinch, lÌnea: 35, columna: 34
+Token: 51, Valor: finregalo, lÌnea: 35, columna: 41
+Token: 44, Valor: envia, lÌnea: 36, columna: 12
+Token: 51, Valor: finregalo, lÌnea: 36, columna: 18
+Token: 42, Valor: ultimo, lÌnea: 37, columna: 12
+Token: 45, Valor: sigue, lÌnea: 37, columna: 19
+Token: 48, Valor: _id_, lÌnea: 37, columna: 25
+Token: 16, Valor: entrega, lÌnea: 37, columna: 30
+Token: 48, Valor: _id_, lÌnea: 37, columna: 38
+Token: 51, Valor: finregalo, lÌnea: 37, columna: 43
+Token: 13, Valor: cierracuento, lÌnea: 38, columna: 13
+Token: 13, Valor: cierracuento, lÌnea: 40, columna: 5
+Token: 44, Valor: envia, lÌnea: 41, columna: 4
+Token: 7, Valor: 1, lÌnea: 41, columna: 10
+Token: 51, Valor: finregalo, lÌnea: 41, columna: 12
+Token: 49, Valor: @, lÌnea: 41, columna: 22 (Error lÈxico)
+Token: 49, Valor: h, lÌnea: 41, columna: 23 (Error lÈxico)
+Token: 49, Valor: o, lÌnea: 41, columna: 24 (Error lÈxico)
+Token: 49, Valor: l, lÌnea: 41, columna: 25 (Error lÈxico)
+Token: 49, Valor: a, lÌnea: 41, columna: 26 (Error lÈxico)
+Token: 13, Valor: cierracuento, lÌnea: 42, columna: 1
+Token: 2, Valor: rodolfo, lÌnea: 44, columna: 0
+Token: 52, Valor: _verano_, lÌnea: 44, columna: 8
+Token: 17, Valor: abreregalo, lÌnea: 44, columna: 18
+Token: 18, Valor: cierraregalo, lÌnea: 44, columna: 31
+Token: 12, Valor: abrecuento, lÌnea: 44, columna: 46
+Token: 50, Valor: \_ 
 Comentario 1 
-_/, l√≠nea: 45, columna: 0
-Token: 48, Valor: @, l√≠nea: 49, columna: 0 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 49, columna: 1 (Error l√©xico)
-Token: 48, Valor: o, l√≠nea: 49, columna: 2 (Error l√©xico)
-Token: 48, Valor: m, l√≠nea: 49, columna: 3 (Error l√©xico)
-Token: 48, Valor: e, l√≠nea: 49, columna: 4 (Error l√©xico)
-Token: 48, Valor: n, l√≠nea: 49, columna: 5 (Error l√©xico)
-Token: 48, Valor: t, l√≠nea: 49, columna: 6 (Error l√©xico)
-Token: 48, Valor: a, l√≠nea: 49, columna: 7 (Error l√©xico)
-Token: 48, Valor: r, l√≠nea: 49, columna: 8 (Error l√©xico)
-Token: 48, Valor: i, l√≠nea: 49, columna: 9 (Error l√©xico)
-Token: 48, Valor: o, l√≠nea: 49, columna: 10 (Error l√©xico)
-Token: 7, Valor: 2, l√≠nea: 49, columna: 12
-Token: 46, Valor: escucha, l√≠nea: 50, columna: 4
-Token: 16, Valor: abreregalo, l√≠nea: 50, columna: 13
-Token: 47, Valor: _s1_, l√≠nea: 50, columna: 25
-Token: 17, Valor: cierraregalo, l√≠nea: 50, columna: 31
-Token: 50, Valor: finregalo, l√≠nea: 50, columna: 46
-Token: 45, Valor: narra, l√≠nea: 51, columna: 4
-Token: 16, Valor: abreregalo, l√≠nea: 51, columna: 10
-Token: 47, Valor: _b1_, l√≠nea: 51, columna: 22
-Token: 17, Valor: cierraregalo, l√≠nea: 51, columna: 28
-Token: 50, Valor: finregalo, l√≠nea: 51, columna: 43
-Token: 48, Valor: m, l√≠nea: 52, columna: 4 (Error l√©xico)
-Token: 48, Valor: i, l√≠nea: 52, columna: 5 (Error l√©xico)
-Token: 48, Valor: F, l√≠nea: 52, columna: 6 (Error l√©xico)
-Token: 48, Valor: u, l√≠nea: 52, columna: 7 (Error l√©xico)
-Token: 48, Valor: n, l√≠nea: 52, columna: 8 (Error l√©xico)
-Token: 48, Valor: c, l√≠nea: 52, columna: 9 (Error l√©xico)
-Token: 16, Valor: abreregalo, l√≠nea: 52, columna: 12
-Token: 47, Valor: _miFunc_, l√≠nea: 52, columna: 24
-Token: 16, Valor: abreregalo, l√≠nea: 52, columna: 34
-Token: 17, Valor: cierraregalo, l√≠nea: 52, columna: 47
-Token: 48, Valor: ,, l√≠nea: 52, columna: 61 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 52, columna: 62 (Error l√©xico)
-Token: 48, Valor: a, l√≠nea: 52, columna: 63 (Error l√©xico)
-Token: 48, Valor: ', l√≠nea: 52, columna: 64 (Error l√©xico)
-Token: 17, Valor: cierraregalo, l√≠nea: 52, columna: 67
-Token: 50, Valor: finregalo, l√≠nea: 53, columna: 2
-Token: 43, Valor: envia, l√≠nea: 54, columna: 4
-Token: 47, Valor: _bl1_, l√≠nea: 54, columna: 10
-Token: 50, Valor: finregalo, l√≠nea: 54, columna: 16
-Token: 12, Valor: cierracuento, l√≠nea: 55, columna: 1
+_/, lÌnea: 45, columna: 0
+Token: 49, Valor: @, lÌnea: 49, columna: 0 (Error lÈxico)
+Token: 49, Valor: c, lÌnea: 49, columna: 1 (Error lÈxico)
+Token: 49, Valor: o, lÌnea: 49, columna: 2 (Error lÈxico)
+Token: 49, Valor: m, lÌnea: 49, columna: 3 (Error lÈxico)
+Token: 49, Valor: e, lÌnea: 49, columna: 4 (Error lÈxico)
+Token: 49, Valor: n, lÌnea: 49, columna: 5 (Error lÈxico)
+Token: 49, Valor: t, lÌnea: 49, columna: 6 (Error lÈxico)
+Token: 49, Valor: a, lÌnea: 49, columna: 7 (Error lÈxico)
+Token: 49, Valor: r, lÌnea: 49, columna: 8 (Error lÈxico)
+Token: 49, Valor: i, lÌnea: 49, columna: 9 (Error lÈxico)
+Token: 49, Valor: o, lÌnea: 49, columna: 10 (Error lÈxico)
+Token: 7, Valor: 2, lÌnea: 49, columna: 12
+Token: 47, Valor: escucha, lÌnea: 50, columna: 4
+Token: 17, Valor: abreregalo, lÌnea: 50, columna: 13
+Token: 48, Valor: _s1_, lÌnea: 50, columna: 25
+Token: 18, Valor: cierraregalo, lÌnea: 50, columna: 31
+Token: 51, Valor: finregalo, lÌnea: 50, columna: 46
+Token: 46, Valor: narra, lÌnea: 51, columna: 4
+Token: 17, Valor: abreregalo, lÌnea: 51, columna: 10
+Token: 48, Valor: _b1_, lÌnea: 51, columna: 22
+Token: 18, Valor: cierraregalo, lÌnea: 51, columna: 28
+Token: 51, Valor: finregalo, lÌnea: 51, columna: 43
+Token: 49, Valor: m, lÌnea: 52, columna: 4 (Error lÈxico)
+Token: 49, Valor: i, lÌnea: 52, columna: 5 (Error lÈxico)
+Token: 49, Valor: F, lÌnea: 52, columna: 6 (Error lÈxico)
+Token: 49, Valor: u, lÌnea: 52, columna: 7 (Error lÈxico)
+Token: 49, Valor: n, lÌnea: 52, columna: 8 (Error lÈxico)
+Token: 49, Valor: c, lÌnea: 52, columna: 9 (Error lÈxico)
+Token: 17, Valor: abreregalo, lÌnea: 52, columna: 12
+Token: 48, Valor: _miFunc_, lÌnea: 52, columna: 24
+Token: 17, Valor: abreregalo, lÌnea: 52, columna: 34
+Token: 18, Valor: cierraregalo, lÌnea: 52, columna: 47
+Token: 49, Valor: ,, lÌnea: 52, columna: 61 (Error lÈxico)
+Token: 11, Valor: 'a', lÌnea: 52, columna: 62
+Token: 18, Valor: cierraregalo, lÌnea: 52, columna: 67
+Token: 51, Valor: finregalo, lÌnea: 53, columna: 2
+Token: 44, Valor: envia, lÌnea: 54, columna: 4
+Token: 48, Valor: _bl1_, lÌnea: 54, columna: 10
+Token: 51, Valor: finregalo, lÌnea: 54, columna: 16
+Token: 13, Valor: cierracuento, lÌnea: 55, columna: 1
