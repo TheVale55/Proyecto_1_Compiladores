@@ -428,6 +428,8 @@ public class Lexer implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
+    public static final int ERROR = -1;
+    public static final int COMENTARIO = -2;
     public BufferedWriter outputFile;
 
     public void createWriter(String root) throws IOException {
@@ -442,10 +444,9 @@ public class Lexer implements java_cup.runtime.Scanner {
 
     public void writeToken(int tokenNum) throws IOException {
         if(outputFile != null) {
-            String text = "Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn;
-            if(tokenNum == sym.ERROR) text += " (Error léxico)";
-            text+='\n';
-            outputFile.write(text);
+            if(tokenNum == ERROR) outputFile.write("Error léxico: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
+            else if(tokenNum == COMENTARIO) outputFile.write("Comentario: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
+            else outputFile.write("Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
             outputFile.flush();
         }
     }
@@ -894,7 +895,7 @@ public class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { writeToken(sym.ERROR); return symbol(sym.ERROR, yytext());
+            { writeToken(-1);
             }
           // fall through
           case 60: break;
@@ -909,7 +910,7 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 62: break;
           case 4:
-            { writeToken(sym.COMENTARIO); return symbol(sym.COMENTARIO, yytext());
+            { writeToken(-2);
             }
           // fall through
           case 63: break;

@@ -21,6 +21,8 @@ import java.io.IOException;
 %cup
 
 %{
+    public static final int ERROR = -1;
+    public static final int COMENTARIO = -2;
     public BufferedWriter outputFile;
 
     public void createWriter(String root) throws IOException {
@@ -35,10 +37,9 @@ import java.io.IOException;
 
     public void writeToken(int tokenNum) throws IOException {
         if(outputFile != null) {
-            String text = "Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn;
-            if(tokenNum == sym.ERROR) text += " (Error léxico)";
-            text+='\n';
-            outputFile.write(text);
+            if(tokenNum == ERROR) outputFile.write("Error léxico: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
+            else if(tokenNum == COMENTARIO) outputFile.write("Comentario: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
+            else outputFile.write("Token: " + tokenNum + ", Valor: " +yytext() + ", línea: " + yyline + ", columna: " + yycolumn + '\n');
             outputFile.flush();
         }
     }
@@ -187,16 +188,15 @@ CharLiteral = '((\\.)|[^\\'\r\n])'
 }
 
 /* Ignore comments */
-<YYINITIAL> {Comment} { writeToken(sym.COMENTARIO); return symbol(sym.COMENTARIO, yytext()); }
+<YYINITIAL> {Comment} { writeToken(-2); }
 
 /* Ignore white space */
 <YYINITIAL> {WhiteSpace} { /* Ignore white space */ }
 
 <YYINITIAL> <<EOF>> { return symbol(sym.EOF, yytext()); }
 
-[^] { writeToken(sym.ERROR); return symbol(sym.ERROR, yytext()); } /* Antes estaba con . */
+[^] { writeToken(-1); }
  
 
 /* ejecutar desde Lexical Analyzer */
-/* cd "Lexical Analyzer" */
 /* java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex */

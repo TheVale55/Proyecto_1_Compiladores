@@ -65,10 +65,6 @@ terminal PRINT, READ;
 terminal IDENTIFICADOR;
 
 
-//desconocido/error y comentario
-terminal ERROR, COMENTARIO;
-
-
 //final de expresion y Main
 terminal END_EXPR, MAIN;
 

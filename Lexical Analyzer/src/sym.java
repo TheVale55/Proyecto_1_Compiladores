@@ -23,20 +23,18 @@ public class sym {
   public static final int BOOL = 4;
   public static final int INCREMENTO = 25;
   public static final int SUMA = 19;
-  public static final int MAIN = 52;
+  public static final int MAIN = 50;
   public static final int IF = 36;
   public static final int EOF = 0;
   public static final int RETURN = 44;
   public static final int CORCHETE_APERTURA = 14;
   public static final int DECREMENTO = 26;
   public static final int error = 1;
-  public static final int COMENTARIO = 50;
   public static final int NEGACION = 35;
   public static final int MODULO = 22;
   public static final int APERTURA_DE_BLOQUE = 12;
   public static final int MENOR = 27;
   public static final int BREAK = 43;
-  public static final int ERROR = 49;
   public static final int SWITCH = 40;
   public static final int ASIGNACION = 16;
   public static final int MAYOR = 29;
@@ -48,7 +46,7 @@ public class sym {
   public static final int MAYOR_IGUAL = 30;
   public static final int FLOAT = 3;
   public static final int CONJUNCION = 33;
-  public static final int END_EXPR = 51;
+  public static final int END_EXPR = 49;
   public static final int STRING = 6;
   public static final int PARENTESIS_APERTURA = 17;
   public static final int DISYUNCION = 34;
@@ -109,8 +107,6 @@ public class sym {
   "PRINT",
   "READ",
   "IDENTIFICADOR",
-  "ERROR",
-  "COMENTARIO",
   "END_EXPR",
   "MAIN"
   };
