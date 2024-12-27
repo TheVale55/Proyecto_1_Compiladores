@@ -1,7 +1,0 @@
-- Compiladores E Interpretes
-- Número de semestre y 20244:07 PM 12/18/2024
-- Joshua Jiménez Delgado - 2023104222
-- Valeria Oconitrillo Solórzano - 2021064883
-- P1 . 18/12/2024
-- Estatus de la entrega (debe ser CONGRUENTE con la solución entregada):
-Excelente

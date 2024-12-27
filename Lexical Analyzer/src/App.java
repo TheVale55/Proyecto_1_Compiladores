@@ -1,7 +1,5 @@
 import java.io.FileReader;
 
-import java_cup.runtime.Symbol;
-
 
 public class App {
     public static void main(String[] args) {
@@ -9,11 +7,8 @@ public class App {
             Lexer lexer = new Lexer(new FileReader("Lexical Analyzer/src/test.txt")); 
             lexer.createWriter("Lexical Analyzer/src/output.txt");
 
-            Symbol token;
-            while ((token = lexer.next_token()).sym != sym.EOF) {
-
-                System.out.println("Token: " + token.sym + ", Value: " + token.value);
-            }
+            Parser parser = new Parser(lexer);
+            parser.parse();
 
             lexer.closeWriter();
 

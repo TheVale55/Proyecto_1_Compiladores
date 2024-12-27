@@ -9,13 +9,13 @@ parser code{:
 
 :};
 
-//para usar esto, sera que debo ponerle de nombre s? asi se declara al compilar
+
 
 //init with {: scanner.init(); :};
 
 scan with {: return scanner.next_token(); :};
 
-//terminales (tokens que va a retornar el scanner)
+
 
 //tipos de datos
 terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, STRING_LITERAL, BOOL_LITERAL, FLOAT_LITERAL, CHAR_LITERAL;
@@ -29,7 +29,7 @@ terminal APERTURA_DE_BLOQUE, CIERRE_DE_BLOQUE;
 terminal CORCHETE_APERTURA, CORCHETE_CIERRE;
 
 
-//asignacion
+//asignacion =
 terminal ASIGNACION;
 
 
@@ -38,14 +38,14 @@ terminal PARENTESIS_APERTURA, PARENTESIS_CIERRE;
 
 
 //expresiones aritmeticas
-terminal SUMA, RESTA, MULTIPLICACION, MODULO, POTENCIA, DIVISION; 
+terminal SUMA, RESTA, MULTIPLICACION, MODULO, POTENCIA, DIVISION;
 
 
 //expresiones aritmeticas unarias
 terminal INCREMENTO, DECREMENTO;
 
 
-//expresiones relacionales
+//expresiones relacionales (igualdad es ==)
 terminal MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUALDAD, DIFERENTE;
 
 
@@ -54,7 +54,7 @@ terminal CONJUNCION, DISYUNCION, NEGACION;
 
 
 //estructuras de control
-terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT, BREAK, RETURN, DOS_PUNTOS;
+terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT, BREAK, RETURN, DOS_PUNTOS, COMMA;
 
 
 //funciones de leer
@@ -69,11 +69,106 @@ terminal IDENTIFICADOR;
 terminal END_EXPR, MAIN;
 
 
-non terminal programa;
+
+non terminal programa, tipos, literales, op_aritmeticas, expr_aritmetica, asignacion_directa, asignacion_compuesta, declaracion, op_unaria, operando, finfuncion,
+nombrefuncion, parametro, parametros, expresiones, bloque, bloques, encabezado, funciones, funcion, if_expr, while_expr, for_expr, simple_expr, switch_expr,
+else_expr, cases, condicion, relacion, simple_op;
+
+
+
+//precedencias
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION, MODULO;
+precedence right POTENCIA;
+
+
+
 
 start with programa;
 
-programa ::= ;
+
+//Reglas
+
+tipos ::= INTEGER | FLOAT | BOOL | CHAR | STRING;
+
+literales ::= INT_LITERAL | STRING_LITERAL |  FLOAT_LITERAL | CHAR_LITERAL;
+
+op_aritmeticas ::= SUMA | RESTA | MULTIPLICACION | DIVISION | MODULO | POTENCIA;
+
+operando ::= IDENTIFICADOR | literales;
+
+
+
+
+expr_aritmetica ::= operando op_aritmeticas expr_aritmetica | operando;
+
+asignacion_directa ::= IDENTIFICADOR ASIGNACION expr_aritmetica;
+
+asignacion_compuesta ::= IDENTIFICADOR op_aritmeticas ASIGNACION expr_aritmetica | asignacion_directa;
+
+declaracion ::= tipos IDENTIFICADOR | tipos asignacion_directa;
+
+
+
+
+op_unaria ::= IDENTIFICADOR INCREMENTO | IDENTIFICADOR DECREMENTO;
+
+
+
+
+finfuncion ::= RETURN literales END_EXPR | RETURN IDENTIFICADOR END_EXPR;
+nombrefuncion ::= MAIN | IDENTIFICADOR;
+parametro ::= tipos IDENTIFICADOR COMMA parametro | tipos IDENTIFICADOR;
+parametros ::=  parametro | ;
+
+
+
+
+
+break_op ::= BREAK | ;
+else_expr ::= ELSE CORCHETE_APERTURA   bloque    CORCHETE_CIERRE;
+else_op ::= else_expr | ;
+
+
+
+relacion::= MENOR | MENOR_IGUAL | MAYOR | MAYOR_IGUAL | IGUALDAD | DIFERENTE;
+condicion ::= operando  relacion  operando; 
+if_expr  ::= IF PARENTESIS_APERTURA  condicion  PARENTESIS_CIERRE CORCHETE_APERTURA   bloque   CORCHETE_CIERRE else_op;
+
+
+
+
+cases ::= CASE literales DOS_PUNTOS bloque cases | DEFAULT DOS_PUNTOS bloque;
+switch_expr ::= SWITCH PARENTESIS_APERTURA  operando  PARENTESIS_CIERRE CORCHETE_APERTURA   cases   CORCHETE_CIERRE;
+
+
+
+
+
+simple_op ::= op_unaria | asignacion_compuesta;
+simple_expr ::= simple_op END_EXPR bloque | declaracion END_EXPR bloque;
+while_expr ::= WHILE PARENTESIS_APERTURA  condicion  PARENTESIS_CIERRE CORCHETE_APERTURA   bloque    CORCHETE_CIERRE;
+for_expr ::= FOR PARENTESIS_APERTURA  declaracion END_EXPR condicion END_EXPR  simple_op  PARENTESIS_CIERRE CORCHETE_APERTURA   bloque    CORCHETE_CIERRE;
+
+
+
+
+
+expresiones ::=  if_expr | while_expr | for_expr | simple_expr | switch_expr;
+bloque ::=  expresiones | finfuncion; 
+bloques ::= bloque | bloques bloque;
+encabezado ::= nombrefuncion PARENTESIS_APERTURA  parametros  PARENTESIS_CIERRE  CORCHETE_APERTURA   bloque    CORCHETE_CIERRE;
+
+
+
+
+funciones ::= funcion | funciones funcion;
+funcion ::= tipos encabezado;
+
+
+
+
+programa ::= funciones;
 
 //ejecutar desde Lexical Analyzer
 //java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup

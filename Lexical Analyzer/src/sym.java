@@ -16,14 +16,15 @@ public class sym {
   public static final int INTEGER = 2;
   public static final int DOS_PUNTOS = 45;
   public static final int FOR = 39;
-  public static final int IDENTIFICADOR = 48;
+  public static final int IDENTIFICADOR = 49;
   public static final int CORCHETE_CIERRE = 15;
   public static final int CIERRE_DE_BLOQUE = 13;
   public static final int IGUALDAD = 31;
+  public static final int COMMA = 46;
   public static final int BOOL = 4;
   public static final int INCREMENTO = 25;
   public static final int SUMA = 19;
-  public static final int MAIN = 50;
+  public static final int MAIN = 51;
   public static final int IF = 36;
   public static final int EOF = 0;
   public static final int RETURN = 44;
@@ -40,20 +41,20 @@ public class sym {
   public static final int MAYOR = 29;
   public static final int POTENCIA = 23;
   public static final int ELSE = 37;
-  public static final int READ = 47;
+  public static final int READ = 48;
   public static final int WHILE = 38;
   public static final int DEFAULT = 42;
   public static final int MAYOR_IGUAL = 30;
   public static final int FLOAT = 3;
   public static final int CONJUNCION = 33;
-  public static final int END_EXPR = 49;
+  public static final int END_EXPR = 50;
   public static final int STRING = 6;
   public static final int PARENTESIS_APERTURA = 17;
   public static final int DISYUNCION = 34;
   public static final int MENOR_IGUAL = 28;
   public static final int FLOAT_LITERAL = 10;
   public static final int DIVISION = 24;
-  public static final int PRINT = 46;
+  public static final int PRINT = 47;
   public static final int BOOL_LITERAL = 9;
   public static final int INT_LITERAL = 7;
   public static final int MULTIPLICACION = 21;
@@ -104,6 +105,7 @@ public class sym {
   "BREAK",
   "RETURN",
   "DOS_PUNTOS",
+  "COMMA",
   "PRINT",
   "READ",
   "IDENTIFICADOR",
