@@ -7,8 +7,10 @@ public class App {
             Lexer lexer = new Lexer(new FileReader("Lexical Analyzer/src/test.txt")); 
             lexer.createWriter("Lexical Analyzer/src/output.txt");
 
-            Parser parser = new Parser(lexer);
-            parser.parse();
+            
+
+            // Parser parser = new Parser(lexer);
+            // parser.parse();
 
             lexer.closeWriter();
 
