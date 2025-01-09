@@ -1,8 +1,0 @@
-Token: 2, Valor: rodolfo, línea: 0, columna: 0
-Token: 49, Valor: _var_, línea: 0, columna: 8
-Token: 16, Valor: entrega, línea: 0, columna: 14
-Token: 7, Valor: 5, línea: 0, columna: 22
-Token: 19, Valor: navidad, línea: 0, columna: 24
-Token: 7, Valor: 3, línea: 0, columna: 32
-Token: 20, Valor: intercambio, línea: 0, columna: 34
-Token: 7, Valor: 2, línea: 0, columna: 46

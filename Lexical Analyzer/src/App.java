@@ -1,16 +1,22 @@
 import java.io.FileReader;
 
+//import java_cup.runtime.Symbol;
+
 
 public class App {
     public static void main(String[] args) {
         try {
             Lexer lexer = new Lexer(new FileReader("Lexical Analyzer/src/test.txt")); 
-            lexer.createWriter("Lexical Analyzer/src/output.txt");
+            lexer.createWriter("Lexical Analyzer/src/ReporteLexemas.txt");
 
-            
+            // Symbol token;
+            // while ((token = lexer.next_token()).sym != sym.EOF) {
 
-            // Parser parser = new Parser(lexer);
-            // parser.parse();
+            //     System.out.println("Token: " + token.sym + ", Value: " + token.value);
+            // }
+
+            Parser parser = new Parser(lexer);
+            parser.parse();
 
             lexer.closeWriter();
 
