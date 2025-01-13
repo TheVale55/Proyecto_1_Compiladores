@@ -1,24 +1,53 @@
 import java_cup.runtime.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 
 parser code {: 
+
     private Lexer scanner;
+
+    // Tabla de símbolos
+    private HashMap<String, ArrayList<String>> tablaSimbolos = new HashMap<>();
 
     public Parser(Lexer scanner) {
         this.scanner = scanner;
     }
 
+    // Método para agregar un símbolo a la tabla
+    public void agregarSimbolo(String categoria, String simbolo) {
+        tablaSimbolos.putIfAbsent(categoria, new ArrayList<>());
+        if (!tablaSimbolos.get(categoria).contains(simbolo)) {
+            tablaSimbolos.get(categoria).add(simbolo);
+        }
+    }
+
+    // Método para imprimir la tabla de símbolos al final
+    public void imprimirTablaSimbolos() {
+        System.out.println("\nTabla de Símbolos:");
+        for (String categoria : tablaSimbolos.keySet()) {
+            System.out.println("Categoría: " + categoria);
+            for (String simbolo : tablaSimbolos.get(categoria)) {
+                System.out.println("  - " + simbolo);
+            }
+        }
+    }
+
 :};
 
-
-
 //init with {: scanner.init(); :};
-
 scan with {: return scanner.next_token(); :};
 
-
+// Tipos de datos
+terminal String IDENTIFICADOR;
+terminal String STRING_LITERAL;
+terminal Integer INT_LITERAL;
+terminal Float FLOAT_LITERAL;
+terminal Character CHAR_LITERAL;
+terminal Boolean BOOL_LITERAL;
 
 //tipos de datos
-terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, STRING_LITERAL, BOOL_LITERAL, FLOAT_LITERAL, CHAR_LITERAL;
+terminal INTEGER, FLOAT, BOOL, CHAR, STRING;
 
 
 //bloques de código
@@ -61,13 +90,8 @@ terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT, BREAK, RETURN, DOS_PUNTOS,
 terminal PRINT, READ;
 
 
-//identificadores
-terminal IDENTIFICADOR;
-
-
 //final de expresion y Main
 terminal END_EXPR, MAIN;
-
 
 
 non terminal tipo, literal, op_aritmeticas, dato_general, sec_oper, sec_var, imprimir, leer_var, inicializacion, 
@@ -77,13 +101,10 @@ comparacion_operacion, op_logica, expr_logica_aritmetica, if_expr, cases, switch
 bloque, bloques, encabezado, funciones, funcion, programa, llamada_funcion, parametros_llamada;
 
 
-
-
 //precedencias
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION, MODULO;
 precedence right POTENCIA;
-
 
 precedence left DISYUNCION;
 precedence left CONJUNCION;
@@ -94,97 +115,163 @@ precedence left MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUALDAD, DIFERENTE;
 start with programa;
 
 
-//Reglas
+// *** REGLAS GRAMATICALES ***
 
+// Nombres de funciones
+nombrefuncion ::= MAIN 
+    {: agregarSimbolo("Funciones", "main"); RESULT = "main"; :}
+    | IDENTIFICADOR:id 
+    {: agregarSimbolo("Funciones", id.toString()); RESULT = id; :};
 
-nombrefuncion ::= MAIN | IDENTIFICADOR;
-parametro_decl ::= tipo IDENTIFICADOR COMMA parametro_decl | tipo IDENTIFICADOR;
-parametros_decl ::=  parametro_decl | ;
-sec_oper ::= dato_general COMMA sec_oper | dato_general;
+// Declaración de parámetros en funciones
+parametro_decl ::= tipo:tipo IDENTIFICADOR:identificador COMMA parametro_decl:resto 
+    {: agregarSimbolo("Parámetros", identificador.toString() + " : " + tipo.toString()); RESULT = null; :}
+    | tipo:tipo IDENTIFICADOR:identificador 
+    {: agregarSimbolo("Parámetros", identificador.toString() + " : " + tipo.toString()); RESULT = null; :};
+
+parametros_decl ::= parametro_decl:declaraciones | ;
+
+// Lista de operaciones separadas por comas
+sec_oper ::= dato_general:elemento COMMA sec_oper:resto | dato_general:elemento;
+
+// Parámetros en llamadas a funciones
 parametros_llamada ::= sec_oper | ;
-llamada_funcion ::= nombrefuncion PARENTESIS_APERTURA  parametros_llamada  PARENTESIS_CIERRE;
 
+// Llamada a función
+llamada_funcion ::= nombrefuncion:funcion PARENTESIS_APERTURA parametros_llamada:parametros PARENTESIS_CIERRE 
+    {: agregarSimbolo("Llamadas", funcion.toString()); RESULT = null; :};
 
+// Tipos de datos
+tipo ::= INTEGER 
+    {: agregarSimbolo("Tipos", "INTEGER"); RESULT = "INTEGER"; :}
+    | FLOAT 
+    {: agregarSimbolo("Tipos", "FLOAT"); RESULT = "FLOAT"; :}
+    | BOOL 
+    {: agregarSimbolo("Tipos", "BOOL"); RESULT = "BOOL"; :}
+    | CHAR 
+    {: agregarSimbolo("Tipos", "CHAR"); RESULT = "CHAR"; :}
+    | STRING 
+    {: agregarSimbolo("Tipos", "STRING"); RESULT = "STRING"; :};
 
+// Literales
+literal ::= INT_LITERAL:literal_entero 
+    {: agregarSimbolo("Literales", literal_entero.toString()); RESULT = literal_entero; :}
+    | STRING_LITERAL:literal_cadena 
+    {: agregarSimbolo("Literales", literal_cadena.toString()); RESULT = literal_cadena; :}
+    | FLOAT_LITERAL:literal_flotante 
+    {: agregarSimbolo("Literales", literal_flotante.toString()); RESULT = literal_flotante; :}
+    | CHAR_LITERAL:literal_caracter 
+    {: agregarSimbolo("Literales", literal_caracter.toString()); RESULT = literal_caracter; :}
+    | BOOL_LITERAL:literal_booleano 
+    {: agregarSimbolo("Literales", literal_booleano.toString()); RESULT = literal_booleano; :};
 
-
-tipo ::= INTEGER | FLOAT | BOOL | CHAR | STRING;
-literal ::= INT_LITERAL | STRING_LITERAL | FLOAT_LITERAL | CHAR_LITERAL | BOOL_LITERAL;
+// Operaciones aritméticas
 op_aritmeticas ::= SUMA | RESTA | MULTIPLICACION | DIVISION | MODULO | POTENCIA;
-dato_general ::= IDENTIFICADOR | literal | llamada_funcion;
+
+// Datos generales (identificadores, literales o llamadas a funciones)
+dato_general ::= IDENTIFICADOR:identificador 
+    {: agregarSimbolo("Identificadores", identificador.toString()); RESULT = identificador; :}
+    | literal:literal;
+
+// Operaciones unarias
 op_unaria ::= IDENTIFICADOR INCREMENTO | IDENTIFICADOR DECREMENTO;
 
-
-
-
+// Declaración de variables
 sec_var ::= IDENTIFICADOR COMMA sec_var | IDENTIFICADOR;
+
+// Instrucción para imprimir
 imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE; 
+
+// Instrucción para leer variables
 leer_var ::= READ PARENTESIS_APERTURA  sec_var  PARENTESIS_CIERRE; 
 
-
-
-
+// Actualización de variables
 actualizacion ::= ASIGNACION | op_aritmeticas ASIGNACION;
+
+// Asignación a arreglos
 asignacion_arreglo ::= IDENTIFICADOR ASIGNACION APERTURA_DE_BLOQUE  sec_oper  CIERRE_DE_BLOQUE;
+
+// Asignación a índices de arreglos
 asignacion_indice ::= IDENTIFICADOR CORCHETE_APERTURA dato_general CORCHETE_CIERRE actualizacion expr_logica_aritmetica;
+
+// Asignación a variables
 asignacion_variable ::= IDENTIFICADOR actualizacion expr_logica_aritmetica;
+
+// Asignaciones compuestas
 asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_indice;
 
-
-
-
+// Declaración de arreglos
 declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE  sec_oper  CIERRE_DE_BLOQUE | ; 
-declaracion ::= tipo IDENTIFICADOR | tipo IDENTIFICADOR ASIGNACION expr_logica_aritmetica | tipo IDENTIFICADOR CORCHETE_APERTURA dato_general CORCHETE_CIERRE declaracion_arreglo_op;
+
+// Declaración de variables
+declaracion ::= tipo:tipo IDENTIFICADOR:identificador 
+    {: agregarSimbolo("Declaraciones", identificador.toString() + " : " + tipo.toString()); RESULT = null; :}
+    | tipo:tipo IDENTIFICADOR:identificador ASIGNACION actualizacion:valor 
+    {: agregarSimbolo("Declaraciones", identificador.toString() + " : " + tipo.toString()); RESULT = null; :};
 
 
-
-
+// Expresiones else
 else_expr ::= ELSE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 else_op ::= else_expr | ;
 
-
-
-
+// Operaciones relacionales
 relacion ::= MENOR | MENOR_IGUAL | MAYOR | MAYOR_IGUAL | IGUALDAD | DIFERENTE;
+
+// Operaciones de comparación
 comparacion_operacion ::= expr_logica_aritmetica  relacion  expr_logica_aritmetica | expr_logica_aritmetica op_aritmeticas expr_logica_aritmetica | dato_general | op_unaria; 
-op_logica ::= CONJUNCION | DISYUNCION;
-expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica | expr_logica_aritmetica op_logica expr_logica_aritmetica | comparacion_operacion | PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE;
+
+// Operaciones lógicas
+op_logica ::= CONJUNCION | DISYUNCION | NEGACION;
+
+// Expresión lógica y aritmética
+expr_logica_aritmetica ::= expr_logica_aritmetica:izquierda op_aritmeticas:op expr_logica_aritmetica:derecha
+    {: RESULT = izquierda + " " + op + " " + derecha; :}
+    | expr_logica_aritmetica:izquierda op_logica:op expr_logica_aritmetica:derecha
+    {: RESULT = izquierda + " " + op + " " + derecha; :};
+
+
+// Expresión if
 if_expr ::= IF PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE else_op;
 
-
-
-
+// Casos de switch
 cases ::= CASE literal DOS_PUNTOS bloques cases | DEFAULT DOS_PUNTOS bloques;
+
+// Expresión switch
 switch_expr ::= SWITCH PARENTESIS_APERTURA  dato_general  PARENTESIS_CIERRE APERTURA_DE_BLOQUE   cases   CIERRE_DE_BLOQUE;
 
-
-
-
-
+// Finalización de función
 finfuncion ::= RETURN dato_general | RETURN;
+
+// Operaciones simples
 op_simple ::= op_unaria | asignacion_variable; 
+
+// Expresiones simples
 simple_expr ::= op_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion;
+
+// Expresión while
 while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE;
+
+// Inicialización en for
 inicializacion ::= asignacion_variable | IDENTIFICADOR;
+
+// Expresión for
 for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 
-
-
-
-
-
+// Bloques y estructuras
 bloque ::= if_expr | while_expr | for_expr | simple_expr END_EXPR | switch_expr; 
 bloques ::= bloque bloques | ; 
+
+// Encabezados de funciones
 encabezado ::= nombrefuncion PARENTESIS_APERTURA  parametros_decl  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 
-
-
+// Funciones
 funciones ::= funcion | funcion funciones;
 funcion ::= tipo encabezado;
 
+// Programa principal
+programa ::= funciones
+    {: imprimirTablaSimbolos(); :};
 
-
-programa ::= funciones;
-
-//ejecutar desde Lexical Analyzer
-//java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup
+// *** COMANDO PARA GENERAR EL PARSER ***
+// Ejecutar desde el analizador léxico:
+// java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup

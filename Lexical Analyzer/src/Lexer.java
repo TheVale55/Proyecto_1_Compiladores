@@ -8,6 +8,9 @@ import java_cup.runtime.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 
 /* This class is a simple example lexer. */
 
@@ -431,6 +434,28 @@ public class Lexer implements java_cup.runtime.Scanner {
     public static final int ERROR = -1;
     public static final int COMENTARIO = -2;
     public BufferedWriter outputFile;
+
+    // Tabla de símbolos
+    HashMap<String, ArrayList<String>> tablaSimbolos = new HashMap<>();
+
+    // Método para agregar un símbolo
+    public void agregarSimbolo(String categoria, String simbolo) {
+        tablaSimbolos.putIfAbsent(categoria, new ArrayList<>());
+        if (!tablaSimbolos.get(categoria).contains(simbolo)) {
+            tablaSimbolos.get(categoria).add(simbolo);
+        }
+    }
+
+    // Método para imprimir la tabla al final
+    public void imprimirTablaSimbolos() {
+        System.out.println("\nTabla de Símbolos:");
+        for (String categoria : tablaSimbolos.keySet()) {
+            System.out.println("Categoría: " + categoria);
+            for (String simbolo : tablaSimbolos.get(categoria)) {
+                System.out.println("  - " + simbolo);
+            }
+        }
+    }
 
     public void createWriter(String root) throws IOException {
         outputFile = new BufferedWriter(new FileWriter(root));
@@ -920,7 +945,7 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 65: break;
           case 6:
-            { writeToken(sym.INT_LITERAL, Integer.parseInt(yytext())); return symbol(sym.INT_LITERAL, Integer.parseInt(yytext()));
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.INT_LITERAL, Integer.parseInt(yytext())); return symbol(sym.INT_LITERAL, Integer.parseInt(yytext()));
             }
           // fall through
           case 66: break;
@@ -960,92 +985,92 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 73: break;
           case 14:
-            { writeToken(sym.CHAR_LITERAL, yytext()); return symbol(sym.CHAR_LITERAL, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CHAR_LITERAL, yytext()); return symbol(sym.CHAR_LITERAL, yytext());
             }
           // fall through
           case 74: break;
           case 15:
-            { writeToken(sym.FLOAT_LITERAL, Float.parseFloat(yytext())); return symbol(sym.FLOAT_LITERAL, Float.parseFloat(yytext()));
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.FLOAT_LITERAL, Float.parseFloat(yytext())); return symbol(sym.FLOAT_LITERAL, Float.parseFloat(yytext()));
             }
           // fall through
           case 75: break;
           case 16:
-            { writeToken(sym.IDENTIFICADOR, yytext()); return symbol(sym.IDENTIFICADOR, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.IDENTIFICADOR, yytext()); return symbol(sym.IDENTIFICADOR, yytext());
             }
           // fall through
           case 76: break;
           case 17:
-            { writeToken(sym.IF, yytext()); return symbol(sym.IF, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.IF, yytext()); return symbol(sym.IF, yytext());
             }
           // fall through
           case 77: break;
           case 18:
-            { writeToken(sym.ELSE, yytext()); return symbol(sym.ELSE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.ELSE, yytext()); return symbol(sym.ELSE, yytext());
             }
           // fall through
           case 78: break;
           case 19:
-            { writeToken(sym.IGUALDAD, yytext()); return symbol(sym.IGUALDAD, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.IGUALDAD, yytext()); return symbol(sym.IGUALDAD, yytext());
             }
           // fall through
           case 79: break;
           case 20:
-            { writeToken(sym.BOOL_LITERAL, yytext()); return symbol(sym.BOOL_LITERAL, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.BOOL_LITERAL, yytext()); return symbol(sym.BOOL_LITERAL, yytext());
             }
           // fall through
           case 80: break;
           case 21:
-            { writeToken(sym.BREAK, yytext()); return symbol(sym.BREAK, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.BREAK, yytext()); return symbol(sym.BREAK, yytext());
             }
           // fall through
           case 81: break;
           case 22:
-            { writeToken(sym.RETURN, yytext()); return symbol(sym.RETURN, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.RETURN, yytext()); return symbol(sym.RETURN, yytext());
             }
           // fall through
           case 82: break;
           case 23:
-            { writeToken(sym.MODULO, yytext()); return symbol(sym.MODULO, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MODULO, yytext()); return symbol(sym.MODULO, yytext());
             }
           // fall through
           case 83: break;
           case 24:
-            { writeToken(sym.PRINT, yytext()); return symbol(sym.PRINT, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.PRINT, yytext()); return symbol(sym.PRINT, yytext());
             }
           // fall through
           case 84: break;
           case 25:
-            { writeToken(sym.INCREMENTO, yytext()); return symbol(sym.INCREMENTO, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.INCREMENTO, yytext()); return symbol(sym.INCREMENTO, yytext());
             }
           // fall through
           case 85: break;
           case 26:
-            { writeToken(sym.DIVISION, yytext()); return symbol(sym.DIVISION, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.DIVISION, yytext()); return symbol(sym.DIVISION, yytext());
             }
           // fall through
           case 86: break;
           case 27:
-            { writeToken(sym.DOS_PUNTOS, yytext()); return symbol(sym.DOS_PUNTOS, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.DOS_PUNTOS, yytext()); return symbol(sym.DOS_PUNTOS, yytext());
             }
           // fall through
           case 87: break;
           case 28:
-            { writeToken(sym.STRING, yytext()); return symbol(sym.STRING, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.STRING, yytext()); return symbol(sym.STRING, yytext());
             }
           // fall through
           case 88: break;
           case 29:
-            { writeToken(sym.CHAR, yytext()); return symbol(sym.CHAR, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CHAR, yytext()); return symbol(sym.CHAR, yytext());
             }
           // fall through
           case 89: break;
           case 30:
-            { writeToken(sym.FOR, yytext()); return symbol(sym.FOR, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.FOR, yytext()); return symbol(sym.FOR, yytext());
             }
           // fall through
           case 90: break;
           case 31:
-            { writeToken(sym.DISYUNCION, yytext()); return symbol(sym.DISYUNCION, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.DISYUNCION, yytext()); return symbol(sym.DISYUNCION, yytext());
             }
           // fall through
           case 91: break;
@@ -1055,142 +1080,142 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 92: break;
           case 33:
-            { writeToken(sym.BOOL, yytext()); return symbol(sym.BOOL, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.BOOL, yytext()); return symbol(sym.BOOL, yytext());
             }
           // fall through
           case 93: break;
           case 34:
-            { writeToken(sym.DEFAULT, yytext()); return symbol(sym.DEFAULT, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.DEFAULT, yytext()); return symbol(sym.DEFAULT, yytext());
             }
           // fall through
           case 94: break;
           case 35:
-            { writeToken(sym.SWITCH, yytext()); return symbol(sym.SWITCH, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.SWITCH, yytext()); return symbol(sym.SWITCH, yytext());
             }
           // fall through
           case 95: break;
           case 36:
-            { writeToken(sym.ASIGNACION, yytext()); return symbol(sym.ASIGNACION, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.ASIGNACION, yytext()); return symbol(sym.ASIGNACION, yytext());
             }
           // fall through
           case 96: break;
           case 37:
-            { writeToken(sym.READ, yytext()); return symbol(sym.READ, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.READ, yytext()); return symbol(sym.READ, yytext());
             }
           // fall through
           case 97: break;
           case 38:
-            { writeToken(sym.CONJUNCION, yytext()); return symbol(sym.CONJUNCION, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CONJUNCION, yytext()); return symbol(sym.CONJUNCION, yytext());
             }
           // fall through
           case 98: break;
           case 39:
-            { writeToken(sym.MAYOR, yytext()); return symbol(sym.MAYOR, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MAYOR, yytext()); return symbol(sym.MAYOR, yytext());
             }
           // fall through
           case 99: break;
           case 40:
-            { writeToken(sym.SUMA, yytext()); return symbol(sym.SUMA, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.SUMA, yytext()); return symbol(sym.SUMA, yytext());
             }
           // fall through
           case 100: break;
           case 41:
-            { writeToken(sym.INTEGER, yytext()); return symbol(sym.INTEGER, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.INTEGER, yytext()); return symbol(sym.INTEGER, yytext());
             }
           // fall through
           case 101: break;
           case 42:
-            { writeToken(sym.MAYOR_IGUAL, yytext()); return symbol(sym.MAYOR_IGUAL, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MAYOR_IGUAL, yytext()); return symbol(sym.MAYOR_IGUAL, yytext());
             }
           // fall through
           case 102: break;
           case 43:
-            { writeToken(sym.MAIN, yytext()); return symbol(sym.MAIN, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MAIN, yytext()); return symbol(sym.MAIN, yytext());
             }
           // fall through
           case 103: break;
           case 44:
-            { writeToken(sym.POTENCIA, yytext()); return symbol(sym.POTENCIA, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.POTENCIA, yytext()); return symbol(sym.POTENCIA, yytext());
             }
           // fall through
           case 104: break;
           case 45:
-            { writeToken(sym.NEGACION, yytext()); return symbol(sym.NEGACION, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.NEGACION, yytext()); return symbol(sym.NEGACION, yytext());
             }
           // fall through
           case 105: break;
           case 46:
-            { writeToken(sym.FLOAT, yytext()); return symbol(sym.FLOAT, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.FLOAT, yytext()); return symbol(sym.FLOAT, yytext());
             }
           // fall through
           case 106: break;
           case 47:
-            { writeToken(sym.WHILE, yytext()); return symbol(sym.WHILE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.WHILE, yytext()); return symbol(sym.WHILE, yytext());
             }
           // fall through
           case 107: break;
           case 48:
-            { writeToken(sym.CASE, yytext()); return symbol(sym.CASE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CASE, yytext()); return symbol(sym.CASE, yytext());
             }
           // fall through
           case 108: break;
           case 49:
-            { writeToken(sym.DIFERENTE, yytext()); return symbol(sym.DIFERENTE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.DIFERENTE, yytext()); return symbol(sym.DIFERENTE, yytext());
             }
           // fall through
           case 109: break;
           case 50:
-            { writeToken(sym.MENOR, yytext()); return symbol(sym.MENOR, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MENOR, yytext()); return symbol(sym.MENOR, yytext());
             }
           // fall through
           case 110: break;
           case 51:
-            { writeToken(sym.MENOR_IGUAL, yytext()); return symbol(sym.MENOR_IGUAL, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MENOR_IGUAL, yytext()); return symbol(sym.MENOR_IGUAL, yytext());
             }
           // fall through
           case 111: break;
           case 52:
-            { writeToken(sym.END_EXPR, yytext()); return symbol(sym.END_EXPR, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.END_EXPR, yytext()); return symbol(sym.END_EXPR, yytext());
             }
           // fall through
           case 112: break;
           case 53:
-            { writeToken(sym.APERTURA_DE_BLOQUE, yytext()); return symbol(sym.APERTURA_DE_BLOQUE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.APERTURA_DE_BLOQUE, yytext()); return symbol(sym.APERTURA_DE_BLOQUE, yytext());
             }
           // fall through
           case 113: break;
           case 54:
-            { writeToken(sym.PARENTESIS_APERTURA, yytext()); return symbol(sym.PARENTESIS_APERTURA, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.PARENTESIS_APERTURA, yytext()); return symbol(sym.PARENTESIS_APERTURA, yytext());
             }
           // fall through
           case 114: break;
           case 55:
-            { writeToken(sym.MULTIPLICACION, yytext()); return symbol(sym.MULTIPLICACION, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.MULTIPLICACION, yytext()); return symbol(sym.MULTIPLICACION, yytext());
             }
           // fall through
           case 115: break;
           case 56:
-            { writeToken(sym.CORCHETE_APERTURA, yytext()); return symbol(sym.CORCHETE_APERTURA, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CORCHETE_APERTURA, yytext()); return symbol(sym.CORCHETE_APERTURA, yytext());
             }
           // fall through
           case 116: break;
           case 57:
-            { writeToken(sym.RESTA, yytext()); return symbol(sym.RESTA, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.RESTA, yytext()); return symbol(sym.RESTA, yytext());
             }
           // fall through
           case 117: break;
           case 58:
-            { writeToken(sym.CIERRE_DE_BLOQUE, yytext()); return symbol(sym.CIERRE_DE_BLOQUE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CIERRE_DE_BLOQUE, yytext()); return symbol(sym.CIERRE_DE_BLOQUE, yytext());
             }
           // fall through
           case 118: break;
           case 59:
-            { writeToken(sym.PARENTESIS_CIERRE, yytext()); return symbol(sym.PARENTESIS_CIERRE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.PARENTESIS_CIERRE, yytext()); return symbol(sym.PARENTESIS_CIERRE, yytext());
             }
           // fall through
           case 119: break;
           case 60:
-            { writeToken(sym.CORCHETE_CIERRE, yytext()); return symbol(sym.CORCHETE_CIERRE, yytext());
+            { agregarSimbolo("Palabras clave", yytext()); writeToken(sym.CORCHETE_CIERRE, yytext()); return symbol(sym.CORCHETE_CIERRE, yytext());
             }
           // fall through
           case 120: break;
