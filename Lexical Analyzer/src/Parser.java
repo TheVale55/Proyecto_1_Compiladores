@@ -508,21 +508,27 @@ public class Parser extends java_cup.runtime.lr_parser {
     }
 
     private void agregarSimbolo(String tipoTabla, String identificador, String tipo) {
-        ArrayList<String> nuevaEntrada = new ArrayList<>();
-        nuevaEntrada.add("tipo:" + tipoTabla);
-        nuevaEntrada.add("identificador:" + identificador);
-        nuevaEntrada.add("tipo_dato:" + tipo);
+        ArrayList<String> nuevaEntrada = listaTablasSimbolos.getOrDefault(currentHash, new ArrayList<>());
 
-        currentHash = identificador;
+        // Verificar si ya existe el símbolo en el ámbito actual
+        for (String simbolo : nuevaEntrada) {
+            if (simbolo.contains("identificador:" + identificador)) {
+                System.err.println("Error: Identificador " + identificador + " ya existe en el ámbito " + currentHash);
+                return;
+            }
+        }
+
+        // Agregar símbolo si no existe
+        nuevaEntrada.add("tipo:" + tipoTabla + " identificador:" + identificador + " tipo_dato:" + tipo);
         listaTablasSimbolos.put(currentHash, nuevaEntrada);
     }
 
     public void imprimirTablaSimbolos() {
         for (String key : listaTablasSimbolos.keySet()) {
-            System.out.println("Tabla de simbolo: " + key);
-            System.out.println("Valores: ");
+            System.out.println("Ámbito: " + key);
+            System.out.println("Símbolos: ");
             for (String item : listaTablasSimbolos.get(key)) {
-                System.out.println(item);
+                System.out.println("    " + item);
             }
             System.out.println("");
         }
@@ -572,7 +578,11 @@ class CUP$Parser$actions {
           case 1: // nombrefuncion ::= MAIN 
             {
               Object RESULT =null;
-
+		 
+                     currentHash = "main"; 
+                     System.out.println("Ámbito cambiado a: main"); 
+                     listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
+                     
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("nombrefuncion",19, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -584,7 +594,11 @@ class CUP$Parser$actions {
 		int idVarleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 System.out.println("Identificador de función: " + idVar); RESULT = idVar.toString(); agregarSimbolo("funcion", idVar.toString(), "N/A"); 
+		 
+                     currentHash = idVar.toString(); 
+                     System.out.println("Ámbito cambiado a: " + idVar);
+                     listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
+                     
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("nombrefuncion",19, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -599,7 +613,10 @@ class CUP$Parser$actions {
 		int idVarleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
-		 System.out.println("Parámetro: " + idVar); RESULT = idVar.toString(); agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
+		 
+                     System.out.println("Parámetro: " + idVar); 
+                     agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
+                     RESULT = idVar.toString(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("parametro_decl",20, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -614,7 +631,10 @@ class CUP$Parser$actions {
 		int idVarleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 System.out.println("Parámetro: " + idVar); RESULT = idVar.toString(); agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
+		 
+                     System.out.println("Parámetro: " + idVar); 
+                     agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
+                     RESULT = idVar.toString(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("parametro_decl",20, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1046,7 +1066,7 @@ class CUP$Parser$actions {
           case 44: // imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE 
             {
               Object RESULT =null;
-
+		 System.out.println("Imprimir expresión"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("imprimir",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1055,7 +1075,7 @@ class CUP$Parser$actions {
           case 45: // leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE 
             {
               Object RESULT =null;
-
+		 System.out.println("Leer variables"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("leer_var",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

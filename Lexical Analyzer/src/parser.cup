@@ -18,21 +18,27 @@ parser code {:
     }
 
     private void agregarSimbolo(String tipoTabla, String identificador, String tipo) {
-        ArrayList<String> nuevaEntrada = new ArrayList<>();
-        nuevaEntrada.add("tipo:" + tipoTabla);
-        nuevaEntrada.add("identificador:" + identificador);
-        nuevaEntrada.add("tipo_dato:" + tipo);
+        ArrayList<String> nuevaEntrada = listaTablasSimbolos.getOrDefault(currentHash, new ArrayList<>());
 
-        currentHash = identificador;
+        // Verificar si ya existe el símbolo en el ámbito actual
+        for (String simbolo : nuevaEntrada) {
+            if (simbolo.contains("identificador:" + identificador)) {
+                System.err.println("Error: Identificador " + identificador + " ya existe en el ámbito " + currentHash);
+                return;
+            }
+        }
+
+        // Agregar símbolo si no existe
+        nuevaEntrada.add("tipo:" + tipoTabla + " identificador:" + identificador + " tipo_dato:" + tipo);
         listaTablasSimbolos.put(currentHash, nuevaEntrada);
     }
 
     public void imprimirTablaSimbolos() {
         for (String key : listaTablasSimbolos.keySet()) {
-            System.out.println("Tabla de simbolo: " + key);
-            System.out.println("Valores: ");
+            System.out.println("Ámbito: " + key);
+            System.out.println("Símbolos: ");
             for (String item : listaTablasSimbolos.get(key)) {
-                System.out.println(item);
+                System.out.println("    " + item);
             }
             System.out.println("");
         }
@@ -101,11 +107,26 @@ precedence left MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUALDAD, DIFERENTE;
 start with programa;
 
 //Reglas
-nombrefuncion ::= MAIN 
-                 | IDENTIFICADOR:idVar {: System.out.println("Identificador de función: " + idVar); RESULT = idVar.toString(); agregarSimbolo("funcion", idVar.toString(), "N/A"); :};
+nombrefuncion ::= MAIN {: 
+                     currentHash = "main"; 
+                     System.out.println("Ámbito cambiado a: main"); 
+                     listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
+                     :}
+                 | IDENTIFICADOR:idVar {: 
+                     currentHash = idVar.toString(); 
+                     System.out.println("Ámbito cambiado a: " + idVar);
+                     listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
+                     :};
 
-parametro_decl ::= tipo:tipo IDENTIFICADOR:idVar COMMA parametro_decl {: System.out.println("Parámetro: " + idVar); RESULT = idVar.toString(); agregarSimbolo("parametro", idVar.toString(), tipo.toString()); :} 
-                  | tipo:tipo IDENTIFICADOR:idVar {: System.out.println("Parámetro: " + idVar); RESULT = idVar.toString(); agregarSimbolo("parametro", idVar.toString(), tipo.toString()); :};
+parametro_decl ::= tipo:tipo IDENTIFICADOR:idVar COMMA parametro_decl {: 
+                     System.out.println("Parámetro: " + idVar); 
+                     agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
+                     RESULT = idVar.toString(); :} 
+                  | tipo:tipo IDENTIFICADOR:idVar {: 
+                     System.out.println("Parámetro: " + idVar); 
+                     agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
+                     RESULT = idVar.toString(); :};
+
 
 parametros_decl ::= parametro_decl | ;
 
@@ -147,8 +168,8 @@ op_unaria ::= IDENTIFICADOR:idVar INCREMENTO {: System.out.println("Incremento: 
 sec_var ::= IDENTIFICADOR:idVar COMMA sec_var {: System.out.println("Variable en lista: " + idVar); RESULT = idVar.toString(); agregarSimbolo("variable", idVar.toString(), "N/A"); :} 
              | IDENTIFICADOR:idVar {: System.out.println("Variable en lista: " + idVar); RESULT = idVar.toString(); agregarSimbolo("variable", idVar.toString(), "N/A"); :};
 
-imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE; 
-leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE; 
+imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE {: System.out.println("Imprimir expresión"); :}; 
+leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE {: System.out.println("Leer variables"); :}; 
 
 actualizacion ::= ASIGNACION | op_aritmeticas ASIGNACION;
 asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper CIERRE_DE_BLOQUE {: System.out.println("Asignación arreglo: " + idVar); RESULT = idVar.toString(); :};
@@ -188,3 +209,7 @@ funciones ::= funcion | funcion funciones;
 funcion ::= tipo encabezado;
 
 programa ::= funciones;
+
+
+/* ejecutar desde Lexical Analyzer */
+/* java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup */
