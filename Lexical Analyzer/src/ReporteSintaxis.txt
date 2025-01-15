@@ -1,0 +1,8 @@
+Error sintáctico recuperado en línea 4, columna 32.
+Error sintáctico recuperado en línea 5, columna 66.
+Error sintáctico recuperado en línea 6, columna 32.
+Error sintáctico recuperado en línea 10, columna 56.
+Error sintáctico recuperado en línea 11, columna 35.
+Error sintáctico recuperado en línea 15, columna 57.
+Error sintáctico recuperado en línea 17, columna 47.
+Error sintáctico recuperado en línea 18, columna 93.

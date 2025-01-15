@@ -143,20 +143,23 @@ precedence left MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUALDAD, DIFERENTE;
 start with programa;
 
 
-//Reglas
+//Reglas Grámaticales
+
 nombrefuncion ::= MAIN {: 
+                    // Cambio de ámbito al principal
                      currentHash = "main"; 
                      System.out.println("Ámbito cambiado a: main"); 
                      listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
                      :}
                  | IDENTIFICADOR:idVar {: 
+                    // Cambio de ámbito a un identificador
                      currentHash = idVar.toString(); 
                      System.out.println("Ámbito cambiado a: " + idVar);
                      listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
                      :};
 
 
-
+// Regla para definir parámetros de una función
 parametro_decl ::= tipo:tipo IDENTIFICADOR:idVar COMMA parametro_decl {: 
                      System.out.println("Parámetro: " + idVar); 
                      agregarSimbolo("parametro", idVar.toString(), tipo.toString()); 
@@ -167,22 +170,24 @@ parametro_decl ::= tipo:tipo IDENTIFICADOR:idVar COMMA parametro_decl {:
                      RESULT = idVar.toString(); :};
 
 
+// Regla para múltiples parámetros
 parametros_decl ::= parametro_decl | ;
 
 
-
+// Secuencia de operaciones
 sec_oper ::= dato_general COMMA sec_oper | dato_general;
 
 
-
+// Llamada de parámetros en funciones
 parametros_llamada ::= sec_oper | ;
 
 
-
+// Llamada a una función
 llamada_funcion ::= nombrefuncion PARENTESIS_APERTURA parametros_llamada PARENTESIS_CIERRE;
 
 
-
+// Definición de tipos básicos
+// Ejemplo: int, float, bool, etc.
 tipo ::= INTEGER {: System.out.println("TIPO: int"); RESULT = "int"; :}
         | FLOAT {: System.out.println("TIPO: float"); RESULT = "float"; :}
         | BOOL {: System.out.println("TIPO: bool"); RESULT = "bool"; :}
@@ -190,7 +195,7 @@ tipo ::= INTEGER {: System.out.println("TIPO: int"); RESULT = "int"; :}
         | STRING {: System.out.println("TIPO: string"); RESULT = "string"; :};
 
 
-
+// Definición de literales
 literal ::= INT_LITERAL:intVar {: System.out.println("Literal entero: " + intVar); RESULT = intVar.toString(); :}
           | STRING_LITERAL:strVar {: System.out.println("Literal string: " + strVar); RESULT = strVar.toString(); :}
           | FLOAT_LITERAL:floatVar {: System.out.println("Literal float: " + floatVar); RESULT = floatVar.toString(); :}
@@ -199,103 +204,117 @@ literal ::= INT_LITERAL:intVar {: System.out.println("Literal entero: " + intVar
 
 
 
-expr ::= expr:e1 SUMA expr:e2 {: System.out.println("Expresión suma: " + e1 + " + " + e2); RESULT = e1 + " + " + e2; :}
-       | expr:e1 RESTA expr:e2 {: System.out.println("Expresión resta: " + e1 + " - " + e2); RESULT = e1 + " - " + e2; :}
-       | expr:e1 MULTIPLICACION expr:e2 {: System.out.println("Expresión multiplicación: " + e1 + " * " + e2); RESULT = e1 + " * " + e2; :}
-       | expr:e1 DIVISION expr:e2 {: System.out.println("Expresión división: " + e1 + " / " + e2); RESULT = e1 + " / " + e2; :}
-       | expr:e1 MODULO expr:e2 {: System.out.println("Expresión módulo: " + e1 + " % " + e2); RESULT = e1 + " % " + e2; :}
-       | expr:e1 POTENCIA expr:e2 {: System.out.println("Expresión potencia: " + e1 + " ^ " + e2); RESULT = e1 + " ^ " + e2; :}
-       | PARENTESIS_APERTURA expr:e PARENTESIS_CIERRE {: System.out.println("Expresión entre paréntesis: " + e); RESULT = "(" + e + ")"; :}
-       | IDENTIFICADOR:idVar {: System.out.println("Identificador en expresión: " + idVar); RESULT = idVar.toString(); :}
-       | literal;
+// Expresiones generales
+expr ::= expr:e1 SUMA expr:e2 {: 
+            System.out.println("Expresión suma: " + e1 + " + " + e2); 
+            RESULT = e1 + " + " + e2; :}
+       | expr:e1 RESTA expr:e2 {: 
+            System.out.println("Expresión resta: " + e1 + " - " + e2); 
+            RESULT = e1 + " - " + e2; :}
+       | expr:e1 MULTIPLICACION expr:e2 {: 
+            System.out.println("Expresión multiplicación: " + e1 + " * " + e2); 
+            RESULT = e1 + " * " + e2; :}
+       | expr:e1 DIVISION expr:e2 {: 
+            System.out.println("Expresión división: " + e1 + " / " + e2); 
+            RESULT = e1 + " / " + e2; :}
+       | expr:e1 MODULO expr:e2 {: 
+            System.out.println("Expresión módulo: " + e1 + " % " + e2); 
+            RESULT = e1 + " % " + e2; :}
+       | expr:e1 POTENCIA expr:e2 {: 
+            System.out.println("Expresión potencia: " + e1 + " ^ " + e2); 
+            RESULT = e1 + " ^ " + e2; :}
+       | PARENTESIS_APERTURA expr:e PARENTESIS_CIERRE {: 
+            System.out.println("Expresión entre paréntesis: " + e); 
+            RESULT = "(" + e + ")"; :}
+       | dato_general {: System.out.println("Dato general evaluado"); RESULT = "dato_general"; :};
 
 
-
+// Operadores aritméticos
 op_aritmeticas ::= SUMA | RESTA | MULTIPLICACION | DIVISION | MODULO | POTENCIA;
 
 
-
+// Generalización de datos
+// Incluye identificadores, literales y funciones
 dato_general ::= IDENTIFICADOR:idVar {: System.out.println("Variable: " + idVar); RESULT = idVar.toString(); agregarSimbolo("variable", idVar.toString(), "N/A"); :} | literal | llamada_funcion;
 
 
-
+// Operaciones unarias
 op_unaria ::= IDENTIFICADOR:idVar INCREMENTO {: System.out.println("Incremento: " + idVar); RESULT = idVar.toString() + "++"; agregarSimbolo("operacion", idVar.toString(), "incremento"); :} 
               | IDENTIFICADOR:idVar DECREMENTO {: System.out.println("Decremento: " + idVar); RESULT = idVar.toString() + "--"; agregarSimbolo("operacion", idVar.toString(), "decremento"); :};
 
 
-
+// Lista de variables
 sec_var ::= IDENTIFICADOR:idVar COMMA sec_var {: System.out.println("Variable en lista: " + idVar); RESULT = idVar.toString(); agregarSimbolo("variable", idVar.toString(), "N/A"); :} 
              | IDENTIFICADOR:idVar {: System.out.println("Variable en lista: " + idVar); RESULT = idVar.toString(); agregarSimbolo("variable", idVar.toString(), "N/A"); :};
 
 
-
+// Imprimir y leer variables
 imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE {: System.out.println("Imprimir expresión"); :}; 
 leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE {: System.out.println("Leer variables"); :}; 
 
 
-
+// Actualización de variables
 actualizacion ::= ASIGNACION | op_aritmeticas ASIGNACION;
 asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper CIERRE_DE_BLOQUE {: System.out.println("Asignación arreglo: " + idVar); RESULT = idVar.toString(); :};
 asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general CORCHETE_CIERRE actualizacion expr_logica_aritmetica {: System.out.println("Asignación índice: " + idVar); RESULT = idVar.toString(); :};
-asignacion_variable ::= IDENTIFICADOR:idVar actualizacion expr_logica_aritmetica {: System.out.println("Asignación variable: " + idVar); RESULT = idVar.toString(); :};
+asignacion_variable ::= IDENTIFICADOR:idVar actualizacion expr {: System.out.println("Asignación variable: " + idVar); RESULT = idVar.toString(); :};
 asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_indice;
 
 
-
+// Declaración de arreglos
 declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper CIERRE_DE_BLOQUE | ; 
 declaracion ::= tipo:tipo IDENTIFICADOR:idVar {: System.out.println("Declaración: " + idVar); RESULT = idVar.toString(); agregarSimbolo("declaracion", idVar.toString(), tipo.toString()); :}
               | tipo:tipo IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica {: System.out.println("Declaración con asignación: " + idVar); RESULT = idVar.toString(); agregarSimbolo("declaracion", idVar.toString(), tipo.toString()); :}
               | tipo:tipo IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general CORCHETE_CIERRE declaracion_arreglo_op {: System.out.println("Declaración arreglo: " + idVar); RESULT = idVar.toString(); :};
 
 
-
+// Else en estructuras de control
 else_expr ::= ELSE APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE;
 else_op ::= else_expr | ;
 
 
-
+// Relaciones y comparaciones
 relacion ::= MENOR | MENOR_IGUAL | MAYOR | MAYOR_IGUAL | IGUALDAD | DIFERENTE;
-comparacion_operacion ::= expr_logica_aritmetica relacion expr_logica_aritmetica | expr_logica_aritmetica op_aritmeticas expr_logica_aritmetica | dato_general | op_unaria; 
+comparacion_operacion ::= dato_general relacion dato_general | dato_general op_aritmeticas dato_general;
 op_logica ::= CONJUNCION | DISYUNCION;
 expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica | expr_logica_aritmetica op_logica expr_logica_aritmetica | comparacion_operacion | PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE;
 if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE else_op
 | IF error {: System.out.println("Error sintáctico en la definición de un if."); :} APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE else_op;
 
 
-
+// Switch
 cases ::= CASE literal DOS_PUNTOS bloques cases | DEFAULT DOS_PUNTOS bloques;
 switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE cases CIERRE_DE_BLOQUE
 | SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE   cases   CIERRE_DE_BLOQUE;
 
 
-
+// Fin de función
 finfuncion ::= RETURN dato_general | RETURN;
 op_simple ::= op_unaria | asignacion_variable; 
 simple_expr ::= op_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion | error {: System.out.println("Error sintáctico en la definición de una expresión simple."); :};
 inicializacion ::= asignacion_variable | IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :};
 
 
-
+// Estructuras de control
 while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE 
 | WHILE error {: System.out.println("Error sintáctico en la definición de un while."); :} APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE;
 
-for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE 
+for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE 
 | FOR error {: System.out.println("Error sintáctico en la definición de un for."); :} APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 
 
-
+// Bloques de código
 bloque ::= if_expr | while_expr | for_expr | switch_expr | simple_expr END_EXPR; 
 bloques ::= bloque bloques | error {: System.out.println("Error dentro de bloque, verificar definición."); :} | ; 
 
 
-
+// Bloques de funciones
 funciones ::= funcion | funcion funciones | error {: System.out.println("Error fatal en la definición de una función, deteniendo parseo."); :};                                  
 funcion ::= tipo nombrefuncion PARENTESIS_APERTURA  parametros_decl  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE 
 | tipo nombrefuncion PARENTESIS_APERTURA  error {: System.out.println("Error en la definición de parámetros de una función."); :}  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 
 
-
-
+// Programa principal
 programa ::= funciones | ;
 
 
