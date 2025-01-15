@@ -9,17 +9,12 @@ public class App {
             Lexer lexer = new Lexer(new FileReader("Lexical Analyzer/src/test.txt")); 
             lexer.createWriter("Lexical Analyzer/src/ReporteLexemas.txt");
 
-            // Symbol token;
-            // while ((token = lexer.next_token()).sym != sym.EOF) {
-
-            //     System.out.println("Token: " + token.sym + ", Value: " + token.value);
-            // }
-
             Parser parser = new Parser(lexer);
+            parser.createWriter("Lexical Analyzer/src/ReporteSintaxis.txt");
             parser.parse();
 
             lexer.closeWriter();
-
+            parser.closeWriter();
 
         } catch (Exception e) {
             e.printStackTrace();

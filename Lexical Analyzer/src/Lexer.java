@@ -211,12 +211,12 @@ public class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\3\2\4\1\3\1\4\1\5\1\6\1\7\1\10"+
+    "\1\3\2\4\1\0\1\4\1\5\1\6\1\7\1\10"+
     "\1\11\1\12\2\3\1\13\1\14\1\3\1\15\1\16"+
     "\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26"+
     "\1\27\1\3\1\30\1\31\1\32\1\3\1\33\1\34"+
-    "\1\35\1\36\1\37\1\40\4\3\2\41\1\3\2\41"+
-    "\1\3\1\42\11\41\1\43\31\41\54\0\1\4\47\0"+
+    "\1\35\1\36\1\37\1\40\4\3\2\41\1\0\2\41"+
+    "\1\0\1\42\11\41\1\43\31\41\54\0\1\4\47\0"+
     "\2\7\1\44\2\7\1\45\44\7\2\46\1\0\2\46"+
     "\1\0\2\46\1\0\7\46\1\47\31\46\15\0\1\50"+
     "\1\14\46\0\1\51\1\0\2\50\46\0\1\52\1\0"+
@@ -449,7 +449,7 @@ public class Lexer implements java_cup.runtime.Scanner {
             if(tokenNum == ERROR) text += "Error léxico: ";
             else if(tokenNum == COMENTARIO) text += "Comentario: ";
             else text += "Token: " + tokenNum + ", Valor: ";
-            text += value + ", línea: " + yyline + ", columna: " + yycolumn + '\n';
+            text += value + ", línea: " + (yyline + 1) + ", columna: " + (yycolumn + 1) + '\n';
             outputFile.write(text);
             outputFile.flush();
         }
@@ -459,7 +459,7 @@ public class Lexer implements java_cup.runtime.Scanner {
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        return new Symbol(type, yyline + 1, yycolumn + 1, value);
     }
 
 

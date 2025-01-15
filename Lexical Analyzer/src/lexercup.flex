@@ -42,7 +42,7 @@ import java.io.IOException;
             if(tokenNum == ERROR) text += "Error léxico: ";
             else if(tokenNum == COMENTARIO) text += "Comentario: ";
             else text += "Token: " + tokenNum + ", Valor: ";
-            text += value + ", línea: " + yyline + ", columna: " + yycolumn + '\n';
+            text += value + ", línea: " + (yyline + 1) + ", columna: " + (yycolumn + 1) + '\n';
             outputFile.write(text);
             outputFile.flush();
         }
@@ -55,7 +55,7 @@ import java.io.IOException;
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        return new Symbol(type, yyline + 1, yycolumn + 1, value);
     }
 
 %}
@@ -197,7 +197,7 @@ CharLiteral = '((\\.)|[^\\'\r\n])'
 
 <YYINITIAL> <<EOF>> { return symbol(sym.EOF, yytext()); }
 
-[^] { writeToken(ERROR, yytext()); }
+. { writeToken(ERROR, yytext()); }
  
 
 /* ejecutar desde Lexical Analyzer */
