@@ -200,5 +200,5 @@ CharLiteral = '((\\.)|[^\\'\r\n])'
 . { writeToken(ERROR, yytext()); }
  
 
-/* ejecutar desde Lexical Analyzer */
+/* ejecutar desde Compilador */
 /* java -cp lib/jflex-full-1.9.1.jar jflex.Main src/lexercup.flex */

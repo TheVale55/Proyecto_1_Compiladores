@@ -9,7 +9,7 @@ import java_cup.runtime.Symbol;
 
 parser code {: 
     private Lexer scanner;
-    private HashMap<String, ArrayList<String>> listaTablasSimbolos;
+    private SymbolTable symbolTable;
     private String currentHash;
     private BufferedWriter outputFile;
 
@@ -17,40 +17,14 @@ parser code {:
 
     public Parser(Lexer scanner) {
         this.scanner = scanner;
-        this.listaTablasSimbolos = new HashMap<>();
+        this.symbolTable = new SymbolTable();
         this.currentHash = "";
     }
 
 
 
-    public void setSymbolTable(HashMap<String, ArrayList<String>> tablaSimbolos) {
-        this.listaTablasSimbolos = tablaSimbolos;
-    }
 
-
-
-    private void agregarSimbolo(String symbol) {
-        //if (!listaTablasSimbolos.get(currentHash).contains(symbol)) {
-            listaTablasSimbolos.get(currentHash).add(symbol);
-        //}
-    }
-
-
-
-    public void imprimirTablaSimbolos() {
-        System.out.println("----------------------------------------------------------------------------------------------");
-        for (String key : listaTablasSimbolos.keySet()) {
-            System.out.println("Ambito: " + key);
-            System.out.println("Simbolos: ");
-            for (String item : listaTablasSimbolos.get(key)) {
-                System.out.println("    " + item);
-            }
-            System.out.println("");
-        }
-    }
-
-
-        public void createWriter(String root) throws IOException {
+    public void createWriter(String root) throws IOException {
         outputFile = new BufferedWriter(new FileWriter(root));
     }
 
@@ -147,25 +121,10 @@ start with programa;
 
 
 //Reglas
-nombrefuncion ::= MAIN {: 
-                    RESULT = "_main_";
-                    currentHash = "_main_"; 
-                    System.out.println("Ambito cambiado a: main"); 
-                    listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
-                    :}
-                 | IDENTIFICADOR:nombreFunc {: 
-                    RESULT = nombreFunc;
-                    currentHash = nombreFunc.toString(); 
-                    System.out.println("Ambito cambiado a: " + nombreFunc);
-                    listaTablasSimbolos.putIfAbsent(currentHash, new ArrayList<>());
-                :};
 
 
-
-
-
-parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param {: System.out.println("Parámetro: " + idVar); agregarSimbolo(t.toString() + ":" + idVar.toString()); RESULT = t + ":" + idVar + ":" + param; :}
-                  | tipo:t IDENTIFICADOR:idVar {: System.out.println("Parámetro: " + idVar); agregarSimbolo(t.toString() + ":" + idVar.toString()); RESULT = t + ":" + idVar; :};
+parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param {: symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); RESULT = t + ":" + idVar + ":" + param; :}
+| tipo:t IDENTIFICADOR:idVar {: symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); RESULT = t + ":" + idVar; :};
 
 
 
@@ -188,18 +147,17 @@ llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:param
 {:
     System.out.println("Llamada a función: " + f.toString() + ", argumentos: " + params.toString());
     RESULT = f + ":" + params.toString();
-    agregarSimbolo(f + ":" + params.toString());
 :};
 
 
 
 
 
-tipo ::= INTEGER {: System.out.println("TIPO: int"); RESULT = "int"; :}
-        | FLOAT {: System.out.println("TIPO: float"); RESULT = "float"; :}
-        | BOOL {: System.out.println("TIPO: bool"); RESULT = "bool"; :}
-        | CHAR {: System.out.println("TIPO: char"); RESULT = "char"; :}
-        | STRING {: System.out.println("TIPO: string"); RESULT = "string"; :};
+tipo ::= INTEGER {: RESULT = "int"; :}
+        | FLOAT {: RESULT = "float"; :}
+        | BOOL {: RESULT = "bool"; :}
+        | CHAR {: RESULT = "char"; :}
+        | STRING {: RESULT = "string"; :};
 
 
 
@@ -213,19 +171,19 @@ literal ::= INT_LITERAL:intVar {: RESULT = intVar.toString(); :}
 
 
 
-op_aritmeticas ::= SUMA {: System.out.println("Operador: suma"); RESULT = "+"; :} | RESTA {: System.out.println("Operador: resta"); RESULT = "-"; :} | MULTIPLICACION {: System.out.println("Operador: multiplicación"); RESULT = "*"; :} | DIVISION {: System.out.println("Operador: división"); RESULT = "/"; :} | MODULO {: System.out.println("Operador: módulo"); RESULT = "%"; :} | POTENCIA {: System.out.println("Operador: potencia"); RESULT = "^"; :};
+op_aritmeticas ::= SUMA {: RESULT = "+"; :} | RESTA {: RESULT = "-"; :} | MULTIPLICACION {: RESULT = "*"; :} | DIVISION {:  RESULT = "/"; :} | MODULO {: RESULT = "%"; :} | POTENCIA {:  RESULT = "^"; :};
 
 
 
-dato_general ::= IDENTIFICADOR:idVar {: System.out.println("Variable: " + idVar); RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit.toString(); :} | llamada_funcion:func {: RESULT = func; :};
+dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit.toString(); :} | llamada_funcion:func {: RESULT = func; :};
 
 
 
-op_unaria ::= INCREMENTO {: System.out.println("Operador unario: incremento"); RESULT = "++"; :} | DECREMENTO {: System.out.println("Operador unario: decremento"); RESULT = "--"; :};
+op_unaria ::= INCREMENTO {:  RESULT = "++"; :} | DECREMENTO {:  RESULT = "--"; :};
 
 
 
-expr_unaria ::= IDENTIFICADOR:idVar op_unaria:op {:  System.out.println("Operación unaria: " + idVar + op); RESULT = idVar.toString() + op; :};
+expr_unaria ::= IDENTIFICADOR:idVar op_unaria:op {:  RESULT = idVar.toString() + op; :};
 
 
 
@@ -233,17 +191,19 @@ sec_var ::= IDENTIFICADOR COMMA sec_var | IDENTIFICADOR;
 
 
 
-imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE {: System.out.println("Imprimir expresión"); :}; 
-leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE {: System.out.println("Leer variables"); :}; 
+imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE; 
+leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE; 
 
 
 
 
 
 actualizacion ::= ASIGNACION {: RESULT = "="; :} | op_aritmeticas:arit_op ASIGNACION {: RESULT = arit_op + "="; :};
-asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: System.out.println("Asignación a un arreglo: " + idVar);
+asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE 
+{:
+    System.out.println("Asignación arreglo: " + idVar + ", valores: " + seq);
     RESULT = idVar + ":" + seq;
-    agregarSimbolo(idVar.toString() + ":" + seq.toString());
+
 :};
 
 
@@ -252,7 +212,6 @@ asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_ope
 asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE actualizacion:act expr_logica_aritmetica:e 
 {: System.out.println("Asignación por índice: " + idVar + "[" + dato + "] " + act + " " + e.toString());
     RESULT = idVar + ":" + dato + ":" + act + ":" + e.toString();
-    agregarSimbolo(idVar.toString() + ":" + dato.toString() + ":" + act.toString() + ":" + e.toString());
 :};
 
 
@@ -261,7 +220,6 @@ asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CO
 asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_aritmetica:e 
 {:  System.out.println("Asignación de variable: " + idVar + " " + act + " " + e);
     RESULT = idVar + ":" + act + ":" + e.toString();
-    agregarSimbolo(idVar.toString() + ":" + act + ":" + e.toString());
 :};
 
 
@@ -272,16 +230,16 @@ asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_i
 
 
 
-declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = seq.toString(); agregarSimbolo(seq.toString()); :} | {: RESULT = ""; :}; 
-declaracion ::= tipo:t IDENTIFICADOR:idVar {: System.out.println("Declaración: " + t + " " + idVar); RESULT = t + ":" + idVar; :}
-              | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e {: System.out.println("Declaración con asignación: " + t + " " + idVar + " = " + e); RESULT = t + ":" + idVar + ":" + e; agregarSimbolo(t.toString() + ":" + idVar.toString() + ":" + e); :}
-              | tipo:t IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE declaracion_arreglo_op:arr_decl {: String text = t + ":" + idVar + ":" + dato + ":" + arr_decl; System.out.println("Declaración arreglo: " + t + " " + idVar + "[" + dato + "]" + arr_decl); RESULT = text; agregarSimbolo(text); :};
+declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = seq.toString(); :} | {: RESULT = ""; :}; 
+declaracion ::= tipo:t IDENTIFICADOR:idVar {: System.out.println("Declaración de variable: " + t + " " + idVar); RESULT = t + ":" + idVar; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); :}
+              | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e {: System.out.println("Declaración de variable con asignación: " + t + " " + idVar + " = " + e); RESULT = t + ":" + idVar + ":" + e; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); :}
+              | tipo:t IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE declaracion_arreglo_op:arr_decl {: String text = t + ":" + idVar + ":" + dato + ":" + arr_decl; System.out.println("Declaración arreglo: " + t + " " + idVar + "[" + dato + "] = " + arr_decl);  RESULT = text; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar);  :};
 
 
 
 
 
-else_expr ::= ELSE APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE;
+else_expr ::= ELSE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques CIERRE_DE_BLOQUE; 
 else_op ::= else_expr | {: RESULT = ""; :};
 
 
@@ -310,15 +268,15 @@ op_logica ::= CONJUNCION {: RESULT = "and"; :} | DISYUNCION {: RESULT = "or"; :}
 
 
 
-expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e {: RESULT = "not " + e.toString(); agregarSimbolo("not:" + e); :} 
-| expr_logica_aritmetica:e1  op_logica:op  expr_logica_aritmetica:e2 {: RESULT = e1.toString() + ":" + op + ":" + e2.toString(); agregarSimbolo(e1.toString() + ":" + op + ":" + e2); :} 
-| comparacion_operacion:cmp {: RESULT = cmp; agregarSimbolo(cmp.toString()); :} 
-| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE {: RESULT = "(" + e.toString() + ")"; agregarSimbolo("(" + e + ")"); :}; //Se ha agregado el simbolo
+expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e {: RESULT = "not " + e.toString(); :} 
+| expr_logica_aritmetica:e1  op_logica:op  expr_logica_aritmetica:e2 {: RESULT = e1.toString() + ":" + op + ":" + e2.toString();  :} 
+| comparacion_operacion:cmp {: RESULT = cmp; :} 
+| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE {: RESULT = "(" + e.toString() + ")"; :}; 
 
 
 
 
-if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE else_op
+if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques   CIERRE_DE_BLOQUE else_op
 | IF error {: System.out.println("Error sintáctico en la definición de un if."); :} APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE else_op;
 
 
@@ -326,26 +284,26 @@ if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APER
 
 
 cases ::= CASE literal DOS_PUNTOS bloques cases | DEFAULT DOS_PUNTOS bloques;
-switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE cases CIERRE_DE_BLOQUE
+switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases CIERRE_DE_BLOQUE 
 | SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE   cases   CIERRE_DE_BLOQUE;
 
 
 
 
 
-finfuncion ::= RETURN dato_general:dato {: System.out.println("Retorno del valor: " + dato.toString()); agregarSimbolo(dato.toString()); :} | RETURN {: System.out.println("Sin valor de retorno"); :};
+finfuncion ::= RETURN dato_general:dato {: System.out.println("Retorno del valor: " + dato.toString()); :} | RETURN {: System.out.println("Sin valor de retorno"); :};
 op_simple ::= expr_unaria | asignacion_variable; 
 simple_expr ::= expr_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion | error {: RESULT = "Error"; System.out.println("Error sintáctico en la definición de una expresión simple."); :};
-inicializacion ::= asignacion_variable:asign {: RESULT = asign; agregarSimbolo(asign.toString()); :} | IDENTIFICADOR:i {: RESULT = i; agregarSimbolo(i.toString()); :};
+inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICADOR:i {: RESULT = i; :};
 
 
 
 
 
-while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE 
+while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE 
 | WHILE error {: System.out.println("Error sintáctico en la definición de un while."); :} APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE;
 
-for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE 
+for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques  CIERRE_DE_BLOQUE 
 | FOR error {: System.out.println("Error sintáctico en la definición de un for."); :} APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 
 
@@ -358,16 +316,28 @@ bloques ::= bloque bloques | error {: System.out.println("Error dentro de bloque
 
 
 
+nombrefuncion ::= MAIN {: 
+                    RESULT = "_verano_"; 
+                    System.out.println("Scope cambiado a: _verano_");
+                    symbolTable.addScope();
+                :}
+                 | IDENTIFICADOR:nombreFunc {: 
+                    RESULT = nombreFunc;
+                    System.out.println("Scope cambiado a: " + nombreFunc);
+                    symbolTable.addScope();
+                :};
+
+
 
 funciones ::= funcion | funcion funciones | error {: System.out.println("Error fatal en la definición de una función, deteniendo parseo."); :};                                  
-funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA  parametros_decl:params  {: System.out.println("Declaración de función: " + funcName + ", parámetros: " + "(" + params + "), " + "tipo: " + t.toString()); agregarSimbolo(t.toString() + ":" + funcName + ":" + params); :}  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE
-| tipo nombrefuncion PARENTESIS_APERTURA  error {: System.out.println("Error en la definición de parámetros de una función."); :}  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
+funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA   parametros_decl:params   PARENTESIS_CIERRE    {: System.out.println("Declaración de función: " + funcName + ", parámetros: " + "(" + params + "), " + "tipo: " + t.toString()); symbolTable.addSymbol(funcName, t + ":" + funcName + ":" + params); :}   APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE
+| tipo nombrefuncion PARENTESIS_APERTURA  error  PARENTESIS_CIERRE  {: System.out.println("Error en la definición de parámetros de una función."); :}  APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
 
 
 
 
-programa ::= funciones {: imprimirTablaSimbolos(); :} | {: RESULT = ""; :};
+programa ::= funciones {: System.out.println("Información de la tabla de símbolos no disponible aún"); :} | {: RESULT = ""; :};
 
 
-/* ejecutar desde Lexical Analyzer */
+/* ejecutar desde Compilador */
 /* java -cp lib/java-cup-11b.jar java_cup.Main -parser Parser -symbols sym -destdir src src/parser.cup */
