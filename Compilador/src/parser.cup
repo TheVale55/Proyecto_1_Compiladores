@@ -1,6 +1,4 @@
 //import java_cup.runtime.*;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

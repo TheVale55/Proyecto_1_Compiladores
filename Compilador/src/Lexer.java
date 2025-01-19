@@ -4,7 +4,6 @@
 
 /* JF1ex exarnole: partial Java language lexer specification */
 
-import java_cup.runtime.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

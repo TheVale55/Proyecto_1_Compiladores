@@ -41,10 +41,15 @@ public class SymbolTable {
     }
 
 
-    public void printScopes() {
-        for (int i=0; i<this.scopes.size(); i++) {
-            System.out.println("Scope " + (i+1) + ": " + scopes.get(i));
-        }
+    // public void printScopes() {
+    //     for (int i=0; i<this.scopes.size(); i++) {
+    //         System.out.println("Scope " + (i+1) + ": " + scopes.get(i));
+    //     }
+    // }
+
+
+    public void printScope(HashMap<String, ArrayList<String>> table) {
+        System.out.println(table);
     }
 
 
