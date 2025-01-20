@@ -36,6 +36,14 @@ parser code {:
     }
 
 
+    public void reportSemanticError(String text) {
+        if(semanticFile != null) {
+            semanticFile.write(text);
+            semanticFile.flush();
+        }
+    }
+
+
     public void closeSyntaxWriter() throws IOException {
         if(syntaxFile != null) {
             syntaxFile.close();
@@ -151,7 +159,11 @@ parametros_llamada ::= sec_oper:seq {: RESULT = seq; :} | {: RESULT = ""; :} ;
 
 llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:params PARENTESIS_CIERRE 
 {:
-    RESULT = f + ":" + params.toString();
+    String functionType = symbolTable.getType(f.toString());
+    RESULT = functionType;
+    if(!symbolTable.verifyType(functionType, params.toString())) {
+        reportSemanticError("Error en el tipo de datos de una llamada a una función o existencia de una variable fuera del scope\n");
+    }
 :};
 
 
@@ -208,6 +220,9 @@ asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_ope
 {:
     System.out.println("Asignación arreglo: " + idVar + ", valores: " + seq);
     RESULT = idVar + ":" + seq;
+    if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), seq.toString())) {
+        reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope\n");
+    }
 
 :};
 
@@ -217,6 +232,9 @@ asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_ope
 asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE actualizacion:act expr_logica_aritmetica:e 
 {: System.out.println("Asignación por índice: " + idVar + "[" + dato + "] " + act + " " + e.toString());
     RESULT = idVar + ":" + dato + ":" + act + ":" + e.toString();
+    if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), e.toString())) {
+        reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope\n");
+    }
 :};
 
 
@@ -225,6 +243,9 @@ asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CO
 asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_aritmetica:e 
 {:  System.out.println("Asignación de variable: " + idVar + " " + act + " " + e);
     RESULT = idVar + ":" + act + ":" + e.toString();
+    if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), e.toString())) {
+        reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope\n");
+    }
 :};
 
 
@@ -236,9 +257,27 @@ asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_i
 
 
 declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = seq.toString(); :} | {: RESULT = ""; :}; 
+
+
 declaracion ::= tipo:t IDENTIFICADOR:idVar {: System.out.println("Declaración de variable: " + t + " " + idVar); RESULT = t + ":" + idVar; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); :}
-              | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e {: System.out.println("Declaración de variable con asignación: " + t + " " + idVar + " = " + e); RESULT = t + ":" + idVar + ":" + e; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); :}
-              | tipo:t IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE declaracion_arreglo_op:arr_decl {: String text = t + ":" + idVar + ":" + dato + ":" + arr_decl; System.out.println("Declaración arreglo: " + t + " " + idVar + "[" + dato + "] = " + arr_decl);  RESULT = text; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar);  :};
+              | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e 
+              {:    
+                    System.out.println("Declaración de variable con asignación: " + t + " " + idVar + " = " + e); 
+                    RESULT = t + ":" + idVar + ":" + e; 
+                    symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); 
+                    if(!symbolTable.verifyType(t.toString(), e.toString())) {
+                        reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope\n");
+                    }
+              :}
+              | tipo:t IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE declaracion_arreglo_op:arr_decl 
+              {:    
+                    String text = t + ":" + idVar + ":" + dato + ":" + arr_decl; //cuidado por con el : si no se asignan valores al arreglo.
+                    System.out.println("Declaración arreglo: " + t + " " + idVar + "[" + dato + "] = " + arr_decl);  
+                    RESULT = text; symbolTable.addSymbol(idVar.toString(), t + ":" + idVar);  
+                    if(!symbolTable.verifyType(t.toString(), arr_decl.toString())) {
+                        reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope\n");
+                    }
+              :};
 
 
 
@@ -325,6 +364,7 @@ nombrefuncion ::= MAIN {: RESULT = "_verano_"; :} | IDENTIFICADOR:nombreFunc {: 
 
 
 
+
 funciones ::= funcion | funcion funciones | error {: System.out.println("Error fatal en la definición de una función, deteniendo parseo."); :}; 
 
 funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); :} parametros_decl:params   PARENTESIS_CIERRE {: 
@@ -332,6 +372,7 @@ symbolTable.addSymbol(funcName.toString(), t + ":" + funcName + ":" + params);
 :}   
 APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); :} | tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); :}  error  PARENTESIS_CIERRE  
 {: System.out.println("Error en la definición de parámetros de una función."); symbolTable.addSymbol(funcName.toString(), t + ":" + funcName + ":error"); :}  APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); :};
+
 
 
 

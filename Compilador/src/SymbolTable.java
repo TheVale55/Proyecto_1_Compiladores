@@ -29,7 +29,7 @@ public class SymbolTable {
            
             this.scopes.peek().put(currentSymbol, info);
 
-        }
+        } 
     }
 
 
