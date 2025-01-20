@@ -3,6 +3,10 @@
         "lib/**/*.jar",
         "Lexical Analyzer/lib/java-cup-11b.jar",
         "Lexical Analyzer/lib/java-cup-11b-runtime.jar",
-        "Lexical Analyzer/lib/jflex-full-1.9.1.jar"
-    ]
+        "Lexical Analyzer/lib/jflex-full-1.9.1.jar",
+        "Compilador/lib/jflex-full-1.9.1.jar",
+        "Compilador/lib/java-cup-11b.jar",
+        "Compilador/lib/java-cup-11b-runtime.jar"
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }

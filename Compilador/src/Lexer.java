@@ -4,9 +4,12 @@
 
 /* JF1ex exarnole: partial Java language lexer specification */
 
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java_cup.runtime.*;
+
 
 /* This class is a simple example lexer. */
 

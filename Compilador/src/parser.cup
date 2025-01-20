@@ -1,42 +1,51 @@
-//import java_cup.runtime.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java_cup.runtime.Symbol;
 
 
+
 parser code {: 
     private Lexer scanner;
     private SymbolTable symbolTable;
-    private String currentHash;
-    private BufferedWriter outputFile;
+    private BufferedWriter syntaxFile;
+    private BufferedWriter semanticFile;
 
 
-
+    @SuppressWarnings("deprecation")
     public Parser(Lexer scanner) {
         this.scanner = scanner;
         this.symbolTable = new SymbolTable();
-        this.currentHash = "";
+    }
+
+    public void createSemanticWriter(String root) throws IOException {
+        semanticFile = new BufferedWriter(new FileWriter(root));
     }
 
 
-
-
-    public void createWriter(String root) throws IOException {
-        outputFile = new BufferedWriter(new FileWriter(root));
+    public void createSyntaxWriter(String root) throws IOException {
+        syntaxFile = new BufferedWriter(new FileWriter(root));
     }
 
 
     public void reportSyntaxError(int line, int column) throws IOException {
-        if(outputFile != null) {
-            outputFile.write("Error sintáctico recuperado en línea " + line + ", columna " + column + ".\n");
-            outputFile.flush();
+        if(syntaxFile != null) {
+            syntaxFile.write("Error sintáctico recuperado en línea " + line + ", columna " + column + ".\n");
+            syntaxFile.flush();
         }
     }
 
-    public void closeWriter() throws IOException {
-        if(outputFile != null) {
-            outputFile.close();
+
+    public void closeSyntaxWriter() throws IOException {
+        if(syntaxFile != null) {
+            syntaxFile.close();
+        }
+    }
+
+
+    public void closeSemanticWriter() throws IOException {
+        if(semanticFile != null) {
+            semanticFile.close();
         }
     }
 
@@ -45,7 +54,6 @@ parser code {:
     public void syntax_error(Symbol current) {
         try {
           reportSyntaxError(current.left, current.right);
-          //System.out.println("Error sintáctico, línea: " + current.left + ", columna: " + current.right);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -143,7 +151,6 @@ parametros_llamada ::= sec_oper:seq {: RESULT = seq; :} | {: RESULT = ""; :} ;
 
 llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:params PARENTESIS_CIERRE 
 {:
-    System.out.println("Llamada a función: " + f.toString() + ", argumentos: " + params.toString());
     RESULT = f + ":" + params.toString();
 :};
 
@@ -159,11 +166,11 @@ tipo ::= INTEGER {: RESULT = "int"; :}
 
 
 
-literal ::= INT_LITERAL:intVar {: RESULT = intVar.toString(); :}
-          | STRING_LITERAL:strVar {: RESULT = strVar.toString(); :}
-          | FLOAT_LITERAL:floatVar {: RESULT = floatVar.toString(); :}
-          | CHAR_LITERAL:charVar {:  RESULT = charVar.toString(); :}
-          | BOOL_LITERAL:boolVar {:  RESULT = boolVar.toString(); :};
+literal ::= INT_LITERAL:intVar {: RESULT = "int"; /* intVar.toString(); */ :}
+          | STRING_LITERAL:strVar {: RESULT = "string"; /* strVar.toString(); */ :}
+          | FLOAT_LITERAL:floatVar {: RESULT = "float"; /* floatVar.toString(); */ :}
+          | CHAR_LITERAL:charVar {:  RESULT = "char"; /* charVar.toString(); */ :}
+          | BOOL_LITERAL:boolVar {:  RESULT = "bool"; /* boolVar.toString(); */ :};
 
 
 
@@ -173,7 +180,7 @@ op_aritmeticas ::= SUMA {: RESULT = "+"; :} | RESTA {: RESULT = "-"; :} | MULTIP
 
 
 
-dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit.toString(); :} | llamada_funcion:func {: RESULT = func; :};
+dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit; :} | llamada_funcion:func {: RESULT = func; :};
 
 
 
@@ -181,7 +188,7 @@ op_unaria ::= INCREMENTO {:  RESULT = "++"; :} | DECREMENTO {:  RESULT = "--"; :
 
 
 
-expr_unaria ::= IDENTIFICADOR:idVar op_unaria:op {:  RESULT = idVar.toString() + op; :};
+expr_unaria ::= IDENTIFICADOR:idVar op_unaria {:  RESULT = idVar.toString(); :};
 
 
 
@@ -237,7 +244,7 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar {: System.out.println("Declaración d
 
 
 
-else_expr ::= ELSE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques CIERRE_DE_BLOQUE; 
+else_expr ::= ELSE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}; 
 else_op ::= else_expr | {: RESULT = ""; :};
 
 
@@ -250,8 +257,8 @@ relacion ::= MENOR {: RESULT = "<"; :} | MENOR_IGUAL {: RESULT = "<="; :} | MAYO
 
 
 
-comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 {: RESULT = e1.toString() + ":" + rel + ":" + e2.toString(); :} 
-| expr_logica_aritmetica:e1  op_aritmeticas:op  expr_logica_aritmetica:e2 {: RESULT = e1 + ":" + op + ":" + e2; :}
+comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 {: RESULT = e1.toString()  + ":" + e2.toString(); :} 
+| expr_logica_aritmetica:e1  op_aritmeticas:op  expr_logica_aritmetica:e2 {: RESULT = e1 + ":" + e2; /* int:_var_:string:_var2_ */:} 
 | dato_general:dato {: RESULT = dato; :}
 | expr_unaria:op {: RESULT = op; :}; 
 
@@ -266,30 +273,30 @@ op_logica ::= CONJUNCION {: RESULT = "and"; :} | DISYUNCION {: RESULT = "or"; :}
 
 
 
-expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e {: RESULT = "not " + e.toString(); :} 
-| expr_logica_aritmetica:e1  op_logica:op  expr_logica_aritmetica:e2 {: RESULT = e1.toString() + ":" + op + ":" + e2.toString();  :} 
+expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e {: RESULT = e.toString(); :} 
+| expr_logica_aritmetica:e1  op_logica  expr_logica_aritmetica:e2 {: RESULT = e1.toString() + ":" + e2.toString();  :} 
 | comparacion_operacion:cmp {: RESULT = cmp; :} 
-| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE {: RESULT = "(" + e.toString() + ")"; :}; 
+| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE {: RESULT = e.toString(); :}; 
 
 
 
 
-if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques   CIERRE_DE_BLOQUE else_op
-| IF error {: System.out.println("Error sintáctico en la definición de un if."); :} APERTURA_DE_BLOQUE bloques CIERRE_DE_BLOQUE else_op;
+if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques   CIERRE_DE_BLOQUE  {: symbolTable.printScope(); symbolTable.exitScope(); :}  else_op
+| IF error {: System.out.println("Error sintáctico en la definición de un if."); :} APERTURA_DE_BLOQUE {: symbolTable.addScope(); :} bloques CIERRE_DE_BLOQUE  {: symbolTable.printScope(); symbolTable.exitScope(); :}  else_op;
 
 
 
 
 
 cases ::= CASE literal DOS_PUNTOS bloques cases | DEFAULT DOS_PUNTOS bloques;
-switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases CIERRE_DE_BLOQUE 
-| SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE   cases   CIERRE_DE_BLOQUE;
+switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}
+| SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
 
 
 
 
-finfuncion ::= RETURN dato_general:dato {: System.out.println("Retorno del valor: " + dato.toString()); :} | RETURN {: System.out.println("Sin valor de retorno"); :};
+finfuncion ::= RETURN dato_general:dato  | RETURN ;
 op_simple ::= expr_unaria | asignacion_variable; 
 simple_expr ::= expr_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion | error {: RESULT = "Error"; System.out.println("Error sintáctico en la definición de una expresión simple."); :};
 inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICADOR:i {: RESULT = i; :};
@@ -298,11 +305,11 @@ inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICAD
 
 
 
-while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE 
-| WHILE error {: System.out.println("Error sintáctico en la definición de un while."); :} APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE;
+while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :} 
+| WHILE error {: System.out.println("Error sintáctico en la definición de un while."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
-for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques  CIERRE_DE_BLOQUE 
-| FOR error {: System.out.println("Error sintáctico en la definición de un for."); :} APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
+for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}
+| FOR error {: System.out.println("Error sintáctico en la definición de un for."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
 
 
@@ -314,27 +321,21 @@ bloques ::= bloque bloques | error {: System.out.println("Error dentro de bloque
 
 
 
-nombrefuncion ::= MAIN {: 
-                    RESULT = "_verano_"; 
-                    System.out.println("Scope cambiado a: _verano_");
-                    symbolTable.addScope();
-                :}
-                 | IDENTIFICADOR:nombreFunc {: 
-                    RESULT = nombreFunc;
-                    System.out.println("Scope cambiado a: " + nombreFunc);
-                    symbolTable.addScope();
-                :};
+nombrefuncion ::= MAIN {: RESULT = "_verano_"; :} | IDENTIFICADOR:nombreFunc {: RESULT = nombreFunc; :};
 
 
 
-funciones ::= funcion | funcion funciones | error {: System.out.println("Error fatal en la definición de una función, deteniendo parseo."); :};                                  
-funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA   parametros_decl:params   PARENTESIS_CIERRE    {: System.out.println("Declaración de función: " + funcName + ", parámetros: " + "(" + params + "), " + "tipo: " + t.toString()); symbolTable.addSymbol(funcName, t + ":" + funcName + ":" + params); :}   APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE
-| tipo nombrefuncion PARENTESIS_APERTURA  error  PARENTESIS_CIERRE  {: System.out.println("Error en la definición de parámetros de una función."); :}  APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE;
+funciones ::= funcion | funcion funciones | error {: System.out.println("Error fatal en la definición de una función, deteniendo parseo."); :}; 
+
+funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); :} parametros_decl:params   PARENTESIS_CIERRE {: 
+symbolTable.addSymbol(funcName.toString(), t + ":" + funcName + ":" + params); 
+:}   
+APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); :} | tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); :}  error  PARENTESIS_CIERRE  
+{: System.out.println("Error en la definición de parámetros de una función."); symbolTable.addSymbol(funcName.toString(), t + ":" + funcName + ":error"); :}  APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); :};
 
 
 
-
-programa ::= funciones {: System.out.println("Información de la tabla de símbolos no disponible aún"); :} | {: RESULT = ""; :};
+programa ::=  funciones | {: RESULT = ""; :};
 
 
 /* ejecutar desde Compilador */
