@@ -296,14 +296,28 @@ relacion ::= MENOR {: RESULT = "<"; :} | MENOR_IGUAL {: RESULT = "<="; :} | MAYO
 
 
 
-comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 {: RESULT = e1.toString()  + ":" + e2.toString(); :} 
-| expr_logica_aritmetica:e1  op_aritmeticas:op  expr_logica_aritmetica:e2 {: RESULT = e1 + ":" + e2; /* int:_var_:string:_var2_ */:} 
+// Aqui falta la logica de condicion de if, while etc.
+comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 
+{: 
+    if(!symbolTable.validateOperation(e1.toString(), rel.toString(), e2.toString())) {
+        reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope\n");
+    }
+    RESULT = e1.toString(); 
+:} 
+| expr_logica_aritmetica:e1  op_aritmeticas:op  expr_logica_aritmetica:e2 
+{: 
+    if(!symbolTable.validateOperation(e1.toString(), op.toString(), e2.toString())) {
+        reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope\n");
+    }
+    RESULT = e1.toString(); 
+
+:} 
 | dato_general:dato {: RESULT = dato; :}
 | expr_unaria:op {: RESULT = op; :}; 
 
 
 
-
+ 
 
 
 op_logica ::= CONJUNCION {: RESULT = "and"; :} | DISYUNCION {: RESULT = "or"; :};
@@ -312,10 +326,23 @@ op_logica ::= CONJUNCION {: RESULT = "and"; :} | DISYUNCION {: RESULT = "or"; :}
 
 
 
-expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e {: RESULT = e.toString(); :} 
-| expr_logica_aritmetica:e1  op_logica  expr_logica_aritmetica:e2 {: RESULT = e1.toString() + ":" + e2.toString();  :} 
-| comparacion_operacion:cmp {: RESULT = cmp; :} 
-| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE {: RESULT = e.toString(); :}; 
+expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e 
+{: 
+    RESULT = e.toString(); 
+:} 
+| expr_logica_aritmetica:e1  op_logica:op  expr_logica_aritmetica:e2 
+{: 
+    /* Aqui no verifico porque se trata de operaciones logicas como and, or o not */
+    RESULT = e1.toString();  
+:} 
+| comparacion_operacion:cmp 
+{: 
+    RESULT = cmp; 
+:} 
+| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE 
+{: 
+    RESULT = e.toString(); 
+:}; 
 
 
 

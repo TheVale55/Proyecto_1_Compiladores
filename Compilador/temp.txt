@@ -1,0 +1,9 @@
+    public boolean verifyType(String type, String data) {
+        String [] values = data.split(SEPARATOR);
+        for(int i=0; i<values.length; i++) {
+            if(getType(values[i]).equals(type)) {
+                return false;
+            }
+        }
+        return true;
+    } 
