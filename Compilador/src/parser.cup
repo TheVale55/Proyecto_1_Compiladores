@@ -116,7 +116,7 @@ non terminal tipo, literal, op_aritmeticas, dato_general, sec_oper, sec_var, imp
 actualizacion, asignacion_arreglo, asignacion_indice, asignacion_variable, asignacion_compuesta, 
 declaracion_arreglo_op, declaracion, op_unaria, finfuncion, nombrefuncion, parametro_decl, parametros_decl, else_expr, else_op, relacion, 
 comparacion_operacion, op_logica, expr_logica_aritmetica, if_expr, cases, switch_expr, op_simple, simple_expr, while_expr, for_expr, 
-bloque, bloques, funciones, funcion, programa, llamada_funcion, parametros_llamada, expr_unaria;
+bloque, bloques, funciones, funcion, programa, llamada_funcion, parametros_llamada, expr_unaria, acceso_arreglo;
 
 
 //precedencias
@@ -161,7 +161,7 @@ llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:param
     String funcName = f.toString();
     RESULT = symbolTable.getType(funcName);
     if(!symbolTable.verifyFunctionCall(funcName, params.toString())) {
-        reportSemanticError("Error en el tipo de datos de una llamada a una función o existencia de una variable o función fuera del scope\n");
+        reportSemanticError("Error en el tipo de datos de una llamada a una función o existencia de una variable o función fuera del scope o cantidad incorrecta de parámetros.\n");
     }
 :};
 
@@ -191,7 +191,7 @@ op_aritmeticas ::= SUMA {: RESULT = "+"; :} | RESTA {: RESULT = "-"; :} | MULTIP
 
 
 
-dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit; :} | llamada_funcion:func {: RESULT = func; :};
+dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit; :} | llamada_funcion:func {: RESULT = func; :} | acceso_arreglo:arrName {: RESULT = arrName; :};
 
 
 
@@ -221,12 +221,23 @@ leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE;
 
 
 
+acceso_arreglo ::= IDENTIFICADOR:idVar CORCHETE_APERTURA expr_logica_aritmetica:e CORCHETE_CIERRE 
+{: 
+    if(!symbolTable.isIndexInteger(e.toString())) {
+        reportSemanticError("Error semántico, el tipo de dato de un índice debe ser entero.\n");
+    }
+    RESULT = idVar.toString(); 
+:};
+
+
+
+
+
 actualizacion ::= ASIGNACION {: RESULT = "="; :} | op_aritmeticas:arit_op ASIGNACION {: RESULT = arit_op + "="; :};
 asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE 
 {:
-    System.out.println("Asignación arreglo: " + idVar + ", valores: " + seq);
     RESULT = idVar + ":" + seq;
-    if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), seq.toString())) { //verificar esto, se cambio la func getType
+    if(!symbolTable.verifyArrayDeclaration(symbolTable.getType(idVar.toString()), seq.toString())) { 
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
 
@@ -235,10 +246,12 @@ asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_ope
 
 
 
-asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE actualizacion:act expr_logica_aritmetica:e 
-{: System.out.println("Asignación por índice: " + idVar + "[" + dato + "] " + act + " " + e.toString());
-    RESULT = idVar + ":" + dato + ":" + act + ":" + e.toString();
-    if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), e.toString())) {
+
+asignacion_indice ::= acceso_arreglo:arr actualizacion:act expr_logica_aritmetica:e 
+{:
+    String arrName = arr.toString();
+    RESULT = arrName;                         
+    if(!symbolTable.verifyType(symbolTable.getType(arrName), e.toString())) {
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
 :};
@@ -247,7 +260,7 @@ asignacion_indice ::= IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CO
 
 
 asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_aritmetica:e 
-{:  System.out.println("Asignación de variable: " + idVar + " " + act + " " + e);
+{: 
     RESULT = idVar + ":" + act + ":" + e.toString();
     if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), e.toString())) {
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
@@ -257,7 +270,6 @@ asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_arit
 
 
 asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_indice;
-
 
 
 
@@ -275,11 +287,11 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar {: String type = t.toString(); RESULT
                         reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope.\n");
                     }
               :}
-              | tipo:t IDENTIFICADOR:idVar CORCHETE_APERTURA dato_general:dato CORCHETE_CIERRE declaracion_arreglo_op:arr_decl 
+              | tipo:t acceso_arreglo:arrName declaracion_arreglo_op:arr_decl 
               {:    
                     String text = t.toString();  
                     RESULT = text; 
-                    symbolTable.addSymbol(idVar.toString(), text + ":" + idVar);  
+                    symbolTable.addSymbol(arrName.toString(), text + ":" + arrName);  
                     if(!symbolTable.verifyType(t.toString(), arr_decl.toString())) {
                         reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope.\n");
                     }
@@ -374,7 +386,7 @@ finfuncion ::= RETURN expr_logica_aritmetica:dato
     if(!symbolTable.verifyType(symbolTable.getType(dato.toString()), symbolTable.getActualFunction())) {
         reportSemanticError("Error semántico en el tipo de retorno de función.\n");
     } 
-:} | RETURN ;
+:} | RETURN {: reportSemanticError("Error semántico, el valor de retorno no coincide con el tipo de la función.\n"); :};
 
 
 

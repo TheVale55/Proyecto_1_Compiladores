@@ -2,13 +2,14 @@ import java.util.*;
 
 public class SymbolTable {
 
-    public static final int TYPE_INDEX = 0;
+    public static final int TYPE_INFO = 0;
     public static final String SEPARATOR = ":";
     public static final List<String> DATA_TYPES = Arrays.asList(
         "int", "float", "char", "bool", "string"
     );
     public static final int FLOAT_TYPE_INDEX = 1;
     public static final int STRING_TYPE_INDEX = 4;
+    public static final int INT_TYPE_INDEX = 0;
     public static final String EMPTY_STRING = "";
     public static final String MODULE_OPERATOR = "%";
     public static final int FUNCTION_PARAMS_INDEX = 2;
@@ -102,7 +103,7 @@ public class SymbolTable {
         for(int i=0; i<localScopes.size(); i++) {
             if(localScopes.get(i).containsKey(key)) {
                 String[] info = localScopes.get(i).get(key).split(SEPARATOR);
-                return info[TYPE_INDEX]; 
+                return info[TYPE_INFO]; 
             }
         }
         return EMPTY_STRING; 
@@ -148,6 +149,26 @@ public class SymbolTable {
         }
         return true;
     } 
+
+
+
+
+    public boolean verifyArrayDeclaration(String type, String data) {
+        String[] values = data.split(SEPARATOR);
+        for(int i=0; i<values.length; i++) {
+            if(!type.equals(values[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+    public boolean isIndexInteger(String index) {
+        return getType(index).equals(DATA_TYPES.get(INT_TYPE_INDEX));
+    }
 
 
 

@@ -14,4 +14,11 @@ Token: 49, Valor: _miChar_, línea: 4, columna: 11
 Token: 16, Valor: entrega, línea: 4, columna: 20
 Token: 11, Valor: '!', línea: 4, columna: 28
 Token: 50, Valor: finregalo, línea: 4, columna: 32
+Token: 49, Valor: _arr_, línea: 5, columna: 4
+Token: 14, Valor: abreempaque, línea: 5, columna: 10
+Token: 8, Valor: cadena, línea: 5, columna: 29
+Token: 15, Valor: cierraempaque, línea: 5, columna: 31
+Token: 16, Valor: entrega, línea: 5, columna: 46
+Token: 11, Valor: 'c', línea: 5, columna: 55
+Token: 50, Valor: finregalo, línea: 5, columna: 59
 Token: 13, Valor: cierracuento, línea: 6, columna: 1
