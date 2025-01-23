@@ -11,33 +11,42 @@ public class SymbolTable {
     public static final int STRING_TYPE_INDEX = 4;
     public static final String EMPTY_STRING = "";
     public static final String MODULE_OPERATOR = "%";
+    public static final int FUNCTION_PARAMS_INDEX = 2;
+    public static final int IGNORABLE_INDEX_COUNT = 2;
 
-    private Stack<HashMap<String, String>> scopes;
+
+    private Stack<HashMap<String, String>> localScopes;
+    private HashMap<String, String> globalScope;
 
 
     public SymbolTable() {
-        this.scopes = new Stack<HashMap<String, String>>();
+        this.localScopes = new Stack<HashMap<String, String>>();
+        this.globalScope = new HashMap<String, String>();
     }
 
 
 
     public void addScope() {
-        this.scopes.add(new HashMap<String, String>());
+        this.localScopes.add(new HashMap<String, String>());
     }
 
 
 
     public void exitScope() {
-        this.scopes.pop();
+        this.localScopes.pop();
     }
 
 
+    public void addGlobalSymbol(String currentSymbol, String info) {
+        if(!this.globalScope.containsKey(currentSymbol)) {
+            this.globalScope.put(currentSymbol, info);
+        }
+    }
+
 
     public void addSymbol(String currentSymbol, String info) {
-        if(!this.scopes.isEmpty() && !this.scopes.peek().containsKey(currentSymbol)) {
-           
-            this.scopes.peek().put(currentSymbol, info);
-
+        if(!this.localScopes.isEmpty() && !this.localScopes.peek().containsKey(currentSymbol)) {
+            this.localScopes.peek().put(currentSymbol, info);
         } 
     }
 
@@ -51,9 +60,9 @@ public class SymbolTable {
         if(isDataType(key)) {
             return key;
         }
-        for(int i=0; i<scopes.size(); i++) {
-            if(scopes.get(i).containsKey(key)) {
-                String[] info = scopes.get(i).get(key).split(SEPARATOR);
+        for(int i=0; i<localScopes.size(); i++) {
+            if(localScopes.get(i).containsKey(key)) {
+                String[] info = localScopes.get(i).get(key).split(SEPARATOR);
                 return info[TYPE_INDEX]; //cambiar indice en el que se pone el tipo
             }
         }
@@ -61,6 +70,7 @@ public class SymbolTable {
     }
 
 
+    
     public boolean verifyType(String varType, String exprFinalType) {
         return varType.equals(exprFinalType);
     } 
@@ -76,11 +86,34 @@ public class SymbolTable {
     }
 
 
+
+    public boolean verifyFunctionCall(String function, String data) {
+        String [] params = data.split(SEPARATOR);
+        String[] functionInfo = globalScope.get(function).split(SEPARATOR);
+        if(functionInfo.length - IGNORABLE_INDEX_COUNT != params.length) {
+            return false;
+        }
+        for(int i = FUNCTION_PARAMS_INDEX; i<functionInfo.length; i++) {
+            if(!functionInfo[i].equals(getType(params[i - IGNORABLE_INDEX_COUNT]))) {
+                return false;
+            }
+        }
+        return true;
+    } 
+
+
+
     public void printScope() {
-        if(!scopes.empty()) {
-            System.out.println(scopes.peek());
+        if(!localScopes.empty()) {
+            System.out.println(localScopes.peek());
             System.out.println(EMPTY_STRING);
         }
+    }
+
+
+    public void printGlobalScope() {
+            System.out.println(globalScope);
+            System.out.println(EMPTY_STRING);
     }
 
 
