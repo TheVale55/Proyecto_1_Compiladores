@@ -17,12 +17,30 @@ public class SymbolTable {
 
     private Stack<HashMap<String, String>> localScopes;
     private HashMap<String, String> globalScope;
+    private String actualFunction;
+
 
 
     public SymbolTable() {
         this.localScopes = new Stack<HashMap<String, String>>();
         this.globalScope = new HashMap<String, String>();
+        this.actualFunction = EMPTY_STRING;
     }
+
+
+
+
+    public void setActualFunction (String funcName) {
+        this.actualFunction = funcName;
+    }
+
+
+
+
+    public String getActualFunction() {
+        return this.actualFunction;
+    }
+
 
 
 
@@ -32,9 +50,12 @@ public class SymbolTable {
 
 
 
+
     public void exitScope() {
         this.localScopes.pop();
     }
+
+
 
 
     public void addGlobalSymbol(String currentSymbol, String info) {
@@ -44,6 +65,8 @@ public class SymbolTable {
     }
 
 
+
+
     public void addSymbol(String currentSymbol, String info) {
         if(!this.localScopes.isEmpty() && !this.localScopes.peek().containsKey(currentSymbol)) {
             this.localScopes.peek().put(currentSymbol, info);
@@ -51,9 +74,25 @@ public class SymbolTable {
     }
 
 
-    private boolean isDataType(String data) {
+
+
+    public boolean isInLocalScope(String key) {
+        for(int i=0; i<localScopes.size(); i++) {
+            if(localScopes.get(i).containsKey(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public boolean isDataType(String data) {
         return DATA_TYPES.contains(data);
     }
+
+
 
 
     public String getType(String key) {
@@ -63,17 +102,19 @@ public class SymbolTable {
         for(int i=0; i<localScopes.size(); i++) {
             if(localScopes.get(i).containsKey(key)) {
                 String[] info = localScopes.get(i).get(key).split(SEPARATOR);
-                return info[TYPE_INDEX]; //cambiar indice en el que se pone el tipo
+                return info[TYPE_INDEX]; 
             }
         }
-        return EMPTY_STRING; //No existe el tipo en ningun scope
+        return EMPTY_STRING; 
     }
 
 
-    
-    public boolean verifyType(String varType, String exprFinalType) {
-        return varType.equals(exprFinalType);
+
+
+    public boolean verifyType(String type1, String type2) {
+        return type1.equals(type2);
     } 
+
 
 
 
@@ -87,12 +128,19 @@ public class SymbolTable {
 
 
 
+
     public boolean verifyFunctionCall(String function, String data) {
+        if(!globalScope.containsKey(function)) {
+            return false;
+        }
+
         String [] params = data.split(SEPARATOR);
         String[] functionInfo = globalScope.get(function).split(SEPARATOR);
+
         if(functionInfo.length - IGNORABLE_INDEX_COUNT != params.length) {
             return false;
         }
+
         for(int i = FUNCTION_PARAMS_INDEX; i<functionInfo.length; i++) {
             if(!functionInfo[i].equals(getType(params[i - IGNORABLE_INDEX_COUNT]))) {
                 return false;
@@ -103,12 +151,15 @@ public class SymbolTable {
 
 
 
+
     public void printScope() {
         if(!localScopes.empty()) {
             System.out.println(localScopes.peek());
             System.out.println(EMPTY_STRING);
         }
     }
+
+
 
 
     public void printGlobalScope() {
