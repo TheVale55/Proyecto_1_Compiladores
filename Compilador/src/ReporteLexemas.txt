@@ -21,4 +21,10 @@ Token: 15, Valor: cierraempaque, línea: 5, columna: 31
 Token: 16, Valor: entrega, línea: 5, columna: 46
 Token: 11, Valor: 'c', línea: 5, columna: 55
 Token: 50, Valor: finregalo, línea: 5, columna: 59
-Token: 13, Valor: cierracuento, línea: 6, columna: 1
+Error léxico: e, línea: 6, columna: 4
+Error léxico: r, línea: 6, columna: 5
+Error léxico: r, línea: 6, columna: 6
+Error léxico: o, línea: 6, columna: 7
+Error léxico: r, línea: 6, columna: 8
+Token: 50, Valor: finregalo, línea: 6, columna: 10
+Token: 13, Valor: cierracuento, línea: 7, columna: 1

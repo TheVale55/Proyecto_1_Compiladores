@@ -59,19 +59,23 @@ public class SymbolTable {
 
 
 
-    public void addGlobalSymbol(String currentSymbol, String info) {
+    public boolean addGlobalSymbol(String currentSymbol, String info) {
         if(!this.globalScope.containsKey(currentSymbol)) {
             this.globalScope.put(currentSymbol, info);
+            return true;
         }
+        return false;
     }
 
 
 
 
-    public void addSymbol(String currentSymbol, String info) {
+    public boolean addSymbol(String currentSymbol, String info) {
         if(!this.localScopes.isEmpty() && !this.localScopes.peek().containsKey(currentSymbol)) {
             this.localScopes.peek().put(currentSymbol, info);
+            return true;
         } 
+        return false;
     }
 
 

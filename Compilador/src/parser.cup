@@ -116,7 +116,7 @@ non terminal tipo, literal, op_aritmeticas, dato_general, sec_oper, sec_var, imp
 actualizacion, asignacion_arreglo, asignacion_indice, asignacion_variable, asignacion_compuesta, 
 declaracion_arreglo_op, declaracion, op_unaria, finfuncion, nombrefuncion, parametro_decl, parametros_decl, else_expr, else_op, relacion, 
 comparacion_operacion, op_logica, expr_logica_aritmetica, if_expr, cases, switch_expr, op_simple, simple_expr, while_expr, for_expr, 
-bloque, bloques, funciones, funcion, programa, llamada_funcion, parametros_llamada, expr_unaria, acceso_arreglo;
+bloque, bloques, funciones, funcion, programa, llamada_funcion, parametros_llamada, expr_unaria, acceso_arreglo, default_op;
 
 
 //precedencias
@@ -136,8 +136,20 @@ start with programa;
 //Reglas
 
 
-parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param {: symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); RESULT = t + ":"  + param; :}
-| tipo:t IDENTIFICADOR:idVar {: symbolTable.addSymbol(idVar.toString(), t + ":" + idVar); RESULT = t.toString(); :};
+parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param 
+{: 
+    if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
+        reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
+    } 
+    RESULT = t + ":"  + param; 
+:}
+| tipo:t IDENTIFICADOR:idVar 
+{: 
+    if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
+        reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
+    } 
+    RESULT = t.toString(); 
+:};
 
 
 
@@ -146,7 +158,7 @@ parametros_decl ::= parametro_decl:params {: RESULT = params; :} | {: RESULT = "
 
 
 
-sec_oper ::= dato_general:dato COMMA sec_oper:seq {: RESULT = dato + ":" + seq; :} | dato_general:dato {: RESULT = dato; :};
+sec_oper ::= expr_logica_aritmetica:dato COMMA sec_oper:seq {: RESULT = dato + ":" + seq; :} | expr_logica_aritmetica:dato {: RESULT = dato; :};
 
 
 
@@ -214,8 +226,8 @@ sec_var ::= IDENTIFICADOR COMMA sec_var | IDENTIFICADOR;
 
 
 
-imprimir ::= PRINT PARENTESIS_APERTURA sec_oper PARENTESIS_CIERRE; 
-leer_var ::= READ PARENTESIS_APERTURA sec_var PARENTESIS_CIERRE; 
+imprimir ::= PRINT PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE; //A petición del profe, se simplifica a un solo valor.
+leer_var ::= READ PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE; 
 
 
 
@@ -277,12 +289,23 @@ asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_i
 declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = seq.toString(); :} | {: RESULT = ""; :}; 
 
 
-declaracion ::= tipo:t IDENTIFICADOR:idVar {: String type = t.toString(); RESULT = type; symbolTable.addSymbol(idVar.toString(), type + ":" + idVar); :}
+
+
+declaracion ::= tipo:t IDENTIFICADOR:idVar 
+              {: 
+                String type = t.toString(); 
+                RESULT = type; 
+                if(!symbolTable.addSymbol(idVar.toString(), type + ":" + idVar)) {
+                    reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
+                } 
+              :}
               | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e 
               {:     
                     String type = t.toString();
                     RESULT = type; 
-                    symbolTable.addSymbol(idVar.toString(), type + ":" + idVar); 
+                    if(!symbolTable.addSymbol(idVar.toString(), type + ":" + idVar)) {
+                        reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
+                    } 
                     if(!symbolTable.verifyType(type, e.toString())) {
                         reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope.\n");
                     }
@@ -291,7 +314,9 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar {: String type = t.toString(); RESULT
               {:    
                     String text = t.toString();  
                     RESULT = text; 
-                    symbolTable.addSymbol(arrName.toString(), text + ":" + arrName);  
+                    if(!symbolTable.addSymbol(arrName.toString(), text + ":" + arrName)) {
+                        reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
+                    }  
                     if(!symbolTable.verifyType(t.toString(), arr_decl.toString())) {
                         reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope.\n");
                     }
@@ -373,10 +398,10 @@ if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APER
 
 
 
-
-cases ::= CASE literal DOS_PUNTOS bloques cases | DEFAULT DOS_PUNTOS bloques;
-switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}
-| SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
+default_op ::= DEFAULT DOS_PUNTOS bloques | ;
+cases ::= CASE literal DOS_PUNTOS bloques cases | CASE literal DOS_PUNTOS bloques;
+switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases   default_op   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}
+| SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases   default_op   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
 
 
@@ -399,7 +424,8 @@ inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICAD
     if(!symbolTable.isInLocalScope(i.toString())) {
         reportSemanticError("Error semántico, identificador fuera del scope.\n");
     }
-:};
+:} | tipo asignacion_variable:asign {: RESULT = asign; :};
+
 
 
 
@@ -430,23 +456,33 @@ funciones ::= funcion | funcion funciones | error {: System.out.println("Error f
 
 
 
-funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  parametros_decl:params  PARENTESIS_CIERRE   
+
+funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  parametros_decl:params  PARENTESIS_CIERRE 
+{:
+    if(!symbolTable.addGlobalSymbol(funcName.toString(), t + ":" + funcName + ":" + params)) {
+        reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");
+    }
+:}  
 APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE 
 {: 
-    symbolTable.addGlobalSymbol(funcName.toString(), t + ":" + funcName + ":" + params);
     symbolTable.printScope(); 
     symbolTable.exitScope();
     symbolTable.setActualFunction(""); 
 :} | 
-tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  error  PARENTESIS_CIERRE   
+tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  error  PARENTESIS_CIERRE 
+{:
+    if(!symbolTable.addGlobalSymbol(funcName.toString(), t + ":" + funcName + ":error")) {
+        reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");
+    }
+:} 
 APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE 
 {: 
     System.out.println("Error en la definición de parámetros de una función."); 
-    symbolTable.addGlobalSymbol(funcName.toString(), t + ":" + funcName + ":error"); 
     symbolTable.printScope(); 
     symbolTable.exitScope(); 
     symbolTable.setActualFunction("");
 :};
+
 
 
 

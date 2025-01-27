@@ -3,4 +3,5 @@
 bromista _func1_ abreregalo cupido _x22_ , cupido _x22_ cierraregalo  abrecuento  
    cupido _miChar_ entrega '!' finregalo
    _arr_ abreempaque "cadena" cierraempaque  entrega  'c' finregalo
+   error finregalo
 cierracuento
