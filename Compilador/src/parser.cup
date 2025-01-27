@@ -133,11 +133,14 @@ start with programa;
 
 
 
-//Reglas
+//Reglas gramáticales
 
 
+// Regla para la declaración de parámetros en una función.
 parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param 
 {: 
+    // Intenta agregar el parámetro a la tabla de símbolos.
+    // Si ya existe, reporta un error semántico.
     if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
         reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
     } 
@@ -145,42 +148,39 @@ parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param
 :}
 | tipo:t IDENTIFICADOR:idVar 
 {: 
+    // Similar al caso anterior, pero para el último parámetro de la lista.
     if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
         reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
     } 
     RESULT = t.toString(); 
 :};
 
-
-
-
+// Regla para definir el conjunto completo de parámetros en una función.
 parametros_decl ::= parametro_decl:params {: RESULT = params; :} | {: RESULT = ""; :};
 
 
-
+// Regla para las operaciones en las llamadas a funciones.
 sec_oper ::= expr_logica_aritmetica:dato COMMA sec_oper:seq {: RESULT = dato + ":" + seq; :} | expr_logica_aritmetica:dato {: RESULT = dato; :};
 
 
-
+// Definición de los parámetros en las llamadas a funciones.
 parametros_llamada ::= sec_oper:seq {: RESULT = seq; :} | {: RESULT = ""; :} ;
 
 
-
-
-
+// Regla para las llamadas a funciones.
 llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:params PARENTESIS_CIERRE 
 {:
     String funcName = f.toString();
+    // Recupera el tipo de la función de la tabla de símbolos.
     RESULT = symbolTable.getType(funcName);
+    // Verifica que la llamada sea válida en términos de parámetros y existencia.
     if(!symbolTable.verifyFunctionCall(funcName, params.toString())) {
         reportSemanticError("Error en el tipo de datos de una llamada a una función o existencia de una variable o función fuera del scope o cantidad incorrecta de parámetros.\n");
     }
 :};
 
 
-
-
-
+// Definición de tipos básicos.
 tipo ::= INTEGER {: RESULT = "int"; :}
         | FLOAT {: RESULT = "float"; :}
         | BOOL {: RESULT = "bool"; :}
@@ -188,29 +188,34 @@ tipo ::= INTEGER {: RESULT = "int"; :}
         | STRING {: RESULT = "string"; :};
 
 
-
+// Reglas para literales de diferentes tipos.
 literal ::= INT_LITERAL:intVar {: RESULT = "int"; /* intVar.toString(); */ :}
           | STRING_LITERAL:strVar {: RESULT = "string"; /* strVar.toString(); */ :}
           | FLOAT_LITERAL:floatVar {: RESULT = "float"; /* floatVar.toString(); */ :}
           | CHAR_LITERAL:charVar {:  RESULT = "char"; /* charVar.toString(); */ :}
           | BOOL_LITERAL:boolVar {:  RESULT = "bool"; /* boolVar.toString(); */ :};
 
+// Operadores aritméticos básicos.
+op_aritmeticas ::= SUMA {: RESULT = "+"; :} 
+                | RESTA {: RESULT = "-"; :} 
+                | MULTIPLICACION {: RESULT = "*"; :} 
+                | DIVISION {:  RESULT = "/"; :} 
+                | MODULO {: RESULT = "%"; :} 
+                | POTENCIA {:  RESULT = "^"; :};
 
 
+// Regla para datos generales: identificadores, literales, funciones o arreglos.
+dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} 
+                | literal:lit {: RESULT = lit; :} 
+                | llamada_funcion:func {: RESULT = func; :} 
+                | acceso_arreglo:arrName {: RESULT = arrName; :};
 
 
-op_aritmeticas ::= SUMA {: RESULT = "+"; :} | RESTA {: RESULT = "-"; :} | MULTIPLICACION {: RESULT = "*"; :} | DIVISION {:  RESULT = "/"; :} | MODULO {: RESULT = "%"; :} | POTENCIA {:  RESULT = "^"; :};
-
-
-
-dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} | literal:lit {: RESULT = lit; :} | llamada_funcion:func {: RESULT = func; :} | acceso_arreglo:arrName {: RESULT = arrName; :};
-
-
-
+// Operadores unarios como incremento y decremento.
 op_unaria ::= INCREMENTO {:  RESULT = "++"; :} | DECREMENTO {:  RESULT = "--"; :};
 
 
-
+// Expresiones unarias, aplicadas sobre identificadores.
 expr_unaria ::= IDENTIFICADOR:idVar op_unaria 
 {:  
     String var = idVar.toString();
@@ -221,18 +226,17 @@ expr_unaria ::= IDENTIFICADOR:idVar op_unaria
 :};
 
 
-
+// Secuencia de variables separadas por comas.
 sec_var ::= IDENTIFICADOR COMMA sec_var | IDENTIFICADOR;
 
 
-
+// Simplificación para imprimir un único valor.
 imprimir ::= PRINT PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE; //A petición del profe, se simplifica a un solo valor.
+// Leer un valor desde la entrada del usuario.
 leer_var ::= READ PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE; 
 
 
-
-
-
+// Leer un valor desde la entrada del usuario.
 acceso_arreglo ::= IDENTIFICADOR:idVar CORCHETE_APERTURA expr_logica_aritmetica:e CORCHETE_CIERRE 
 {: 
     if(!symbolTable.isIndexInteger(e.toString())) {
@@ -244,8 +248,9 @@ acceso_arreglo ::= IDENTIFICADOR:idVar CORCHETE_APERTURA expr_logica_aritmetica:
 
 
 
-
+// Regla para actualización de valores en asignaciones.
 actualizacion ::= ASIGNACION {: RESULT = "="; :} | op_aritmeticas:arit_op ASIGNACION {: RESULT = arit_op + "="; :};
+// Regla para actualización de valores en asignaciones.
 asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE 
 {:
     RESULT = idVar + ":" + seq;
@@ -256,9 +261,7 @@ asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_ope
 :};
 
 
-
-
-
+// Regla para actualización de valores en asignaciones.
 asignacion_indice ::= acceso_arreglo:arr actualizacion:act expr_logica_aritmetica:e 
 {:
     String arrName = arr.toString();
@@ -270,7 +273,7 @@ asignacion_indice ::= acceso_arreglo:arr actualizacion:act expr_logica_aritmetic
 
 
 
-
+// Asignación de valores a una variable.
 asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_aritmetica:e 
 {: 
     RESULT = idVar + ":" + act + ":" + e.toString();
@@ -280,17 +283,17 @@ asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_arit
 :};
 
 
-
+// Regla general para asignaciones: puede ser a una variable, arreglo o un índice de arreglo.
 asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_indice;
 
 
 
-
+// Declaración opcional de un arreglo, con o sin asignación de valores iniciales.
 declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = seq.toString(); :} | {: RESULT = ""; :}; 
 
 
 
-
+// Declaración de variables, con validaciones semánticas.
 declaracion ::= tipo:t IDENTIFICADOR:idVar 
               {: 
                 String type = t.toString(); 
@@ -326,21 +329,26 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar
 
 
 
-else_expr ::= ELSE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}; 
+// Definición de una cláusula else opcional.
+else_expr ::= ELSE APERTURA_DE_BLOQUE {: symbolTable.addScope(); :}  bloques CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}; 
+
+// Definición del operador else como opcional.
 else_op ::= else_expr | {: RESULT = ""; :};
 
 
+// Relación entre dos expresiones (comparaciones).
+relacion ::= MENOR {: RESULT = "<"; :} 
+            | MENOR_IGUAL {: RESULT = "<="; :} 
+            | MAYOR {: RESULT = ">"; :} 
+            | MAYOR_IGUAL {: RESULT = ">="; :} 
+            | IGUALDAD {: RESULT = "=="; :} 
+            | DIFERENTE {: RESULT = "!="; :};
 
 
-
-relacion ::= MENOR {: RESULT = "<"; :} | MENOR_IGUAL {: RESULT = "<="; :} | MAYOR {: RESULT = ">"; :} | MAYOR_IGUAL {: RESULT = ">="; :} | IGUALDAD {: RESULT = "=="; :} | DIFERENTE {: RESULT = "!="; :};
-
-
-
-
-
+// Comparaciones y operaciones aritméticas.
 comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 
 {: 
+    // Valida la operación y su compatibilidad semántica.
     if(!symbolTable.validateOperation(e1.toString(), rel.toString(), e2.toString())) {
         reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
     }
@@ -365,12 +373,12 @@ comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_a
 
 
 
- 
+// Operadores lógicos  and y or  
 op_logica ::= CONJUNCION {: RESULT = "and"; :} | DISYUNCION {: RESULT = "or"; :};
 
 
 
-
+// Expresiones lógicas y aritméticas con validaciones.
 expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e 
 {: 
     RESULT = e.toString(); 
@@ -391,23 +399,27 @@ expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e
 
 
 
-
+// Expresiones lógicas y aritméticas con validaciones.
 if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques   CIERRE_DE_BLOQUE  {: symbolTable.printScope(); symbolTable.exitScope(); :}  else_op
 | IF error {: System.out.println("Error sintáctico en la definición de un if."); :} APERTURA_DE_BLOQUE {: symbolTable.addScope(); :} bloques CIERRE_DE_BLOQUE  {: symbolTable.printScope(); symbolTable.exitScope(); :}  else_op;
 
 
-
-
+// Definición de un caso por defecto en una estructura SWITCH.
 default_op ::= DEFAULT DOS_PUNTOS bloques | ;
+
+// Definición de casos en una estructura SWITCH
 cases ::= CASE literal DOS_PUNTOS bloques cases | CASE literal DOS_PUNTOS bloques;
+
+// Definición de una estructura SWITCH con casos y un DEFAULT opcional.
 switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases   default_op   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}
 | SWITCH error {: System.out.println("Error sintáctico en la definición de una switch."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  cases   default_op   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
 
 
-
+// Definición de la expresión RETURN dentro de funciones, con validación de tipos
 finfuncion ::= RETURN expr_logica_aritmetica:dato 
-{: 
+{:
+     // Verifica que el tipo de retorno sea compatible con el tipo declarado de la función.
     if(!symbolTable.verifyType(symbolTable.getType(dato.toString()), symbolTable.getActualFunction())) {
         reportSemanticError("Error semántico en el tipo de retorno de función.\n");
     } 
@@ -415,9 +427,13 @@ finfuncion ::= RETURN expr_logica_aritmetica:dato
 
 
 
+// Operaciones simples que pueden ser expresiones unarias o asignaciones.
+op_simple ::= expr_unaria | asignacion_variable;
 
-op_simple ::= expr_unaria | asignacion_variable; 
+// Expresiones simples, como declaraciones, asignaciones, lectura/escritura, o llamadas a funciones.
 simple_expr ::= expr_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion | error {: RESULT = "Error"; System.out.println("Error sintáctico en la definición de una expresión simple."); :};
+
+// Inicialización de variables, que puede ser una asignación o declaración.
 inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICADOR:i 
 {: 
     RESULT = i; 
@@ -428,35 +444,32 @@ inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICAD
 
 
 
-
-
-
+// Estructura de control WHILE, con validación de bloques y manejo de scopes.
 while_expr ::= WHILE PARENTESIS_APERTURA  expr_logica_aritmetica  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :} 
 | WHILE error {: System.out.println("Error sintáctico en la definición de un while."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
+// Estructura de control FOR con inicialización, condición, y actualización.
 for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmetica  COMMA  op_simple  PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}   bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}
 | FOR error {: System.out.println("Error sintáctico en la definición de un for."); :} APERTURA_DE_BLOQUE  {: symbolTable.addScope(); :}  bloques  CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :};
 
 
 
-
-
+// Un único bloque de código puede ser un IF, WHILE, FOR, SWITCH, o una expresión simple.
 bloque ::= if_expr | while_expr | for_expr | switch_expr | simple_expr END_EXPR; 
+
+// Secuencia de bloques de código (uno tras otro).
 bloques ::= bloque bloques | error {: System.out.println("Error dentro de bloque, verificar definición."); RESULT = "Error"; :} | ; 
 
 
-
-
+// Definición de nombres de funciones, incluyendo el nombre especial MAIN.
 nombrefuncion ::= MAIN {: RESULT = "_verano_"; :} | IDENTIFICADOR:nombreFunc {: RESULT = nombreFunc; :};
 
 
-
-
+// Conjunto de funciones en el programa.
 funciones ::= funcion | funcion funciones | error {: System.out.println("Error fatal en la definición de una función, deteniendo parseo."); :}; 
 
 
-
-
+// Definición de una función con su tipo, nombre, parámetros y cuerpo.
 funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  parametros_decl:params  PARENTESIS_CIERRE 
 {:
     if(!symbolTable.addGlobalSymbol(funcName.toString(), t + ":" + funcName + ":" + params)) {
@@ -485,7 +498,7 @@ APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE
 
 
 
-
+// Definición del programa principal, compuesto por funciones
 programa ::=  funciones {: symbolTable.printGlobalScope(); :} | {: RESULT = ""; :};
 
 

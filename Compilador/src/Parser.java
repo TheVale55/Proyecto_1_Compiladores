@@ -758,6 +758,8 @@ class CUP$Parser$actions {
 		int paramright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object param = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
+    // Intenta agregar el parámetro a la tabla de símbolos.
+    // Si ya existe, reporta un error semántico.
     if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
         reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
     } 
@@ -778,6 +780,7 @@ class CUP$Parser$actions {
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
+    // Similar al caso anterior, pero para el último parámetro de la lista.
     if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
         reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
     } 
@@ -868,7 +871,9 @@ class CUP$Parser$actions {
 		Object params = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
     String funcName = f.toString();
+    // Recupera el tipo de la función de la tabla de símbolos.
     RESULT = symbolTable.getType(funcName);
+    // Verifica que la llamada sea válida en términos de parámetros y existencia.
     if(!symbolTable.verifyFunctionCall(funcName, params.toString())) {
         reportSemanticError("Error en el tipo de datos de una llamada a una función o existencia de una variable o función fuera del scope o cantidad incorrecta de parámetros.\n");
     }
@@ -1494,6 +1499,7 @@ class CUP$Parser$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
+    // Valida la operación y su compatibilidad semántica.
     if(!symbolTable.validateOperation(e1.toString(), rel.toString(), e2.toString())) {
         reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
     }
@@ -1798,7 +1804,8 @@ class CUP$Parser$actions {
 		int datoleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int datoright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object dato = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 
+		
+     // Verifica que el tipo de retorno sea compatible con el tipo declarado de la función.
     if(!symbolTable.verifyType(symbolTable.getType(dato.toString()), symbolTable.getActualFunction())) {
         reportSemanticError("Error semántico en el tipo de retorno de función.\n");
     } 
