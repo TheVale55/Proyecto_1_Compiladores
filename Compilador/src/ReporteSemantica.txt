@@ -1,2 +1,3 @@
+Error semántico en la declaración de una función, hay parámetros repetidos.
 Error semántico, el tipo de dato de un índice debe ser entero.
 Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.
