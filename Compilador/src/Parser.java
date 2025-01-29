@@ -648,6 +648,33 @@ public class Parser extends java_cup.runtime.lr_parser {
     private BufferedWriter syntaxFile;
     private BufferedWriter semanticFile;
 
+    // Clase Node para encapsular información de los nodos
+    class Node {
+        private String value; // Valor del nodo (ej. "42", "+", "x")
+        private int line;     // Línea en el código fuente
+        private int column;   // Columna en el código fuente
+        private Node left;    // Nodo izquierdo (opcional)
+        private Node right;   // Nodo derecho (opcional)
+
+        public Node(String value, int line, int column) {
+            this.value = value;
+            this.line = line;
+            this.column = column;
+        }
+
+        public String getValue() { return value; }
+        public int getLine() { return line; }
+        public int getColumn() { return column; }
+        public Node getLeft() { return left; }
+        public void setLeft(Node left) { this.left = left; }
+        public Node getRight() { return right; }
+        public void setRight(Node right) { this.right = right; }
+
+        @Override
+        public String toString() {
+            return value; // Convierte el nodo en un String cuando se necesite
+        }
+    }
 
     @SuppressWarnings("deprecation")
     public Parser(Lexer scanner) {
