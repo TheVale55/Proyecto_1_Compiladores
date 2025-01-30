@@ -4,6 +4,7 @@ import java.io.IOException;
 import java_cup.runtime.Symbol;
 
 
+
 parser code {: 
     private Lexer scanner;
     private SymbolTable symbolTable;
@@ -11,7 +12,7 @@ parser code {:
     private BufferedWriter semanticFile;
 
     // Clase Node para encapsular información de los nodos
-    class Node {
+    public static class Node {
         private String value; // Valor del nodo (ej. "42", "+", "x")
         private int line;     // Línea en el código fuente
         private int column;   // Columna en el código fuente
@@ -164,92 +165,144 @@ start with programa;
 
 // Regla para la declaración de parámetros en una función.
 parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param 
-{: 
-    // Intenta agregar el parámetro a la tabla de símbolos.
-    // Si ya existe, reporta un error semántico.
-    if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
-        reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
-    } 
-    RESULT = t + ":"  + param; 
-:}
-| tipo:t IDENTIFICADOR:idVar 
-{: 
-    // Similar al caso anterior, pero para el último parámetro de la lista.
-    if(!symbolTable.addSymbol(idVar.toString(), t + ":" + idVar)) {
-        reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos.\n");
-    } 
-    RESULT = t.toString(); 
-:};
+    {: 
+        String idVarName = (String) ((Symbol) idVar).value;
+        String typeName = (String) ((Symbol) t).value;
+
+        int left = ((Symbol) idVar).left;
+        int right = ((Symbol) idVar).right;
+
+        // Verificar si ya existe en la tabla de símbolos
+        if(!symbolTable.addSymbol(idVarName, typeName + ":" + idVarName)) {
+            reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos en línea " + left + ".\n");
+        } 
+
+        RESULT = new Node(typeName, left, right);
+    :}
+    | tipo:t IDENTIFICADOR:idVar 
+    {: 
+        String idVarName = (String) ((Symbol) idVar).value;
+        String typeName = (String) ((Symbol) t).value;
+
+
+        int left = ((Symbol) idVar).left;
+        int right = ((Symbol) idVar).right;
+
+        if(!symbolTable.addSymbol(idVarName, typeName + ":" + idVarName)) {
+            reportSemanticError("Error semántico en la declaración de una función, hay parámetros repetidos en línea " + left + ".\n");
+        } 
+
+        RESULT = new Node(typeName, left, right); 
+    :};
+
 
 // Regla para definir el conjunto completo de parámetros en una función.
-parametros_decl ::= parametro_decl:params {: RESULT = params; :} | {: RESULT = ""; :};
+parametros_decl ::= parametro_decl:params {: RESULT = params; :} | {: RESULT = new Node("empty_params", -1, -1); :};
+
 
 
 // Regla para las operaciones en las llamadas a funciones.
-sec_oper ::= expr_logica_aritmetica:dato COMMA sec_oper:seq {: RESULT = dato + ":" + seq; :} | expr_logica_aritmetica:dato {: RESULT = dato; :};
+// Regla para las operaciones en las llamadas a funciones.
+sec_oper ::= expr_logica_aritmetica:dato COMMA sec_oper:seq 
+    {:
+        Node datoNode = (Node) dato; // Casting a Node
+        Node seqNode = (Node) seq;   // Casting a Node
+
+        Node opNode = new Node(datoNode.getValue() + ":" + seqNode.getValue(), datoNode.getLine(), datoNode.getColumn());
+        opNode.setLeft(datoNode);
+        opNode.setRight(seqNode);
+        RESULT = opNode;
+    :}
+    | expr_logica_aritmetica:dato 
+    {:
+        RESULT = (Node) dato;  // Casting a Node
+    :};
+
 
 
 // Definición de los parámetros en las llamadas a funciones.
-parametros_llamada ::= sec_oper:seq {: RESULT = seq; :} | {: RESULT = ""; :} ;
+parametros_llamada ::= sec_oper:seq {: RESULT = (Node) seq; :} | {: RESULT = new Node("empty_call_params", -1, -1); :};
 
 
-// Regla para las llamadas a funciones.
 llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:params PARENTESIS_CIERRE 
-{:
-    String funcName = f.toString();
-    // Recupera el tipo de la función de la tabla de símbolos.
-    RESULT = symbolTable.getType(funcName);
-    // Verifica que la llamada sea válida en términos de parámetros y existencia.
-    if(!symbolTable.verifyFunctionCall(funcName, params.toString())) {
-        reportSemanticError("Error en el tipo de datos de una llamada a una función o existencia de una variable o función fuera del scope o cantidad incorrecta de parámetros.\n");
-    }
-:};
+    {:
+        // Casting seguro a Node
+        Node funcNameNode = (Node) f;
+        Node paramsNode = (Node) params;
+
+        // Crear nodo de la función con su nombre
+        Node funcNode = new Node(funcNameNode.getValue(), funcNameNode.getLine(), funcNameNode.getColumn());
+        
+        // Agregar los parámetros como hijo izquierdo
+        funcNode.setLeft(paramsNode);
+
+        // Asignar el resultado
+        RESULT = funcNode;
+
+        // Verifica que la llamada sea válida en términos de parámetros y existencia.
+        if (!symbolTable.verifyFunctionCall(funcNameNode.getValue(), paramsNode.getValue())) {
+            reportSemanticError("Error en la llamada a la función: tipo de datos incorrecto, función inexistente o cantidad incorrecta de parámetros en línea " + funcNameNode.getLine() + ".\n");
+        }
+    :};
+
 
 
 // Definición de tipos básicos.
-tipo ::= INTEGER {: RESULT = "int"; :}
-        | FLOAT {: RESULT = "float"; :}
-        | BOOL {: RESULT = "bool"; :}
-        | CHAR {: RESULT = "char"; :}
-        | STRING {: RESULT = "string"; :};
+tipo ::= INTEGER {: RESULT = new Node("int", -1, -1); :}
+        | FLOAT {: RESULT = new Node("float", -1, -1); :}
+        | BOOL {: RESULT = new Node("bool", -1, -1); :}
+        | CHAR {: RESULT = new Node("char", -1, -1); :}
+        | STRING {: RESULT = new Node("string", -1, -1); :};
 
 
 // Reglas para literales de diferentes tipos.
-literal ::= INT_LITERAL:intVar {: RESULT = "int"; /* intVar.toString(); */ :}
-          | STRING_LITERAL:strVar {: RESULT = "string"; /* strVar.toString(); */ :}
-          | FLOAT_LITERAL:floatVar {: RESULT = "float"; /* floatVar.toString(); */ :}
-          | CHAR_LITERAL:charVar {:  RESULT = "char"; /* charVar.toString(); */ :}
-          | BOOL_LITERAL:boolVar {:  RESULT = "bool"; /* boolVar.toString(); */ :};
+literal ::= INT_LITERAL:intVar {:Symbol intSymbol = (Symbol) intVar;RESULT = new Node(intSymbol.value.toString(), intSymbol.left, intSymbol.right);:}
+        | STRING_LITERAL:strVar {:Symbol strSymbol = (Symbol) strVar;RESULT = new Node(strSymbol.value.toString(), strSymbol.left, strSymbol.right);:}
+        | FLOAT_LITERAL:floatVar {:Symbol floatSymbol = (Symbol) floatVar;RESULT = new Node(floatSymbol.value.toString(), floatSymbol.left, floatSymbol.right);:}
+        | CHAR_LITERAL:charVar {:Symbol charSymbol = (Symbol) charVar;RESULT = new Node(charSymbol.value.toString(), charSymbol.left, charSymbol.right);:}
+        | BOOL_LITERAL:boolVar {:Symbol boolSymbol = (Symbol) boolVar; RESULT = new Node(boolSymbol.value.toString(), boolSymbol.left, boolSymbol.right);:};
+
 
 // Operadores aritméticos básicos.
-op_aritmeticas ::= SUMA {: RESULT = "+"; :} 
-                | RESTA {: RESULT = "-"; :} 
-                | MULTIPLICACION {: RESULT = "*"; :} 
-                | DIVISION {:  RESULT = "/"; :} 
-                | MODULO {: RESULT = "%"; :} 
-                | POTENCIA {:  RESULT = "^"; :};
+op_aritmeticas ::= SUMA {: RESULT = new Node("+", -1, -1); :} 
+                | RESTA {: RESULT = new Node("-", -1, -1); :} 
+                | MULTIPLICACION {: RESULT = new Node("*", -1, -1); :} 
+                | DIVISION {: RESULT = new Node("/", -1, -1); :} 
+                | MODULO {: RESULT = new Node("%", -1, -1); :} 
+                | POTENCIA {: RESULT = new Node("^", -1, -1); :};
+
 
 
 // Regla para datos generales: identificadores, literales, funciones o arreglos.
-dato_general ::= IDENTIFICADOR:idVar {: RESULT = idVar.toString(); :} 
+dato_general ::= IDENTIFICADOR:idVar {: Symbol idSymbol = (Symbol) idVar; RESULT = new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right); :} 
                 | literal:lit {: RESULT = lit; :} 
                 | llamada_funcion:func {: RESULT = func; :} 
                 | acceso_arreglo:arrName {: RESULT = arrName; :};
 
 
 // Operadores unarios como incremento y decremento.
-op_unaria ::= INCREMENTO {:  RESULT = "++"; :} | DECREMENTO {:  RESULT = "--"; :};
+op_unaria ::= INCREMENTO {: RESULT = new Node("++", -1, -1); :} | DECREMENTO {: RESULT = new Node("--", -1, -1); :};
 
 
 // Expresiones unarias, aplicadas sobre identificadores.
-expr_unaria ::= IDENTIFICADOR:idVar op_unaria 
-{:  
-    String var = idVar.toString();
-    RESULT = var; 
-    if(!symbolTable.isInLocalScope(var)) {
-        reportSemanticError("Error semántico, identificador fuera del scope.\n");
-    }
-:};
+expr_unaria ::= IDENTIFICADOR:idVar op_unaria:op 
+    {:  
+
+        Symbol idSymbol = (Symbol) idVar;
+        Symbol opSymbol = (Symbol) op;
+
+        Node unariaNode = new Node(opSymbol.value.toString(), idSymbol.left, idSymbol.right);
+        
+        Node idNode = new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right);
+        unariaNode.setLeft(idNode);
+
+        if (!symbolTable.isInLocalScope(idSymbol.value.toString())) {
+            reportSemanticError("Error semántico, identificador fuera del scope en línea " + idSymbol.left + ".\n");
+        }
+
+        RESULT = unariaNode;
+    :};
+
 
 
 // Secuencia de variables separadas por comas.
@@ -264,49 +317,88 @@ leer_var ::= READ PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE;
 
 // Leer un valor desde la entrada del usuario.
 acceso_arreglo ::= IDENTIFICADOR:idVar CORCHETE_APERTURA expr_logica_aritmetica:e CORCHETE_CIERRE 
-{: 
-    if(!symbolTable.isIndexInteger(e.toString())) {
-        reportSemanticError("Error semántico, el tipo de dato de un índice debe ser entero.\n");
-    }
-    RESULT = idVar.toString(); 
-:};
+    {: 
+        Symbol idSymbol = (Symbol) idVar;
+        Node indexNode = (Node) e; 
 
+        if (!symbolTable.isIndexInteger(indexNode.getValue())) {
+            reportSemanticError("Error semántico, el tipo de dato de un índice debe ser entero en línea " + idSymbol.left + ".\n");
+        }
 
+        Node arrayAccessNode = new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right);
+        
+        arrayAccessNode.setLeft(indexNode);
+
+        RESULT = arrayAccessNode;
+    :};
 
 
 // Regla para actualización de valores en asignaciones.
-actualizacion ::= ASIGNACION {: RESULT = "="; :} | op_aritmeticas:arit_op ASIGNACION {: RESULT = arit_op + "="; :};
-// Regla para actualización de valores en asignaciones.
+actualizacion ::= ASIGNACION {: RESULT = new Node("=", -1, -1); :} 
+                | op_aritmeticas:arit_op ASIGNACION {: Node aritNode = (Node) arit_op; RESULT = new Node(aritNode.getValue() + "=", -1, -1); :};
+
+// Regla para asignación a un arreglo.
 asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE 
-{:
-    RESULT = idVar + ":" + seq;
-    if(!symbolTable.verifyArrayDeclaration(symbolTable.getType(idVar.toString()), seq.toString())) { 
-        reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
-    }
+    {:
+        Symbol idSymbol = (Symbol) idVar;
+        Node seqNode = (Node) seq; 
 
-:};
+        Node arrayAssignNode = new Node("=", idSymbol.left, idSymbol.right);
+
+        Node arrayNode = new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right);
+        arrayAssignNode.setLeft(arrayNode);
+
+        arrayAssignNode.setRight(seqNode);
+
+        if (!symbolTable.verifyArrayDeclaration(symbolTable.getType(idSymbol.value.toString()), seqNode.getValue())) { 
+            reportSemanticError("Error en la asignación al arreglo: tipo de datos incorrecto o variable fuera del scope en línea " + idSymbol.left + ".\n");
+        }
+
+        RESULT = arrayAssignNode;
+    :};
+
 
 
 // Regla para actualización de valores en asignaciones.
 asignacion_indice ::= acceso_arreglo:arr actualizacion:act expr_logica_aritmetica:e 
-{:
-    String arrName = arr.toString();
-    RESULT = arrName;                         
-    if(!symbolTable.verifyType(symbolTable.getType(arrName), e.toString())) {
-        reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
-    }
-:};
+    {:
+        Node arrNode = (Node) arr;  
+        Node actNode = (Node) act;  
+        Node exprNode = (Node) e;   
+
+        Node indexAssignNode = new Node(actNode.getValue(), arrNode.getLine(), arrNode.getColumn());
+        indexAssignNode.setLeft(arrNode);
+        indexAssignNode.setRight(exprNode);
+
+        if (!symbolTable.verifyType(symbolTable.getType(arrNode.getValue()), exprNode.getValue())) {
+            reportSemanticError("Error en la asignación a índice: tipo de datos incorrecto o variable fuera del scope en línea " + arrNode.getLine() + ".\n");
+        }
+
+        RESULT = indexAssignNode;
+    :};
 
 
 
 // Asignación de valores a una variable.
-asignacion_variable ::= IDENTIFICADOR:idVar  actualizacion:act  expr_logica_aritmetica:e 
-{: 
-    RESULT = idVar + ":" + act + ":" + e.toString();
-    if(!symbolTable.verifyType(symbolTable.getType(idVar.toString()), e.toString())) {
-        reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
-    }
-:};
+asignacion_variable ::= IDENTIFICADOR:idVar actualizacion:act expr_logica_aritmetica:e 
+    {:
+        Symbol idSymbol = (Symbol) idVar; 
+        Node actNode = (Node) act;        
+        Node exprNode = (Node) e;         
+
+        Node assignNode = new Node(actNode.getValue(), idSymbol.left, idSymbol.right);
+    
+        Node idNode = new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right);
+        assignNode.setLeft(idNode);
+
+        assignNode.setRight(exprNode);
+
+        if (!symbolTable.verifyType(symbolTable.getType(idSymbol.value.toString()), exprNode.getValue())) {
+            reportSemanticError("Error en la asignación a variable: tipo de datos incorrecto o variable fuera del scope en línea " + idSymbol.left + ".\n");
+        }
+
+        RESULT = assignNode;
+    :};
 
 
 // Regla general para asignaciones: puede ser a una variable, arreglo o un índice de arreglo.
@@ -315,41 +407,65 @@ asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_i
 
 
 // Declaración opcional de un arreglo, con o sin asignación de valores iniciales.
-declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = seq.toString(); :} | {: RESULT = ""; :}; 
-
+declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: RESULT = (Node) seq; :} | {: RESULT = new Node("empty_array_init", -1, -1); :};
 
 
 // Declaración de variables, con validaciones semánticas.
 declaracion ::= tipo:t IDENTIFICADOR:idVar 
-              {: 
-                String type = t.toString(); 
-                RESULT = type; 
-                if(!symbolTable.addSymbol(idVar.toString(), type + ":" + idVar)) {
-                    reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
-                } 
-              :}
-              | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e 
-              {:     
-                    String type = t.toString();
-                    RESULT = type; 
-                    if(!symbolTable.addSymbol(idVar.toString(), type + ":" + idVar)) {
-                        reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
-                    } 
-                    if(!symbolTable.verifyType(type, e.toString())) {
-                        reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope.\n");
-                    }
-              :}
-              | tipo:t acceso_arreglo:arrName declaracion_arreglo_op:arr_decl 
-              {:    
-                    String text = t.toString();  
-                    RESULT = text; 
-                    if(!symbolTable.addSymbol(arrName.toString(), text + ":" + arrName)) {
-                        reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
-                    }  
-                    if(!symbolTable.verifyType(t.toString(), arr_decl.toString())) {
-                        reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope.\n");
-                    }
-              :};
+    {:
+        Symbol typeSymbol = (Symbol) t;
+        Symbol idSymbol = (Symbol) idVar;
+
+        Node declNode = new Node(typeSymbol.value.toString(), idSymbol.left, idSymbol.right);
+
+        if (!symbolTable.addSymbol(idSymbol.value.toString(), typeSymbol.value.toString() + ":" + idSymbol.value.toString())) {
+            reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope en línea " + idSymbol.left + ".\n");
+        } 
+
+        RESULT = declNode;
+    :} 
+
+    | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e 
+    {:
+        Symbol typeSymbol = (Symbol) t;
+        Symbol idSymbol = (Symbol) idVar;
+        Node exprNode = (Node) e;
+
+        Node declAssignNode = new Node("=", idSymbol.left, idSymbol.right);
+        declAssignNode.setLeft(new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right));
+        declAssignNode.setRight(exprNode);
+
+        if (!symbolTable.addSymbol(idSymbol.value.toString(), typeSymbol.value.toString() + ":" + idSymbol.value.toString())) {
+            reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope en línea " + idSymbol.left + ".\n");
+        } 
+
+        if (!symbolTable.verifyType(typeSymbol.value.toString(), exprNode.getValue())) {
+            reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope en línea " + idSymbol.left + ".\n");
+        }
+
+        RESULT = declAssignNode;
+    :}
+
+    | tipo:t acceso_arreglo:arrName declaracion_arreglo_op:arr_decl 
+    {:
+        Symbol typeSymbol = (Symbol) t;
+        Node arrNode = (Node) arrName;
+        Node arrDeclNode = (Node) arr_decl;
+
+        Node arrayDeclNode = new Node("array_decl", arrNode.getLine(), arrNode.getColumn());
+        arrayDeclNode.setLeft(new Node(typeSymbol.value.toString(), -1, -1));
+        arrayDeclNode.setRight(arrDeclNode);
+
+        if (!symbolTable.addSymbol(arrNode.getValue(), typeSymbol.value.toString() + ":" + arrNode.getValue())) {
+            reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope en línea " + arrNode.getLine() + ".\n");
+        }  
+
+        if (!symbolTable.verifyType(typeSymbol.value.toString(), arrDeclNode.getValue())) {
+            reportSemanticError("Error en el tipo de datos en la asignación de una declaración o existencia de una variable fuera del scope en línea " + arrNode.getLine() + ".\n");
+        }
+
+        RESULT = arrayDeclNode;
+    :};
 
 
 
@@ -359,69 +475,113 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar
 else_expr ::= ELSE APERTURA_DE_BLOQUE {: symbolTable.addScope(); :}  bloques CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); :}; 
 
 // Definición del operador else como opcional.
-else_op ::= else_expr | {: RESULT = ""; :};
-
+else_op ::= else_expr | {: RESULT = new Node("no_else", -1, -1); :};
 
 // Relación entre dos expresiones (comparaciones).
-relacion ::= MENOR {: RESULT = "<"; :} 
-            | MENOR_IGUAL {: RESULT = "<="; :} 
-            | MAYOR {: RESULT = ">"; :} 
-            | MAYOR_IGUAL {: RESULT = ">="; :} 
-            | IGUALDAD {: RESULT = "=="; :} 
-            | DIFERENTE {: RESULT = "!="; :};
+relacion ::= MENOR {: RESULT = new Node("<", -1, -1); :} 
+            | MENOR_IGUAL {: RESULT = new Node("<=", -1, -1); :} 
+            | MAYOR {: RESULT = new Node(">", -1, -1); :} 
+            | MAYOR_IGUAL {: RESULT = new Node(">=", -1, -1); :} 
+            | IGUALDAD {: RESULT = new Node("==", -1, -1); :} 
+            | DIFERENTE {: RESULT = new Node("!=", -1, -1); :};
 
 
 // Comparaciones y operaciones aritméticas.
-comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 
-{: 
-    // Valida la operación y su compatibilidad semántica.
-    if(!symbolTable.validateOperation(e1.toString(), rel.toString(), e2.toString())) {
-        reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
-    }
-    RESULT = e1.toString(); 
-:} | expr_logica_aritmetica:e1  op_aritmeticas:op  expr_logica_aritmetica:e2 
-{: 
-    if(!symbolTable.validateOperation(e1.toString(), op.toString(), e2.toString())) {
-        reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
-    }
-    RESULT = e1.toString(); 
+comparacion_operacion ::= expr_logica_aritmetica:e1 relacion:rel expr_logica_aritmetica:e2 
+    {:
+        // Casting seguro
+        Node leftExpr = (Node) e1;
+        Node rightExpr = (Node) e2;
+        Node relNode = (Node) rel;
 
-:} 
-| dato_general:dato 
-{: 
-    String operando = dato.toString();
-    RESULT = operando;
-    if(!symbolTable.isDataType(operando) && !symbolTable.isInLocalScope(operando)) {
-        reportSemanticError("Error semantico, variable fuera del scope.\n");
-    }
+        // Crear nodo de comparación
+        Node opNode = new Node(relNode.getValue(), leftExpr.getLine(), leftExpr.getColumn());
+        opNode.setLeft(leftExpr);
+        opNode.setRight(rightExpr);
 
-:} | expr_unaria:op {: RESULT = op; :}; 
+        // Validar la operación en la tabla de símbolos
+        if (!symbolTable.validateOperation(leftExpr.getValue(), relNode.getValue(), rightExpr.getValue())) {
+            reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope en línea " + leftExpr.getLine() + ".\n");
+        }
+
+        RESULT = opNode;
+    :} 
+
+    | expr_logica_aritmetica:e1 op_aritmeticas:op expr_logica_aritmetica:e2 
+    {:
+        // Casting seguro
+        Node leftExpr = (Node) e1;
+        Node rightExpr = (Node) e2;
+        Node opNode = (Node) op;
+
+        // Crear nodo de operación aritmética
+        Node arithNode = new Node(opNode.getValue(), leftExpr.getLine(), leftExpr.getColumn());
+        arithNode.setLeft(leftExpr);
+        arithNode.setRight(rightExpr);
+
+        // Validar la operación en la tabla de símbolos
+        if (!symbolTable.validateOperation(leftExpr.getValue(), opNode.getValue(), rightExpr.getValue())) {
+            reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope en línea " + leftExpr.getLine() + ".\n");
+        }
+
+        RESULT = arithNode;
+    :} 
+
+    | dato_general:dato 
+    {:
+        Node dataNode = (Node) dato;
+
+        // Validar si el dato está dentro del scope o es un tipo válido
+        if (!symbolTable.isDataType(dataNode.getValue()) && !symbolTable.isInLocalScope(dataNode.getValue())) {
+            reportSemanticError("Error semántico, variable fuera del scope en línea " + dataNode.getLine() + ".\n");
+        }
+
+        RESULT = dataNode;
+    :} 
+
+    | expr_unaria:op 
+    {:
+        RESULT = (Node) op; // Casting a Node
+    :};
+ 
 
 
 
 // Operadores lógicos  and y or  
-op_logica ::= CONJUNCION {: RESULT = "and"; :} | DISYUNCION {: RESULT = "or"; :};
+op_logica ::= CONJUNCION {: RESULT = new Node("and", -1, -1); :} | DISYUNCION {: RESULT = new Node("or", -1, -1); :};
+
 
 
 
 // Expresiones lógicas y aritméticas con validaciones.
 expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e 
-{: 
-    RESULT = e.toString(); 
-:} 
-| expr_logica_aritmetica:e1  op_logica:op  expr_logica_aritmetica:e2 
-{: 
-    /* Aqui no verifico porque se trata de operaciones logicas como and, or o not */
-    RESULT = e1.toString();  
-:} 
-| comparacion_operacion:cmp 
-{: 
-    RESULT = cmp; 
-:} 
-| PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE 
-{: 
-    RESULT = e.toString(); 
-:}; 
+    {:
+        Node exprNode = (Node) e;
+        Node negNode = new Node("not", exprNode.getLine(), exprNode.getColumn());
+        negNode.setLeft(exprNode);
+        RESULT = negNode;
+    :} 
+    | expr_logica_aritmetica:e1 op_logica:op expr_logica_aritmetica:e2 
+    {:
+        Node leftExpr = (Node) e1;
+        Node rightExpr = (Node) e2;
+        Node opNode = (Node) op;
+        
+        Node logicalOpNode = new Node(opNode.getValue(), leftExpr.getLine(), leftExpr.getColumn());
+        logicalOpNode.setLeft(leftExpr);
+        logicalOpNode.setRight(rightExpr);
+        
+        RESULT = logicalOpNode;
+    :} 
+    | comparacion_operacion:cmp 
+    {:
+        RESULT = (Node) cmp;
+    :} 
+    | PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE 
+    {:
+        RESULT = (Node) e;
+    :};
+
 
 
 
@@ -457,16 +617,20 @@ finfuncion ::= RETURN expr_logica_aritmetica:dato
 op_simple ::= expr_unaria | asignacion_variable;
 
 // Expresiones simples, como declaraciones, asignaciones, lectura/escritura, o llamadas a funciones.
-simple_expr ::= expr_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion | error {: RESULT = "Error"; System.out.println("Error sintáctico en la definición de una expresión simple."); :};
+simple_expr ::= expr_unaria | declaracion | asignacion_compuesta | leer_var | imprimir | BREAK | llamada_funcion | finfuncion | error 
+              {: RESULT = new Node("error_expr", -1, -1); System.out.println("Error sintáctico en la definición de una expresión simple."); :};
 
 // Inicialización de variables, que puede ser una asignación o declaración.
-inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} | IDENTIFICADOR:i 
+inicializacion ::= asignacion_variable:asign {: RESULT = (Node) asign; :} | IDENTIFICADOR:i 
 {: 
-    RESULT = i; 
-    if(!symbolTable.isInLocalScope(i.toString())) {
-        reportSemanticError("Error semántico, identificador fuera del scope.\n");
+    Symbol idSymbol = (Symbol) i;
+
+    Node idNode = new Node(idSymbol.value.toString(), idSymbol.left, idSymbol.right);
+
+    if (!symbolTable.isInLocalScope(idSymbol.value.toString())) {
+        reportSemanticError("Error semántico, identificador fuera del scope en línea " + idSymbol.left + ".\n");
     }
-:} | tipo asignacion_variable:asign {: RESULT = asign; :};
+:} | tipo asignacion_variable:asign {: RESULT = (Node) asign; :};
 
 
 
@@ -484,11 +648,15 @@ for_expr ::= FOR PARENTESIS_APERTURA  inicializacion  COMMA  expr_logica_aritmet
 bloque ::= if_expr | while_expr | for_expr | switch_expr | simple_expr END_EXPR; 
 
 // Secuencia de bloques de código (uno tras otro).
-bloques ::= bloque bloques | error {: System.out.println("Error dentro de bloque, verificar definición."); RESULT = "Error"; :} | ; 
+bloques ::= bloque bloques 
+          | error {: System.out.println("Error dentro de bloque, verificar definición."); RESULT = new Node("error_block", -1, -1); :} 
+          | ;
 
 
 // Definición de nombres de funciones, incluyendo el nombre especial MAIN.
-nombrefuncion ::= MAIN {: RESULT = "_verano_"; :} | IDENTIFICADOR:nombreFunc {: RESULT = nombreFunc; :};
+nombrefuncion ::= MAIN {:RESULT = new Node("_verano_", -1, -1); :} 
+                | IDENTIFICADOR:nombreFunc {: RESULT = new Node(nombreFunc.toString(), -1, -1); :};
+
 
 
 // Conjunto de funciones en el programa.
@@ -502,7 +670,6 @@ funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA {: symbolTable.add
         reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");
     }
 :}  
-APERTURA_DE_BLOQUE   bloques  CIERRE_DE_BLOQUE 
 {: 
     symbolTable.printScope(); 
     symbolTable.exitScope();
@@ -525,7 +692,8 @@ APERTURA_DE_BLOQUE  bloques  CIERRE_DE_BLOQUE
 
 
 // Definición del programa principal, compuesto por funciones
-programa ::=  funciones {: symbolTable.printGlobalScope(); :} | {: RESULT = ""; :};
+programa ::= funciones {: symbolTable.printGlobalScope(); :} 
+          | {: RESULT = new Node("empty_program", -1, -1); :};
 
 
 /* ejecutar desde Compilador */

@@ -1,30 +1,10 @@
-Comentario: \_ esto es un comentario inicial _/, línea: 1, columna: 1
-Token: 3, Valor: bromista, línea: 3, columna: 1
-Token: 49, Valor: _func1_, línea: 3, columna: 10
-Token: 17, Valor: abreregalo, línea: 3, columna: 18
-Token: 5, Valor: cupido, línea: 3, columna: 29
-Token: 49, Valor: _x22_, línea: 3, columna: 36
-Token: 46, Valor: ,, línea: 3, columna: 42
-Token: 5, Valor: cupido, línea: 3, columna: 44
-Token: 49, Valor: _x22_, línea: 3, columna: 51
-Token: 18, Valor: cierraregalo, línea: 3, columna: 57
-Token: 12, Valor: abrecuento, línea: 3, columna: 71
-Token: 5, Valor: cupido, línea: 4, columna: 4
-Token: 49, Valor: _miChar_, línea: 4, columna: 11
-Token: 16, Valor: entrega, línea: 4, columna: 20
-Token: 11, Valor: '!', línea: 4, columna: 28
-Token: 50, Valor: finregalo, línea: 4, columna: 32
-Token: 49, Valor: _arr_, línea: 5, columna: 4
-Token: 14, Valor: abreempaque, línea: 5, columna: 10
-Token: 8, Valor: cadena, línea: 5, columna: 29
-Token: 15, Valor: cierraempaque, línea: 5, columna: 31
-Token: 16, Valor: entrega, línea: 5, columna: 46
-Token: 11, Valor: 'c', línea: 5, columna: 55
-Token: 50, Valor: finregalo, línea: 5, columna: 59
-Error léxico: e, línea: 6, columna: 4
-Error léxico: r, línea: 6, columna: 5
-Error léxico: r, línea: 6, columna: 6
-Error léxico: o, línea: 6, columna: 7
-Error léxico: r, línea: 6, columna: 8
-Token: 50, Valor: finregalo, línea: 6, columna: 10
-Token: 13, Valor: cierracuento, línea: 7, columna: 1
+Comentario: \_ esto es un comentario inicial _/, l�nea: 1, columna: 1
+Token: 3, Valor: bromista, l�nea: 3, columna: 1
+Token: 49, Valor: _func1_, l�nea: 3, columna: 10
+Token: 17, Valor: abreregalo, l�nea: 3, columna: 18
+Token: 5, Valor: cupido, l�nea: 3, columna: 29
+Token: 49, Valor: _x22_, l�nea: 3, columna: 36
+Token: 46, Valor: ,, l�nea: 3, columna: 42
+Token: 5, Valor: cupido, l�nea: 3, columna: 44
+Token: 49, Valor: _x22_, l�nea: 3, columna: 51
+Token: 18, Valor: cierraregalo, l�nea: 3, columna: 57
