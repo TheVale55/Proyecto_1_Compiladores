@@ -140,9 +140,9 @@ start with programa;
 parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param 
 {: 
     // Hacemos casting explícito a Symbol para poder acceder a left, right y value
-    Symbol idVarSymbol = (Symbol) idVar;
-    Symbol paramSymbol = (Symbol) param;
-    Symbol tipoSymbol = (Symbol) t;
+    Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol paramSymbol = new Symbol(0, 0, 0, param);
+    Symbol tipoSymbol = new Symbol(0, 0, 0, t);
 
     // Verificamos si ya existe en la tabla de símbolos
     if (!symbolTable.addSymbol(idVarSymbol.value.toString(), tipoSymbol.value.toString())) {
@@ -157,8 +157,8 @@ parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param
 | tipo:t IDENTIFICADOR:idVar 
 {: 
     // Hacemos casting explícito a Symbol
-    Symbol idVarSymbol = (Symbol) idVar;
-    Symbol tipoSymbol = (Symbol) t;
+    Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol tipoSymbol = new Symbol(0, 0, 0, t);
 
     // Verificamos si ya existe en la tabla de símbolos
     if (!symbolTable.addSymbol(idVarSymbol.value.toString(), tipoSymbol.value.toString())) {
@@ -175,7 +175,7 @@ parametro_decl ::= tipo:t IDENTIFICADOR:idVar COMMA parametro_decl:param
 // Regla para definir el conjunto completo de parámetros en una función.
 parametros_decl ::= parametro_decl:params 
 {: 
-    Symbol paramsSymbol = (Symbol) params;
+    Symbol paramsSymbol = new Symbol(0, 0, 0, params);
     RESULT = parser.getSymbolFactory().newSymbol("parametros_decl", 0, paramsSymbol, paramsSymbol.value.toString()); 
 :} 
 | 
@@ -184,20 +184,20 @@ parametros_decl ::= parametro_decl:params
 // Regla para las operaciones en las llamadas a funciones.
 sec_oper ::= expr_logica_aritmetica:dato COMMA sec_oper:seq 
 {: 
-    Symbol datoSymbol = (Symbol) dato;
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     RESULT = parser.getSymbolFactory().newSymbol("sec_oper", 0, datoSymbol, datoSymbol.value.toString() + ":" + seqSymbol.value.toString()); 
 :} 
 | expr_logica_aritmetica:dato 
 {: 
-    Symbol datoSymbol = (Symbol) dato;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
     RESULT = parser.getSymbolFactory().newSymbol("sec_oper", 0, datoSymbol, datoSymbol.value.toString()); 
 :};
 
 // Definición de los parámetros en las llamadas a funciones.
 parametros_llamada ::= sec_oper:seq 
 {: 
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     RESULT = parser.getSymbolFactory().newSymbol("parametros_llamada", 0, seqSymbol, seqSymbol.value.toString()); 
 :} 
 | 
@@ -206,8 +206,8 @@ parametros_llamada ::= sec_oper:seq
 // Regla para las llamadas a funciones.
 llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:params PARENTESIS_CIERRE 
 {: 
-    Symbol funcSymbol = (Symbol) f;
-    Symbol paramsSymbol = (Symbol) params;
+    Symbol funcSymbol = new Symbol(0, 0, 0, f);
+    Symbol paramsSymbol = new Symbol(0, 0, 0, params);
     String funcName = funcSymbol.value.toString();
     
     // Recupera el tipo de la función de la tabla de símbolos.
@@ -226,27 +226,27 @@ llamada_funcion ::= nombrefuncion:f PARENTESIS_APERTURA parametros_llamada:param
 // Definición de tipos básicos.
 tipo ::= INTEGER:i 
         {: 
-            Symbol intSymbol = (Symbol) i;
+            Symbol intSymbol = new Symbol(0, 0, 0, i);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, intSymbol, "int"); 
         :}
         | FLOAT:f 
         {: 
-            Symbol floatSymbol = (Symbol) f;
+            Symbol floatSymbol = new Symbol(0, 0, 0, f);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, floatSymbol, "float"); 
         :}
         | BOOL:b 
         {: 
-            Symbol boolSymbol = (Symbol) b;
+            Symbol boolSymbol = new Symbol(0, 0, 0, b);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, boolSymbol, "bool"); 
         :}
         | CHAR:c 
         {: 
-            Symbol charSymbol = (Symbol) c;
+            Symbol charSymbol = new Symbol(0, 0, 0, c);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, charSymbol, "char"); 
         :}
         | STRING:s 
         {: 
-            Symbol stringSymbol = (Symbol) s;
+            Symbol stringSymbol = new Symbol(0, 0, 0, s);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, stringSymbol, "string"); 
         :};
 
@@ -254,27 +254,27 @@ tipo ::= INTEGER:i
 // Reglas para literales de diferentes tipos.
 literal ::= INT_LITERAL:intVar 
         {: 
-            Symbol intSymbol = (Symbol) intVar;
+            Symbol intSymbol = new Symbol(0, 0, 0, intVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, intSymbol, "int"); 
         :}
         | STRING_LITERAL:strVar 
         {: 
-            Symbol strSymbol = (Symbol) strVar;
+            Symbol strSymbol = new Symbol(0, 0, 0, strVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, strSymbol, "string"); 
         :}
         | FLOAT_LITERAL:floatVar 
         {: 
-            Symbol floatSymbol = (Symbol) floatVar;
+            Symbol floatSymbol = new Symbol(0, 0, 0, floatVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, floatSymbol, "float"); 
         :}
         | CHAR_LITERAL:charVar 
         {:  
-            Symbol charSymbol = (Symbol) charVar;
+            Symbol charSymbol = new Symbol(0, 0, 0, charVar) ;
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, charSymbol, "char"); 
         :}
         | BOOL_LITERAL:boolVar 
         {:  
-            Symbol boolSymbol = (Symbol) boolVar;
+            Symbol boolSymbol = new Symbol (0, 0, 0, boolVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, boolSymbol, "bool"); 
         :};
 
@@ -282,32 +282,32 @@ literal ::= INT_LITERAL:intVar
 // Operadores aritméticos básicos.
 op_aritmeticas ::= SUMA:s 
         {: 
-            Symbol sSymbol = (Symbol) s;
+            Symbol sSymbol = new Symbol(0, 0, 0, s);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, sSymbol, "+"); 
         :} 
         | RESTA:r 
         {: 
-            Symbol rSymbol = (Symbol) r;
+            Symbol rSymbol = new Symbol(0, 0, 0, r);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, rSymbol, "-"); 
         :} 
         | MULTIPLICACION:m 
         {: 
-            Symbol mSymbol = (Symbol) m;
+            Symbol mSymbol = new Symbol(0, 0, 0, m);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, mSymbol, "*"); 
         :} 
         | DIVISION:d 
         {:  
-            Symbol dSymbol = (Symbol) d;
+            Symbol dSymbol = new Symbol(0, 0, 0, d);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, dSymbol, "/"); 
         :} 
         | MODULO:m 
         {: 
-            Symbol mSymbol = (Symbol) m;
+            Symbol mSymbol = new Symbol(0, 0, 0, m);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, mSymbol, "%"); 
         :} 
         | POTENCIA:p 
         {:  
-            Symbol pSymbol = (Symbol) p;
+            Symbol pSymbol = new Symbol(0, 0, 0, p);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, pSymbol, "^"); 
 :};
 
@@ -315,22 +315,22 @@ op_aritmeticas ::= SUMA:s
 // Regla para datos generales: identificadores, literales, funciones o arreglos.
 dato_general ::= IDENTIFICADOR:idVar 
         {: 
-            Symbol idSymbol = (Symbol) idVar;
+            Symbol idSymbol = new Symbol(0, 0, 0, idVar);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, idSymbol, idSymbol.value.toString());  
         :} 
         | literal:lit 
         {: 
-            Symbol litSymbol = (Symbol) lit;
+            Symbol litSymbol = new Symbol(0, 0, 0, lit);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, litSymbol, litSymbol.value.toString());  
         :} 
         | llamada_funcion:func 
         {: 
-            Symbol funcSymbol = (Symbol) func;
+            Symbol funcSymbol = new Symbol(0, 0, 0, func);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, funcSymbol, funcSymbol.value.toString());  
         :} 
         | acceso_arreglo:arrName 
         {: 
-            Symbol arrSymbol = (Symbol) arrName;
+            Symbol arrSymbol = new Symbol(0, 0, 0, arrName);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, arrSymbol, arrSymbol.value.toString());  
         :};
 
@@ -341,7 +341,7 @@ op_unaria ::= INCREMENTO:i {:  RESULT = parser.getSymbolFactory().newSymbol("op_
 // Expresiones unarias, aplicadas sobre identificadores.
 expr_unaria ::= IDENTIFICADOR:idVar op_unaria:op 
 {:  
-    Symbol idSymbol = (Symbol) idVar;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
     RESULT = idSymbol; 
     if(!symbolTable.isInLocalScope(idSymbol.value.toString())) {
         reportSemanticError("Error semántico, identificador fuera del scope.\n");
@@ -351,13 +351,13 @@ expr_unaria ::= IDENTIFICADOR:idVar op_unaria:op
 // Secuencia de variables separadas por comas.
 sec_var ::= IDENTIFICADOR:idVar COMMA sec_var:seq 
 {: 
-    Symbol idSymbol = (Symbol) idVar;
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     RESULT = parser.getSymbolFactory().newSymbol("sec_var", 0, idSymbol, idSymbol.value.toString() + "," + seqSymbol.value.toString()); 
 :} 
 | IDENTIFICADOR:idVar 
 {: 
-    Symbol idSymbol = (Symbol) idVar;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
     RESULT = parser.getSymbolFactory().newSymbol("sec_var", 0, idSymbol, idSymbol.value.toString()); 
 :};
 
@@ -370,8 +370,8 @@ leer_var ::= READ PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE;
 // Leer un valor desde la entrada del usuario.
 acceso_arreglo ::= IDENTIFICADOR:idVar CORCHETE_APERTURA expr_logica_aritmetica:e CORCHETE_CIERRE 
 {: 
-    Symbol exprSymbol = (Symbol) e;
-    Symbol idSymbol = (Symbol) idVar;
+    Symbol exprSymbol = new Symbol(0, 0, 0, e);
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
     if(!symbolTable.isIndexInteger(exprSymbol.value.toString())) {
         reportSemanticError("Error semántico, el tipo de dato de un índice debe ser entero.\n");
     }
@@ -381,21 +381,21 @@ acceso_arreglo ::= IDENTIFICADOR:idVar CORCHETE_APERTURA expr_logica_aritmetica:
 // Regla para actualización de valores en asignaciones.
 actualizacion ::= ASIGNACION:a 
 {: 
-    Symbol aSymbol = (Symbol) a;
+    Symbol aSymbol = new Symbol(0, 0, 0, a);
     RESULT = parser.getSymbolFactory().newSymbol("actualizacion", 0, aSymbol, "="); 
 :} 
 | op_aritmeticas:arit_op ASIGNACION:a 
 {: 
-    Symbol aritSymbol = (Symbol) arit_op;
-    Symbol aSymbol = (Symbol) a;
+    Symbol aritSymbol = new Symbol(0, 0, 0, arit_op);
+    Symbol aSymbol = new Symbol(0, 0, 0, a);
     RESULT = parser.getSymbolFactory().newSymbol("actualizacion", 0, aSymbol, aritSymbol.value.toString() + "="); 
 :};
 
 // Regla para actualización de valores en asignaciones.
 asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION:a APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE 
 {: 
-    Symbol idSymbol = (Symbol) idVar;
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     if(!symbolTable.verifyArrayDeclaration(symbolTable.getType(idSymbol.value.toString()), seqSymbol.value.toString())) { 
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
@@ -405,8 +405,8 @@ asignacion_arreglo ::= IDENTIFICADOR:idVar ASIGNACION:a APERTURA_DE_BLOQUE sec_o
 // Regla para actualización de valores en asignaciones.
 asignacion_indice ::= acceso_arreglo:arr actualizacion:act expr_logica_aritmetica:e 
 {: 
-    Symbol arrSymbol = (Symbol) arr;
-    Symbol exprSymbol = (Symbol) e;
+    Symbol arrSymbol = new Symbol(0, 0, 0, arr);
+    Symbol exprSymbol = new Symbol(0, 0, 0, e) ;
     if(!symbolTable.verifyType(symbolTable.getType(arrSymbol.value.toString()), exprSymbol.value.toString())) {
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
@@ -416,9 +416,9 @@ asignacion_indice ::= acceso_arreglo:arr actualizacion:act expr_logica_aritmetic
 // Asignación de valores a una variable.
 asignacion_variable ::= IDENTIFICADOR:idVar actualizacion:act expr_logica_aritmetica:e 
 {: 
-    Symbol idSymbol = (Symbol) idVar;
-    Symbol actSymbol = (Symbol) act;
-    Symbol exprSymbol = (Symbol) e;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol actSymbol = new Symbol(0, 0, 0, act);
+    Symbol exprSymbol = new Symbol(0, 0, 0, e);
     if(!symbolTable.verifyType(symbolTable.getType(idSymbol.value.toString()), exprSymbol.value.toString())) {
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
@@ -428,7 +428,7 @@ asignacion_variable ::= IDENTIFICADOR:idVar actualizacion:act expr_logica_aritme
 asignacion_compuesta ::= asignacion_variable | asignacion_arreglo | asignacion_indice;
 
 // Declaración opcional de un arreglo, con o sin asignación de valores iniciales.
-declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: Symbol seqSymbol = (Symbol) seq; RESULT = parser.getSymbolFactory().newSymbol("declaracion_arreglo_op", 0, seqSymbol, seqSymbol.value.toString());:}
+declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_BLOQUE {: Symbol seqSymbol = new Symbol(0, 0, 0, seq); RESULT = parser.getSymbolFactory().newSymbol("declaracion_arreglo_op", 0, seqSymbol, seqSymbol.value.toString());:}
                         | {: RESULT = parser.getSymbolFactory().newSymbol("declaracion_arreglo_op", 0, null, null); :};
 
 
@@ -436,8 +436,8 @@ declaracion_arreglo_op ::= ASIGNACION APERTURA_DE_BLOQUE sec_oper:seq CIERRE_DE_
 // Declaración de variables, con validaciones semánticas.
 declaracion ::= tipo:t IDENTIFICADOR:idVar 
               {: 
-                Symbol tSymbol = (Symbol) t;
-                Symbol idVarSymbol = (Symbol) idVar;
+                Symbol tSymbol = new Symbol(0, 0, 0, t);
+                Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
                 RESULT = parser.getSymbolFactory().newSymbol("declaracion", 0, idVarSymbol, tSymbol.value.toString()); 
                 if(!symbolTable.addSymbol(idVarSymbol.value.toString(), tSymbol.value.toString() + ":" + idVarSymbol.value.toString())) {
                     reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
@@ -445,9 +445,9 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar
               :}
               | tipo:t IDENTIFICADOR:idVar ASIGNACION expr_logica_aritmetica:e 
               {:     
-                    Symbol tSymbol = (Symbol) t;
-                    Symbol idVarSymbol = (Symbol) idVar;
-                    Symbol exprSymbol = (Symbol) e;
+                    Symbol tSymbol = new Symbol(0, 0, 0, t);
+                    Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
+                    Symbol exprSymbol = new Symbol(0, 0, 0, e);
                     RESULT = parser.getSymbolFactory().newSymbol("declaracion", 0, idVarSymbol, tSymbol.value.toString()); 
                     if(!symbolTable.addSymbol(idVarSymbol.value.toString(), tSymbol.value.toString() + ":" + idVarSymbol.value.toString())) {
                         reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
@@ -458,9 +458,9 @@ declaracion ::= tipo:t IDENTIFICADOR:idVar
               :}
               | tipo:t acceso_arreglo:arrName declaracion_arreglo_op:arr_decl 
               {:    
-                    Symbol tSymbol = (Symbol) t;
-                    Symbol arrSymbol = (Symbol) arrName;
-                    Symbol arrDeclSymbol = (Symbol) arr_decl;
+                    Symbol tSymbol = new Symbol(0, 0, 0, t);
+                    Symbol arrSymbol = new Symbol(0, 0, 0, arrName);
+                    Symbol arrDeclSymbol = new Symbol(0, 0, 0, arr_decl);
                     RESULT = parser.getSymbolFactory().newSymbol("declaracion", 0, arrSymbol, tSymbol.value.toString()); 
                     if(!symbolTable.addSymbol(arrSymbol.value.toString(), tSymbol.value.toString() + ":" + arrSymbol.value.toString())) {
                         reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
@@ -489,18 +489,18 @@ relacion ::= MENOR:m {: RESULT = parser.getSymbolFactory().newSymbol("relacion",
 // Comparaciones y operaciones aritméticas.
 comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_aritmetica:e2 
 {: 
-    Symbol expr1Symbol = (Symbol) e1;
-    Symbol relSymbol = (Symbol) rel;
-    Symbol expr2Symbol = (Symbol) e2;
+    Symbol expr1Symbol = new Symbol(0, 0, 0, e1);
+    Symbol relSymbol = new Symbol(0, 0, 0, rel);
+    Symbol expr2Symbol = new Symbol(0, 0, 0, e2);
     if(!symbolTable.validateOperation(expr1Symbol.value.toString(), relSymbol.value.toString(), expr2Symbol.value.toString())) {
         reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
     }
     RESULT = expr1Symbol; 
 :} | expr_logica_aritmetica:e1  op_aritmeticas:op  expr_logica_aritmetica:e2 
 {: 
-    Symbol expr1Symbol = (Symbol) e1;
-    Symbol opSymbol = (Symbol) op;
-    Symbol expr2Symbol = (Symbol) e2;
+    Symbol expr1Symbol = new Symbol(0, 0, 0, e1);
+    Symbol opSymbol = new Symbol(0, 0, 0, op);
+    Symbol expr2Symbol = new Symbol(0, 0, 0,e2);
     if(!symbolTable.validateOperation(expr1Symbol.value.toString(), opSymbol.value.toString(), expr2Symbol.value.toString())) {
         reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
     }
@@ -508,7 +508,7 @@ comparacion_operacion ::= expr_logica_aritmetica:e1  relacion:rel  expr_logica_a
 :} 
 | dato_general:dato 
 {: 
-    Symbol datoSymbol = (Symbol) dato;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
     if(!symbolTable.isDataType(datoSymbol.value.toString()) && !symbolTable.isInLocalScope(datoSymbol.value.toString())) {
         reportSemanticError("Error semántico, variable fuera del scope.\n");
     }
@@ -522,24 +522,24 @@ op_logica ::= CONJUNCION:c {: RESULT = parser.getSymbolFactory().newSymbol("op_l
 // Expresiones lógicas y aritméticas con validaciones.
 expr_logica_aritmetica ::= NEGACION expr_logica_aritmetica:e 
                         {: 
-                            Symbol exprSymbol = (Symbol) e;
+                            Symbol exprSymbol = new Symbol(0, 0, 0, e) ;
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, exprSymbol, "!" + exprSymbol.value.toString());
                         :} 
                         | expr_logica_aritmetica:e1  op_logica:op  expr_logica_aritmetica:e2 
                         {: 
-                            Symbol e1Symbol = (Symbol) e1;
-                            Symbol opSymbol = (Symbol) op;
-                            Symbol e2Symbol = (Symbol) e2;
+                            Symbol e1Symbol = new Symbol(0, 0, 0, e1);
+                            Symbol opSymbol = new Symbol(0, 0, 0, op);
+                            Symbol e2Symbol = new Symbol(0, 0, 0, e2);
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, e1Symbol, e1Symbol.value.toString() + " " + opSymbol.value.toString() + " " + e2Symbol.value.toString());
                         :} 
                         | comparacion_operacion:cmp 
                         {: 
-                            Symbol cmpSymbol = (Symbol) cmp;
+                            Symbol cmpSymbol = new Symbol(0, 0, 0, cmp);
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, cmpSymbol, cmpSymbol.value);
                         :} 
                         | PARENTESIS_APERTURA expr_logica_aritmetica:e PARENTESIS_CIERRE 
                         {: 
-                            Symbol eSymbol = (Symbol) e;
+                            Symbol eSymbol = new Symbol(0, 0, 0, e);
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, eSymbol, "(" + eSymbol.value.toString() + ")");
                         :};
 
@@ -568,7 +568,7 @@ switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTU
 // Definición de la expresión RETURN dentro de funciones, con validación de tipos
 finfuncion ::= RETURN expr_logica_aritmetica:dato 
 {: 
-    Symbol datoSymbol = (Symbol) dato;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
     if(!symbolTable.verifyType(symbolTable.getType(datoSymbol.value.toString()), symbolTable.getActualFunction())) {
         reportSemanticError("Error semántico en el tipo de retorno de función.\n");
     } 
@@ -585,7 +585,7 @@ simple_expr ::= expr_unaria | declaracion | asignacion_compuesta | leer_var | im
 inicializacion ::= asignacion_variable:asign {: RESULT = asign; :} 
                  | IDENTIFICADOR:i 
                  {: 
-                     Symbol iSymbol = (Symbol) i;
+                     Symbol iSymbol = new Symbol(0, 0, 0, i);
                      RESULT = iSymbol;
                      if(!symbolTable.isInLocalScope(iSymbol.value.toString())) {
                          reportSemanticError("Error semántico, identificador fuera del scope.\n");
@@ -623,9 +623,9 @@ funciones ::= funcion | funcion funciones | error {: System.out.println("Error f
 funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA 
             {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  parametros_decl:params  PARENTESIS_CIERRE 
             {: 
-                Symbol tSymbol = (Symbol) t;
-                Symbol funcSymbol = (Symbol) funcName;
-                Symbol paramsSymbol = (Symbol) params;
+                Symbol tSymbol = new Symbol(0, 0, 0, t);
+                Symbol funcSymbol = new Symbol(0, 0, 0, funcName) ;
+                Symbol paramsSymbol = new Symbol(0, 0, 0, params);
                 
                 if(!symbolTable.addGlobalSymbol(funcSymbol.value.toString(), tSymbol.value.toString() + ":" + funcSymbol.value.toString() + ":" + paramsSymbol.value.toString())) {
                     reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");
@@ -641,8 +641,8 @@ funcion ::= tipo:t nombrefuncion:funcName PARENTESIS_APERTURA
             tipo:t nombrefuncion:funcName PARENTESIS_APERTURA 
             {: symbolTable.addScope(); symbolTable.setActualFunction(funcName.toString()); :}  error  PARENTESIS_CIERRE 
             {:
-                Symbol tSymbol = (Symbol) t;
-                Symbol funcSymbol = (Symbol) funcName;
+                Symbol tSymbol = new Symbol(0, 0, 0, t);
+                Symbol funcSymbol = new Symbol(0, 0, 0, funcName);
                 
                 if(!symbolTable.addGlobalSymbol(funcSymbol.value.toString(), tSymbol.value.toString() + ":" + funcSymbol.value.toString() + ":error")) {
                     reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");

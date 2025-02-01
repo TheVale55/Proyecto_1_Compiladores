@@ -759,9 +759,9 @@ class CUP$Parser$actions {
 		Object param = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
     // Hacemos casting explícito a Symbol para poder acceder a left, right y value
-    Symbol idVarSymbol = (Symbol) idVar;
-    Symbol paramSymbol = (Symbol) param;
-    Symbol tipoSymbol = (Symbol) t;
+    Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol paramSymbol = new Symbol(0, 0, 0, param);
+    Symbol tipoSymbol = new Symbol(0, 0, 0, t);
 
     // Verificamos si ya existe en la tabla de símbolos
     if (!symbolTable.addSymbol(idVarSymbol.value.toString(), tipoSymbol.value.toString())) {
@@ -789,8 +789,8 @@ class CUP$Parser$actions {
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
     // Hacemos casting explícito a Symbol
-    Symbol idVarSymbol = (Symbol) idVar;
-    Symbol tipoSymbol = (Symbol) t;
+    Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol tipoSymbol = new Symbol(0, 0, 0, t);
 
     // Verificamos si ya existe en la tabla de símbolos
     if (!symbolTable.addSymbol(idVarSymbol.value.toString(), tipoSymbol.value.toString())) {
@@ -814,7 +814,7 @@ class CUP$Parser$actions {
 		int paramsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object params = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol paramsSymbol = (Symbol) params;
+    Symbol paramsSymbol = new Symbol(0, 0, 0, params);
     RESULT = parser.getSymbolFactory().newSymbol("parametros_decl", 0, paramsSymbol, paramsSymbol.value.toString()); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("parametros_decl",20, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -841,8 +841,8 @@ class CUP$Parser$actions {
 		int seqright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object seq = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol datoSymbol = (Symbol) dato;
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     RESULT = parser.getSymbolFactory().newSymbol("sec_oper", 0, datoSymbol, datoSymbol.value.toString() + ":" + seqSymbol.value.toString()); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("sec_oper",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -857,7 +857,7 @@ class CUP$Parser$actions {
 		int datoright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object dato = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol datoSymbol = (Symbol) dato;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
     RESULT = parser.getSymbolFactory().newSymbol("sec_oper", 0, datoSymbol, datoSymbol.value.toString()); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("sec_oper",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -872,7 +872,7 @@ class CUP$Parser$actions {
 		int seqright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object seq = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     RESULT = parser.getSymbolFactory().newSymbol("parametros_llamada", 0, seqSymbol, seqSymbol.value.toString()); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("parametros_llamada",40, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -899,8 +899,8 @@ class CUP$Parser$actions {
 		int paramsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Object params = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-    Symbol funcSymbol = (Symbol) f;
-    Symbol paramsSymbol = (Symbol) params;
+    Symbol funcSymbol = new Symbol(0, 0, 0, f);
+    Symbol paramsSymbol = new Symbol(0, 0, 0, params);
     String funcName = funcSymbol.value.toString();
     
     // Recupera el tipo de la función de la tabla de símbolos.
@@ -927,7 +927,7 @@ class CUP$Parser$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object i = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol intSymbol = (Symbol) i;
+            Symbol intSymbol = new Symbol(0, 0, 0, i);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, intSymbol, "int"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipo",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -942,7 +942,7 @@ class CUP$Parser$actions {
 		int fright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object f = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol floatSymbol = (Symbol) f;
+            Symbol floatSymbol = new Symbol(0, 0, 0, f);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, floatSymbol, "float"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipo",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -957,7 +957,7 @@ class CUP$Parser$actions {
 		int bright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object b = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol boolSymbol = (Symbol) b;
+            Symbol boolSymbol = new Symbol(0, 0, 0, b);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, boolSymbol, "bool"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipo",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -972,7 +972,7 @@ class CUP$Parser$actions {
 		int cright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol charSymbol = (Symbol) c;
+            Symbol charSymbol = new Symbol(0, 0, 0, c);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, charSymbol, "char"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipo",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -987,7 +987,7 @@ class CUP$Parser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object s = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol stringSymbol = (Symbol) s;
+            Symbol stringSymbol = new Symbol(0, 0, 0, s);
             RESULT = parser.getSymbolFactory().newSymbol("tipo", 0, stringSymbol, "string"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipo",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1002,7 +1002,7 @@ class CUP$Parser$actions {
 		int intVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object intVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol intSymbol = (Symbol) intVar;
+            Symbol intSymbol = new Symbol(0, 0, 0, intVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, intSymbol, "int"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("literal",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1017,7 +1017,7 @@ class CUP$Parser$actions {
 		int strVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object strVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol strSymbol = (Symbol) strVar;
+            Symbol strSymbol = new Symbol(0, 0, 0, strVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, strSymbol, "string"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("literal",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1032,7 +1032,7 @@ class CUP$Parser$actions {
 		int floatVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object floatVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol floatSymbol = (Symbol) floatVar;
+            Symbol floatSymbol = new Symbol(0, 0, 0, floatVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, floatSymbol, "float"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("literal",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1047,7 +1047,7 @@ class CUP$Parser$actions {
 		int charVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object charVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		  
-            Symbol charSymbol = (Symbol) charVar;
+            Symbol charSymbol = new Symbol(0, 0, 0, charVar) ;
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, charSymbol, "char"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("literal",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1062,7 +1062,7 @@ class CUP$Parser$actions {
 		int boolVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object boolVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		  
-            Symbol boolSymbol = (Symbol) boolVar;
+            Symbol boolSymbol = new Symbol (0, 0, 0, boolVar);
             RESULT = parser.getSymbolFactory().newSymbol("literal", 0, boolSymbol, "bool"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("literal",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1077,7 +1077,7 @@ class CUP$Parser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object s = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol sSymbol = (Symbol) s;
+            Symbol sSymbol = new Symbol(0, 0, 0, s);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, sSymbol, "+"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("op_aritmeticas",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1092,7 +1092,7 @@ class CUP$Parser$actions {
 		int rright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object r = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol rSymbol = (Symbol) r;
+            Symbol rSymbol = new Symbol(0, 0, 0, r);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, rSymbol, "-"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("op_aritmeticas",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1107,7 +1107,7 @@ class CUP$Parser$actions {
 		int mright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object m = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol mSymbol = (Symbol) m;
+            Symbol mSymbol = new Symbol(0, 0, 0, m);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, mSymbol, "*"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("op_aritmeticas",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1122,7 +1122,7 @@ class CUP$Parser$actions {
 		int dright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object d = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		  
-            Symbol dSymbol = (Symbol) d;
+            Symbol dSymbol = new Symbol(0, 0, 0, d);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, dSymbol, "/"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("op_aritmeticas",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1137,7 +1137,7 @@ class CUP$Parser$actions {
 		int mright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object m = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol mSymbol = (Symbol) m;
+            Symbol mSymbol = new Symbol(0, 0, 0, m);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, mSymbol, "%"); 
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("op_aritmeticas",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1152,7 +1152,7 @@ class CUP$Parser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object p = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		  
-            Symbol pSymbol = (Symbol) p;
+            Symbol pSymbol = new Symbol(0, 0, 0, p);
             RESULT = parser.getSymbolFactory().newSymbol("op_aritmeticas", 0, pSymbol, "^"); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("op_aritmeticas",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1167,7 +1167,7 @@ class CUP$Parser$actions {
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol idSymbol = (Symbol) idVar;
+            Symbol idSymbol = new Symbol(0, 0, 0, idVar);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, idSymbol, idSymbol.value.toString());  
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("dato_general",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1182,7 +1182,7 @@ class CUP$Parser$actions {
 		int litright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object lit = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol litSymbol = (Symbol) lit;
+            Symbol litSymbol = new Symbol(0, 0, 0, lit);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, litSymbol, litSymbol.value.toString());  
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("dato_general",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1197,7 +1197,7 @@ class CUP$Parser$actions {
 		int funcright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object func = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol funcSymbol = (Symbol) func;
+            Symbol funcSymbol = new Symbol(0, 0, 0, func);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, funcSymbol, funcSymbol.value.toString());  
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("dato_general",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1212,7 +1212,7 @@ class CUP$Parser$actions {
 		int arrNameright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object arrName = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-            Symbol arrSymbol = (Symbol) arrName;
+            Symbol arrSymbol = new Symbol(0, 0, 0, arrName);
             RESULT = parser.getSymbolFactory().newSymbol("dato_general", 0, arrSymbol, arrSymbol.value.toString());  
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("dato_general",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1254,7 +1254,7 @@ class CUP$Parser$actions {
 		int opright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object op = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		  
-    Symbol idSymbol = (Symbol) idVar;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
     RESULT = idSymbol; 
     if(!symbolTable.isInLocalScope(idSymbol.value.toString())) {
         reportSemanticError("Error semántico, identificador fuera del scope.\n");
@@ -1275,8 +1275,8 @@ class CUP$Parser$actions {
 		int seqright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object seq = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol idSymbol = (Symbol) idVar;
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     RESULT = parser.getSymbolFactory().newSymbol("sec_var", 0, idSymbol, idSymbol.value.toString() + "," + seqSymbol.value.toString()); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("sec_var",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1291,7 +1291,7 @@ class CUP$Parser$actions {
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol idSymbol = (Symbol) idVar;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
     RESULT = parser.getSymbolFactory().newSymbol("sec_var", 0, idSymbol, idSymbol.value.toString()); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("sec_var",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1327,8 +1327,8 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-    Symbol exprSymbol = (Symbol) e;
-    Symbol idSymbol = (Symbol) idVar;
+    Symbol exprSymbol = new Symbol(0, 0, 0, e);
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
     if(!symbolTable.isIndexInteger(exprSymbol.value.toString())) {
         reportSemanticError("Error semántico, el tipo de dato de un índice debe ser entero.\n");
     }
@@ -1346,7 +1346,7 @@ class CUP$Parser$actions {
 		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol aSymbol = (Symbol) a;
+    Symbol aSymbol = new Symbol(0, 0, 0, a);
     RESULT = parser.getSymbolFactory().newSymbol("actualizacion", 0, aSymbol, "="); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("actualizacion",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1364,8 +1364,8 @@ class CUP$Parser$actions {
 		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol aritSymbol = (Symbol) arit_op;
-    Symbol aSymbol = (Symbol) a;
+    Symbol aritSymbol = new Symbol(0, 0, 0, arit_op);
+    Symbol aSymbol = new Symbol(0, 0, 0, a);
     RESULT = parser.getSymbolFactory().newSymbol("actualizacion", 0, aSymbol, aritSymbol.value.toString() + "="); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("actualizacion",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1386,8 +1386,8 @@ class CUP$Parser$actions {
 		int seqright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Object seq = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-    Symbol idSymbol = (Symbol) idVar;
-    Symbol seqSymbol = (Symbol) seq;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol seqSymbol = new Symbol(0, 0, 0, seq);
     if(!symbolTable.verifyArrayDeclaration(symbolTable.getType(idSymbol.value.toString()), seqSymbol.value.toString())) { 
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
@@ -1411,8 +1411,8 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol arrSymbol = (Symbol) arr;
-    Symbol exprSymbol = (Symbol) e;
+    Symbol arrSymbol = new Symbol(0, 0, 0, arr);
+    Symbol exprSymbol = new Symbol(0, 0, 0, e) ;
     if(!symbolTable.verifyType(symbolTable.getType(arrSymbol.value.toString()), exprSymbol.value.toString())) {
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
@@ -1436,9 +1436,9 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol idSymbol = (Symbol) idVar;
-    Symbol actSymbol = (Symbol) act;
-    Symbol exprSymbol = (Symbol) e;
+    Symbol idSymbol = new Symbol(0, 0, 0, idVar);
+    Symbol actSymbol = new Symbol(0, 0, 0, act);
+    Symbol exprSymbol = new Symbol(0, 0, 0, e);
     if(!symbolTable.verifyType(symbolTable.getType(idSymbol.value.toString()), exprSymbol.value.toString())) {
         reportSemanticError("Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.\n");
     }
@@ -1482,7 +1482,7 @@ class CUP$Parser$actions {
 		int seqleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int seqright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Object seq = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
-		 Symbol seqSymbol = (Symbol) seq; RESULT = parser.getSymbolFactory().newSymbol("declaracion_arreglo_op", 0, seqSymbol, seqSymbol.value.toString());
+		 Symbol seqSymbol = new Symbol(0, 0, 0, seq); RESULT = parser.getSymbolFactory().newSymbol("declaracion_arreglo_op", 0, seqSymbol, seqSymbol.value.toString());
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("declaracion_arreglo_op",14, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1507,8 +1507,8 @@ class CUP$Parser$actions {
 		int idVarright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                Symbol tSymbol = (Symbol) t;
-                Symbol idVarSymbol = (Symbol) idVar;
+                Symbol tSymbol = new Symbol(0, 0, 0, t);
+                Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
                 RESULT = parser.getSymbolFactory().newSymbol("declaracion", 0, idVarSymbol, tSymbol.value.toString()); 
                 if(!symbolTable.addSymbol(idVarSymbol.value.toString(), tSymbol.value.toString() + ":" + idVarSymbol.value.toString())) {
                     reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
@@ -1532,9 +1532,9 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		     
-                    Symbol tSymbol = (Symbol) t;
-                    Symbol idVarSymbol = (Symbol) idVar;
-                    Symbol exprSymbol = (Symbol) e;
+                    Symbol tSymbol = new Symbol(0, 0, 0, t);
+                    Symbol idVarSymbol = new Symbol(0, 0, 0, idVar);
+                    Symbol exprSymbol = new Symbol(0, 0, 0, e);
                     RESULT = parser.getSymbolFactory().newSymbol("declaracion", 0, idVarSymbol, tSymbol.value.toString()); 
                     if(!symbolTable.addSymbol(idVarSymbol.value.toString(), tSymbol.value.toString() + ":" + idVarSymbol.value.toString())) {
                         reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
@@ -1561,9 +1561,9 @@ class CUP$Parser$actions {
 		int arr_declright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object arr_decl = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		    
-                    Symbol tSymbol = (Symbol) t;
-                    Symbol arrSymbol = (Symbol) arrName;
-                    Symbol arrDeclSymbol = (Symbol) arr_decl;
+                    Symbol tSymbol = new Symbol(0, 0, 0, t);
+                    Symbol arrSymbol = new Symbol(0, 0, 0, arrName);
+                    Symbol arrDeclSymbol = new Symbol(0, 0, 0, arr_decl);
                     RESULT = parser.getSymbolFactory().newSymbol("declaracion", 0, arrSymbol, tSymbol.value.toString()); 
                     if(!symbolTable.addSymbol(arrSymbol.value.toString(), tSymbol.value.toString() + ":" + arrSymbol.value.toString())) {
                         reportSemanticError("Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope.\n");
@@ -1700,9 +1700,9 @@ class CUP$Parser$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol expr1Symbol = (Symbol) e1;
-    Symbol relSymbol = (Symbol) rel;
-    Symbol expr2Symbol = (Symbol) e2;
+    Symbol expr1Symbol = new Symbol(0, 0, 0, e1);
+    Symbol relSymbol = new Symbol(0, 0, 0, rel);
+    Symbol expr2Symbol = new Symbol(0, 0, 0, e2);
     if(!symbolTable.validateOperation(expr1Symbol.value.toString(), relSymbol.value.toString(), expr2Symbol.value.toString())) {
         reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
     }
@@ -1726,9 +1726,9 @@ class CUP$Parser$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol expr1Symbol = (Symbol) e1;
-    Symbol opSymbol = (Symbol) op;
-    Symbol expr2Symbol = (Symbol) e2;
+    Symbol expr1Symbol = new Symbol(0, 0, 0, e1);
+    Symbol opSymbol = new Symbol(0, 0, 0, op);
+    Symbol expr2Symbol = new Symbol(0, 0, 0,e2);
     if(!symbolTable.validateOperation(expr1Symbol.value.toString(), opSymbol.value.toString(), expr2Symbol.value.toString())) {
         reportSemanticError("Error semántico al operar o comparar tipos que no son compatibles o están fuera del scope.\n");
     }
@@ -1746,7 +1746,7 @@ class CUP$Parser$actions {
 		int datoright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object dato = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol datoSymbol = (Symbol) dato;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
     if(!symbolTable.isDataType(datoSymbol.value.toString()) && !symbolTable.isInLocalScope(datoSymbol.value.toString())) {
         reportSemanticError("Error semántico, variable fuera del scope.\n");
     }
@@ -1800,7 +1800,7 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                            Symbol exprSymbol = (Symbol) e;
+                            Symbol exprSymbol = new Symbol(0, 0, 0, e) ;
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, exprSymbol, "!" + exprSymbol.value.toString());
                         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1821,9 +1821,9 @@ class CUP$Parser$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                            Symbol e1Symbol = (Symbol) e1;
-                            Symbol opSymbol = (Symbol) op;
-                            Symbol e2Symbol = (Symbol) e2;
+                            Symbol e1Symbol = new Symbol(0, 0, 0, e1);
+                            Symbol opSymbol = new Symbol(0, 0, 0, op);
+                            Symbol e2Symbol = new Symbol(0, 0, 0, e2);
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, e1Symbol, e1Symbol.value.toString() + " " + opSymbol.value.toString() + " " + e2Symbol.value.toString());
                         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1838,7 +1838,7 @@ class CUP$Parser$actions {
 		int cmpright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object cmp = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                            Symbol cmpSymbol = (Symbol) cmp;
+                            Symbol cmpSymbol = new Symbol(0, 0, 0, cmp);
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, cmpSymbol, cmpSymbol.value);
                         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1853,7 +1853,7 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-                            Symbol eSymbol = (Symbol) e;
+                            Symbol eSymbol = new Symbol(0, 0, 0, e);
                             RESULT = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica", 0, eSymbol, "(" + eSymbol.value.toString() + ")");
                         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_logica_aritmetica",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -2029,7 +2029,7 @@ class CUP$Parser$actions {
 		int datoright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object dato = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-    Symbol datoSymbol = (Symbol) dato;
+    Symbol datoSymbol = new Symbol(0, 0, 0, dato);
     if(!symbolTable.verifyType(symbolTable.getType(datoSymbol.value.toString()), symbolTable.getActualFunction())) {
         reportSemanticError("Error semántico en el tipo de retorno de función.\n");
     } 
@@ -2166,7 +2166,7 @@ class CUP$Parser$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Object i = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                     Symbol iSymbol = (Symbol) i;
+                     Symbol iSymbol = new Symbol(0, 0, 0, i);
                      RESULT = iSymbol;
                      if(!symbolTable.isInLocalScope(iSymbol.value.toString())) {
                          reportSemanticError("Error semántico, identificador fuera del scope.\n");
@@ -2447,9 +2447,9 @@ class CUP$Parser$actions {
 		int paramsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Object params = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
  
-                Symbol tSymbol = (Symbol) t;
-                Symbol funcSymbol = (Symbol) funcName;
-                Symbol paramsSymbol = (Symbol) params;
+                Symbol tSymbol = new Symbol(0, 0, 0, t);
+                Symbol funcSymbol = new Symbol(0, 0, 0, funcName) ;
+                Symbol paramsSymbol = new Symbol(0, 0, 0, params);
                 
                 if(!symbolTable.addGlobalSymbol(funcSymbol.value.toString(), tSymbol.value.toString() + ":" + funcSymbol.value.toString() + ":" + paramsSymbol.value.toString())) {
                     reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");
@@ -2509,8 +2509,8 @@ class CUP$Parser$actions {
 		int funcNameright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).right;
 		Object funcName = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-4)).value;
 
-                Symbol tSymbol = (Symbol) t;
-                Symbol funcSymbol = (Symbol) funcName;
+                Symbol tSymbol = new Symbol(0, 0, 0, t);
+                Symbol funcSymbol = new Symbol(0, 0, 0, funcName);
                 
                 if(!symbolTable.addGlobalSymbol(funcSymbol.value.toString(), tSymbol.value.toString() + ":" + funcSymbol.value.toString() + ":error")) {
                     reportSemanticError("Error semántico durante declaración, ya existe una función con el mismo nombre.\n");

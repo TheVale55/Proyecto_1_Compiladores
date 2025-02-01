@@ -1,0 +1,6 @@
+Error semántico en línea 0, columna 0: Parámetro '_x22_' ya fue declarado.
+Error semántico, variable fuera del scope.
+Error semántico, variable fuera del scope.
+Error semántico, el tipo de dato de un índice debe ser entero.
+Error semántico, variable fuera del scope.
+Error en el tipo de datos de una asignación o hay una variable que está fuera del scope.

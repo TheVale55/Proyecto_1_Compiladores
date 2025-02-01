@@ -1,0 +1,1 @@
+Error sintáctico recuperado en línea 6, columna 10.
