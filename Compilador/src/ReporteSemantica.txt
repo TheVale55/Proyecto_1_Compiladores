@@ -1,3 +1,6 @@
-Error sem√°ntico en la declaraci√≥n de una funci√≥n, hay par√°metros repetidos.
-Error sem√°ntico, el tipo de dato de un √≠ndice debe ser entero.
-Error en el tipo de datos de una asignaci√≥n o hay una variable que est√° fuera del scope.
+Error sem·ntico en lÌnea 0, columna 0: Par·metro '_x22_' ya fue declarado.
+Error sem·ntico, variable fuera del scope.
+Error sem·ntico, variable fuera del scope.
+Error sem·ntico, el tipo de dato de un Ìndice debe ser entero.
+Error sem·ntico, variable fuera del scope.
+Error en el tipo de datos de una asignaciÛn o hay una variable que est· fuera del scope.

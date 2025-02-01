@@ -1,1 +1,1 @@
-Error sintÃ¡ctico recuperado en lÃ­nea 6, columna 10.
+Error sintáctico recuperado en línea 6, columna 10.
