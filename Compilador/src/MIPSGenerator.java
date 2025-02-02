@@ -93,7 +93,7 @@ public class MIPSGenerator {
     }
 
 
-
+    
     public void breakLastLoopCreated() {
         for(int i = structController.size()-1; i>=0; i--) {
             String[] data = this.structController.get(i).split(":");
@@ -103,7 +103,49 @@ public class MIPSGenerator {
         }
     }
 
+    /** Almacena una cadena en la sección de datos. */
+    public void storeString(String label, String value) {
+        dataSection.append(label).append(" .asciiz \"").append(value).append("\"\n");
+    }
 
+    /** Asigna un registro para una variable. */
+    public String allocateRegister(String varName) {
+        String reg = "$t" + (registerMap.size() % 10);
+        registerMap.put(varName, reg);
+        return reg;
+    }
+
+    /** Libera un registro. */
+    public void freeRegister(String reg) {
+        registerMap.values().remove(reg);
+    }
+
+    /** Operaciones aritméticas. */
+    public void add(String dest, String op1, String op2) {
+        textSection.append("add ").append(dest).append(", ").append(op1).append(", ").append(op2).append("\n");
+    }
+    
+    public void sub(String dest, String op1, String op2) {
+        textSection.append("sub ").append(dest).append(", ").append(op1).append(", ").append(op2).append("\n");
+    }
+    
+    public void mul(String dest, String op1, String op2) {
+        textSection.append("mul ").append(dest).append(", ").append(op1).append(", ").append(op2).append("\n");
+    }
+    
+    public void div(String dest, String op1, String op2) {
+        textSection.append("div ").append(op1).append(", ").append(op2).append("\n");
+        textSection.append("mflo ").append(dest).append("\n");
+    }
+    
+    /** Generación de condicionales */
+    public void generateIfCondition(String regCond, int ifCount) {
+        textSection.append("beq ").append(regCond).append(", $zero, ELSE").append(ifCount).append("\n");
+    }
+    
+    public void generateWhileCondition(String regCond, int whileCount) {
+        textSection.append("beq ").append(regCond).append(", $zero, WHILE_END").append(whileCount).append("\n");
+    }
 
     public void exitProgram() {
         this.textSection.append("li $v0, 10\nsyscall\n");
