@@ -1,7 +1,8 @@
-\_ esto es un comentario inicial _/ 
- 
-bromista _func1_ abreregalo cupido _x22_ , cupido _x22_ cierraregalo  abrecuento  
-   bromista _lester_ abreempaque 2 cierraempaque  entrega  abrecuento 1.1, 1.1 cierracuento finregalo
-   bromista _hola_ entrega 5.3 finregalo
-   bromista _hola_ entrega 5.3 finregalo
-cierracuento
+
+rodolfo   _verano_  abreregalo  cierraregalo  abrecuento
+
+	trueno _mibool_ entrega 5 finregalo
+
+	envia 0 finregalo
+
+cierracuento 

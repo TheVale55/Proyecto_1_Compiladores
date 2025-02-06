@@ -421,7 +421,7 @@ if_expr ::= IF PARENTESIS_APERTURA expr_logica_aritmetica PARENTESIS_CIERRE APER
 default_op ::= DEFAULT DOS_PUNTOS {: mips.createStartTag("default"); :} bloques | ;
 
 // Definición de casos en una estructura SWITCH
-cases ::= CASE {:  mips.createStartTag("case"); :}  literal  DOS_PUNTOS  bloques  cases | ;
+cases ::= CASE literal DOS_PUNTOS {: mips.createStartTag("case"); :} bloques cases | CASE literal DOS_PUNTOS {: mips.createStartTag("case"); :} bloques;
 
 // Definición de una estructura SWITCH con casos y un DEFAULT opcional.
 switch_expr ::= SWITCH PARENTESIS_APERTURA dato_general PARENTESIS_CIERRE APERTURA_DE_BLOQUE  {: symbolTable.addScope();  mips.createStartTag("switch");  :}  cases   default_op   CIERRE_DE_BLOQUE {: symbolTable.printScope(); symbolTable.exitScope(); mips.createEndTag(); :}

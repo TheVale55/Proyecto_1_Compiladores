@@ -1,2 +1,0 @@
-Error semántico en la declaración de una función, hay parámetros repetidos [Fila: 3, Columna: 36].
-Error semántico en una declaración. Ya existe una variable con el mismo nombre dentro del scope [Fila: 6, Columna: 13].

@@ -1,11 +1,12 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
-/** Clase que genera el código MIPS. */
+
 public class MIPSGenerator {
 
     public static final int IF_COUNTER_INDEX = 0;
@@ -15,6 +16,7 @@ public class MIPSGenerator {
     public static final int SWITCH_COUNTER_INDEX = 4;
     public static final int CASE_COUNTER_INDEX = 5;
     public static final int DEFAULT_COUNTER_INDEX = 6;
+
     public static final int STRUCT_TYPE = 0;
     public static final int STRUCT_NUMBER = 1;
 
@@ -25,12 +27,12 @@ public class MIPSGenerator {
     private List<Integer> structCounter = Arrays.asList(
         0, 0, 0, 0, 0, 0, 0
     );
-    private Stack<String> structController; //--> Como los scopes, saber la estructura en la que voy para saber dónde saltar.
-    private HashMap<String,String> registerMap; //sin usar aún --> para saber que variable quedó en qué registro.
-    private HashMap<String, Stack<String>> registerHandler; //sin usar aún --> saber que registros están disponibles.
+    private Stack<String> structController; 
+    private HashMap<String,String> registerMap; 
+    private HashMap<String, Stack<String>> registerHandler; 
 
 
-    /** Constructor de la clase. */
+
     public MIPSGenerator(String fileName) {
         this.fileName = fileName;
         this.textSection = new StringBuilder();
@@ -38,13 +40,16 @@ public class MIPSGenerator {
         this.structController = new Stack<String>();
         this.registerMap = new HashMap<String,String>();
         this.registerHandler = new HashMap<String, Stack<String>>();
-        for(int i=0; i<10; i++) registerHandler.get("").add("$t" + i);
-
-
+        registerHandler.putIfAbsent("temporalRegisters", new Stack<String>());
+        registerHandler.putIfAbsent("floatRegisters", new Stack<String>());
+        registerHandler.putIfAbsent("generalRegisters", new Stack<String>());
+        for(int i=0; i<10; i++) registerHandler.get("temporalRegisters").add("$t" + i);
+        for(int j=0; j<32; j++) registerHandler.get("floatRegisters").add("$f" + j);
+        for(int k=0; k<7; k++) registerHandler.get("generalRegisters").add("$s" + k);
     }
 
 
-    /** Obtiene el índice de la estructura. */
+
     private int getStructCountIndex(String structName) {
         switch (structName) {
             case "while":
@@ -72,17 +77,44 @@ public class MIPSGenerator {
     }
 
 
-    /** Crea una etiqueta de inicio de estructura. */
+
+    public String getNewRegister(String registerType) {
+        if(registerHandler.get(registerType).isEmpty()) return "$s0"; //aqui realmente se haria manejo de la pila
+        return registerHandler.get(registerType).peek(); 
+    }
+
+
+
+
     public void createStartTag(String structName) {
         int structIndex = getStructCountIndex(structName);
         int structCount = this.structCounter.get(structIndex);
         this.textSection.append(structName + "Start" + structCount + ":\n");
-        this.structController.add(structName + ":" + structCount);
+        if(!structName.equals("case") && !structName.equals("default")) {
+            this.structController.add(structName + ":" + structCount);
+        }
         this.structCounter.set(structIndex, structCount + 1);
     }
 
 
-    /** Crea una etiqueta de fin de estructura. */
+
+    public void createFunctionStartTag(String funcName) {
+        this.structController.add(funcName);
+        this.textSection.append(funcName + ":\n");
+    }
+
+
+
+
+    public void createFunctionEndTag() {
+        if(!structController.empty()) {
+            this.textSection.append(structController.peek() + "END" + ":\n");
+            this.structController.pop();
+        }
+    }
+
+
+
     public void createEndTag() {
         if(!structController.empty()) {
             String[] data = this.structController.peek().split(":");
@@ -93,7 +125,7 @@ public class MIPSGenerator {
     }
 
 
-    /** Crea un salto a la etiqueta de inicio de la estructura. */
+
     public void breakLastLoopCreated() {
         for(int i = structController.size()-1; i>=0; i--) {
             String[] data = this.structController.get(i).split(":");
@@ -103,136 +135,162 @@ public class MIPSGenerator {
         }
     }
 
-    /** Almacena una cadena en la sección de datos. */
-    public void storeString(String label, String value) {
-        dataSection.append(label).append(" .asciiz \"").append(value).append("\"\n");
-    }
 
-    /** Asigna un registro para una variable. */
-    public String allocateRegister(String varName) {
-        String reg = "$t" + (registerMap.size() % 10);
-        registerMap.put(varName, reg);
-        return reg;
-    }
 
-    /** Libera un registro. */
-    public void freeRegister(String reg) {
-        registerMap.values().remove(reg);
-    }
-
-    /** 
-     * Operaciones aritméticas. 
-     * */
-
-    /** Suma. */
-    public void add(String dest, String op1, String op2) {
-        textSection.append("add ").append(dest).append(", ").append(op1).append(", ").append(op2).append("\n");
-    }
-
-    /** Resta. */
-    public void sub(String dest, String op1, String op2) {
-        textSection.append("sub ").append(dest).append(", ").append(op1).append(", ").append(op2).append("\n");
-    }
-    
-    /** Multiplicación. */
-    public void mul(String dest, String op1, String op2) {
-        textSection.append("mul ").append(dest).append(", ").append(op1).append(", ").append(op2).append("\n");
-    }
-    
-    /** División. */
-    public void div(String dest, String op1, String op2) {
-        textSection.append("div ").append(op1).append(", ").append(op2).append("\n");
-        textSection.append("mflo ").append(dest).append("\n");
-    }
-    
-    /** Generación de condicionales */
-    public void generateIfCondition(String regCond, int ifCount) {
-        textSection.append("beq ").append(regCond).append(", $zero, ELSE").append(ifCount).append("\n");
-    }
-    
-    /** Generación de condicionales */
-    public void generateWhileCondition(String regCond, int whileCount) {
-        textSection.append("beq ").append(regCond).append(", $zero, WHILE_END").append(whileCount).append("\n");
-    }
-
-    /** Generación de condicionales */
     public void exitProgram() {
         this.textSection.append("li $v0, 10\nsyscall\n");
     }
 
-    /** Imprime un entero. */
+
+    
     public void printInt(int value) {
         this.textSection.append("li $v0, 1\nli $a0, " + value + "\nsyscall\n");
     }
     
-    /** Lee un entero. */
+
+
     public String readInt() {
         this.textSection.append("li $v0, 5\nsyscall\nmove $t0, $v0\n");
-        return "$t0"; 
+        return getNewRegister("temporalRegisters"); 
     }
 
-    /** Imprime una cadena. */
+
+
     public void printString(String text) {
         this.textSection.append("li $v0, 4\nla $a0, " + text + "\nsyscall\n");
     }
     
-    /** Lee una cadena. */
+
+
     public void readString(String text, int length) {
         this.textSection.append("li $v0, 8\nla $a0, " + text + "\nli $a1, " + length + "\nsyscall\n");
     }
 
-    /** Imprime un flotante. */
+
+
     public void printFloat(float value) {
         this.textSection.append("li $v0, 2\nl.s $f12, " + value + "\nsyscall\n");
     }    
 
-    /** Lee un flotante. */
+
+
     public String readFloat() {
         this.textSection.append("li $v0, 6\nsyscall\nmov.s $f0, $f12\n");
         return "$f12";  
     }
 
-    /** Imprime un caracter. */
+
+
     public void printChar(char value) {
         this.textSection.append("li $v0, 11\nli $a0, " + (int) value + "\nsyscall\n");
     }
 
-    /** Lee un caracter. */
+
+
     public String readChar() {
         this.textSection.append("li $v0, 12\nsyscall\nmove $t0, $v0\n");
-        return "$t0";  
+        return getNewRegister("temporalRegisters");  
     }
     
-    /** Imprime un booleano. */
+
+
     public void printBool(boolean value) {
         this.textSection.append("li $v0, 16\nli $a0, " + (value ? 1 : 0) + "\nsyscall\n");
     }
 
-    /** Reserva memoria dinámica. */
+
+
     public String malloc(int size) {
         this.textSection.append("li $v0, 9\nli $a0, " + size + "\nsyscall\nmove $t0, $v0\n");
         return "$t0";  
     }
     
-    /** Libera memoria dinámica. */
+
+
     public void free(String address) {
         this.textSection.append("li $v0, 11\nmove $a0, " + address + "\nsyscall\n");
     }
 
-    /** Reserva memoria del stack. */
+
+
     public void reserveStackMemory(int size) {
         this.textSection.append("sub $sp, $sp, " + size + "\n");
     }
     
-    /** Libera memoria del stack. */
+
+
     public void freeStackMemory(int size) {
         this.textSection.append("add $sp, $sp, " + size + "\n");
     }
 
-    /** Escribe el código en un archivo. */
+
+
+
+    public void add(String dest, String src1, String src2) {
+        this.textSection.append("add " + dest + ", " + src1 + ", " + src2 + "\n");
+    }
+
+
+
+    public void sub(String dest, String src1, String src2) {
+        this.textSection.append("sub " + dest + ", " + src1 + ", " + src2 + "\n");
+    }
+
+
+
+    public void mul(String dest, String src1, String src2) {
+        this.textSection.append("mul " + dest + ", " + src1 + ", " + src2 + "\n");
+    }
+
+
+
+    public void div(String dest, String src1, String src2) {
+        this.textSection.append("div " + src1 + ", " + src2 + "\n");
+        this.textSection.append("mflo " + dest + "\n");
+    }
+
+
+
+    public void mod(String dest, String src1, String src2) {
+        this.textSection.append("div " + src1 + ", " + src2 + "\n");
+        this.textSection.append("mfhi " + dest + "\n");
+    }
+
+
+
+    public void beq(String src1, String src2, String label) {
+        this.textSection.append("beq " + src1 + ", " + src2 + ", " + label + "\n");
+    }
+
+
+
+    public void blt(String src1, String src2, String label) {
+        this.textSection.append("blt " + src1 + ", " + src2 + ", " + label + "\n");
+    }
+
+
+
+    public void bgt(String src1, String src2, String label) {
+        this.textSection.append("bgt " + src1 + ", " + src2 + ", " + label + "\n");
+    }
+
+
+
+    public void ble(String src1, String src2, String label) {
+        this.textSection.append("ble " + src1 + ", " + src2 + ", " + label + "\n");
+    }
+
+
+
+    public void bge(String src1, String src2, String label) {
+        this.textSection.append("bge " + src1 + ", " + src2 + ", " + label + "\n");
+    }
+
+
+
     public void writeCodetoFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(".data\n" + dataSection.toString() + "\n\n" + ".text\n.globl _main_\n\n" + textSection.toString());
+            writer.write(".data\n" + dataSection.toString() + "\n\n" + ".text\n.globl _verano_\n\n" + textSection.toString());
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
