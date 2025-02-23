@@ -1,7 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
@@ -284,6 +283,16 @@ public class MIPSGenerator {
 
     public void bge(String src1, String src2, String label) {
         this.textSection.append("bge " + src1 + ", " + src2 + ", " + label + "\n");
+    }
+
+
+
+    public void asignacion(String source, String data) {
+        if(!registerMap.containsKey(source)) {
+            String register = getNewRegister("temporalRegisters");
+            registerMap.put(source, register);
+        }
+        this.textSection.append("move " + registerMap.get(source) + ", " + data + "\n");
     }
 
 
